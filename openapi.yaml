@@ -18,7 +18,7 @@ components:
       name: x-api-key
 security:
   - userId: []
-  - apiToken: []
+    apiToken: []
 paths:
   /status:
     get:
@@ -45,6 +45,9 @@ paths:
         shown the Record Yesterday's Activity ("Check off any Dailies you did
         yesterday") screen and so it will immediately apply damage for
         incomplete due Dailies.
+      security:
+        - userId: []
+          apiToken: []
       responses:
         "200":
           description: Cron executed successfully
@@ -64,6 +67,9 @@ paths:
     get:
       summary: Get user's groups
       description: Retrieve information about groups associated with the user.
+      security:
+        - userId: []
+          apiToken: []
       parameters:
         - name: type
           in: query
@@ -83,7 +89,7 @@ paths:
           description: Whether to paginate the results (true or false)
           schema:
             type: boolean
-          example: true
+          example: false
         - name: page
           in: query
           description: Page number for paginated results (if paginate is true)
@@ -115,6 +121,9 @@ paths:
     post:
       summary: Create a new group
       description: Endpoint to create a new group.
+      security:
+        - userId: []
+          apiToken: []
       requestBody:
         required: true
         content:
@@ -153,6 +162,9 @@ paths:
     get:
       summary: Get party information
       description: Retrieve information about the user's party.
+      security:
+        - userId: []
+          apiToken: []
       responses:
         "200":
           description: Party information retrieved successfully
@@ -179,6 +191,9 @@ paths:
     post:
       summary: Create a new party
       description: Endpoint to create a new party for the user.
+      security:
+        - userId: []
+          apiToken: []
       requestBody:
         required: true
         content:
@@ -226,6 +241,9 @@ paths:
     post:
       summary: Create a new quest
       description: Endpoint to create a new quest for the party.
+      security:
+        - userId: []
+          apiToken: []
       requestBody:
         required: true
         content:
