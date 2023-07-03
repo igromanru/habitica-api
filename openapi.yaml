@@ -16,9 +16,6 @@ components:
       type: apiKey
       in: header
       name: x-api-key
-security:
-  - userId: []
-    apiToken: []
 paths:
   /status:
     get:
@@ -63,6 +60,94 @@ paths:
               example:
                 success: false
                 message: Invalid input data
+  /user:
+    get:
+      summary: Get user information
+      description: Retrieve information about the user.
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: User information retrieved successfully
+          content:
+            application/json:
+              example:
+                _id: a1780f33-xxxx-40e9-b50a-404e4964a09a
+                username: my_username
+                email: my_email@example.com
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+  /user/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        description: ID of the user to retrieve information for
+        required: true
+        schema:
+          type: string
+        example: a1780f33-xxxx-40e9-b50a-404e4964a09a
+    get:
+      summary: Get user information
+      description: Retrieve information about a specific user.
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: User information retrieved successfully
+          content:
+            application/json:
+              example:
+                _id: a1780f33-xxxx-40e9-b50a-404e4964a09a
+                username: my_username
+                email: my_email@example.com
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+        '404':
+          description: User not found
+          content:
+            application/json:
+              example:
+                error: User with ID a1780f33-xxxx-40e9-b50a-404e4964a09a not found
+  /tasks/user:
+    get:
+      summary: Get user's tasks
+      description: Retrieve all tasks for the authenticated user.
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Tasks retrieved successfully
+          content:
+            application/json:
+              example:
+                dailies:
+                  - id: daily123
+                    text: Complete daily exercise
+                    completed: false
+                  - id: daily456
+                    text: Read 30 minutes
+                    completed: true
+                todos:
+                  - id: todo789
+                    text: Buy groceries
+                    completed: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
   /groups:
     get:
       summary: Get user's groups
@@ -104,10 +189,10 @@ paths:
             application/json:
               example:
                 data:
-                  - id: group123
+                  - id: a1780f33-xxxx-40e9-b50a-404e4964a09a
                     name: Group One
                     type: party
-                  - id: group456
+                  - id: a1780f33-xxyy-40e9-b50a-404e4964a09a
                     name: Group Two
                     type: guild
                 total: 2
@@ -149,7 +234,7 @@ paths:
           content:
             application/json:
               example:
-                id: group789
+                id: a1780f33-gggg-40e9-b50a-404e4964a09a
                 name: My Group
                 type: party
         "401":
@@ -158,6 +243,42 @@ paths:
             application/json:
               example:
                 error: You must be logged in to create a new group
+  /groups/{groupId}:
+    get:
+      summary: Get group information
+      description: Retrieve information about a specific group.
+      security:
+        - userId: []
+          apiToken: []
+      parameters:
+        - name: groupId
+          in: path
+          description: ID of the group to retrieve information for
+          required: true
+          schema:
+            type: string
+          example: a1780f33-gggg-40e9-b50a-404e4964a09a
+      responses:
+        '200':
+          description: Group information retrieved successfully
+          content:
+            application/json:
+              example:
+                id: a1780f33-gggg-40e9-b50a-404e4964a09a
+                name: Example Group
+                type: guild
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+        '404':
+          description: Group not found
+          content:
+            application/json:
+              example:
+                error: Group with ID group123 not found
   /groups/party:
     get:
       summary: Get party information
@@ -172,10 +293,10 @@ paths:
             application/json:
               example:
                 name: The Party
-                leader: user123
+                leader: a1780f33-xxxx-40e9-b50a-404e4964a09a
                 members:
-                  - user123
-                  - user456
+                  - a1780f33-xxxx-40e9-b50a-404e4964a09a
+                  - a1780f33-yyyy-40e9-b50a-404e4964a09a
         "401":
           description: Unauthorized
           content:
@@ -206,14 +327,14 @@ paths:
                   example: My Party
                 leader:
                   type: string
-                  example: user123
+                  example: a1780f33-xxxx-40e9-b50a-404e4964a09a
                 members:
                   type: array
                   items:
                     type: string
                   example:
-                    - user123
-                    - user456
+                    - a1780f33-xxxx-40e9-b50a-404e4964a09a
+                    - a1780f33-yyyy-40e9-b50a-404e4964a09a
       responses:
         "201":
           description: Party created successfully
@@ -221,10 +342,10 @@ paths:
             application/json:
               example:
                 name: My Party
-                leader: user123
+                leader: a1780f33-xxxx-40e9-b50a-404e4964a09a
                 members:
-                  - user123
-                  - user456
+                  - a1780f33-xxxx-40e9-b50a-404e4964a09a
+                  - a1780f33-yyyy-40e9-b50a-404e4964a09a
         "401":
           description: Unauthorized
           content:
