@@ -45,16 +45,6 @@ paths:
         shown the Record Yesterday's Activity ("Check off any Dailies you did
         yesterday") screen and so it will immediately apply damage for
         incomplete due Dailies.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                key:
-                  type: string
-                  example: your_cron_key_here
       responses:
         "200":
           description: Cron executed successfully
@@ -73,20 +63,50 @@ paths:
   /groups:
     get:
       summary: Get user's groups
-      description: Retrieve information about all groups associated with the user.
+      description: Retrieve information about groups associated with the user.
+      parameters:
+        - name: type
+          in: query
+          description: Type of groups to retrieve (party, guilds, privateGuilds, publicGuilds, tavern)
+          required: true
+          schema:
+            type: string
+            enum:
+              - party
+              - guilds
+              - privateGuilds
+              - publicGuilds
+              - tavern
+          example: party
+        - name: paginate
+          in: query
+          description: Whether to paginate the results (true or false)
+          schema:
+            type: boolean
+          example: true
+        - name: page
+          in: query
+          description: Page number for paginated results (if paginate is true)
+          schema:
+            type: integer
+            minimum: 1
+          example: 1
       responses:
-        "200":
+        '200':
           description: User's groups retrieved successfully
           content:
             application/json:
               example:
-                - id: group123
-                  name: Group One
-                  type: party
-                - id: group456
-                  name: Group Two
-                  type: guild
-        "401":
+                data:
+                  - id: group123
+                    name: Group One
+                    type: party
+                  - id: group456
+                    name: Group Two
+                    type: guild
+                total: 2
+                page: 1
+        '401':
           description: Unauthorized
           content:
             application/json:
@@ -108,8 +128,11 @@ paths:
                 type:
                   type: string
                   enum:
-                    - party
-                    - guild
+                  - party
+                  - guilds
+                  - privateGuilds
+                  - publicGuilds
+                  - tavern
                   example: party
       responses:
         "201":
