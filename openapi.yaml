@@ -1,0 +1,236 @@
+---
+openapi: 3.0.3
+info:
+  title: Habitica API
+  version: 3.0.0
+servers:
+  - url: https://habitica.com/api/v3/
+    description: Habitica API server
+components:
+  securitySchemes:
+    userId:
+      type: apiKey
+      in: header
+      name: x-api-user
+    apiToken:
+      type: apiKey
+      in: header
+      name: x-api-key
+security:
+  - userId: []
+  - apiToken: []
+paths:
+  /status:
+    get:
+      summary: Get Habitica API status
+      description: Endpoint to get the current status of the Habitica API.
+      responses:
+        "200":
+          description: Habitica API status retrieved successfully
+          content:
+            application/json:
+              example:
+                status: up
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                status: down
+                message: The Habitica API is currently experiencing issues
+  /cron:
+    post:
+      summary: Run cron
+      description: This causes cron to run. It assumes that the user has already been
+        shown the Record Yesterday's Activity ("Check off any Dailies you did
+        yesterday") screen and so it will immediately apply damage for
+        incomplete due Dailies.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key:
+                  type: string
+                  example: your_cron_key_here
+      responses:
+        "200":
+          description: Cron executed successfully
+          content:
+            application/json:
+              example:
+                success: true
+                message: Cron executed successfully
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: Invalid input data
+  /groups:
+    get:
+      summary: Get user's groups
+      description: Retrieve information about all groups associated with the user.
+      responses:
+        "200":
+          description: User's groups retrieved successfully
+          content:
+            application/json:
+              example:
+                - id: group123
+                  name: Group One
+                  type: party
+                - id: group456
+                  name: Group Two
+                  type: guild
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: You must be logged in to access this information
+    post:
+      summary: Create a new group
+      description: Endpoint to create a new group.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: My Group
+                type:
+                  type: string
+                  enum:
+                    - party
+                    - guild
+                  example: party
+      responses:
+        "201":
+          description: Group created successfully
+          content:
+            application/json:
+              example:
+                id: group789
+                name: My Group
+                type: party
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: You must be logged in to create a new group
+  /groups/party:
+    get:
+      summary: Get party information
+      description: Retrieve information about the user's party.
+      responses:
+        "200":
+          description: Party information retrieved successfully
+          content:
+            application/json:
+              example:
+                name: The Party
+                leader: user123
+                members:
+                  - user123
+                  - user456
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: You must be logged in to access this information
+        "404":
+          description: Party not found
+          content:
+            application/json:
+              example:
+                error: Party not found for the user
+    post:
+      summary: Create a new party
+      description: Endpoint to create a new party for the user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: My Party
+                leader:
+                  type: string
+                  example: user123
+                members:
+                  type: array
+                  items:
+                    type: string
+                  example:
+                    - user123
+                    - user456
+      responses:
+        "201":
+          description: Party created successfully
+          content:
+            application/json:
+              example:
+                name: My Party
+                leader: user123
+                members:
+                  - user123
+                  - user456
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: You must be logged in to create a new party
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              example:
+                error: Party already exists for the user
+  /groups/party/quests:
+    post:
+      summary: Create a new quest
+      description: Endpoint to create a new quest for the party.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key:
+                  type: string
+                  example: my_quest
+                text:
+                  type: string
+                  example: Defeat the Dragon
+                challengeRating:
+                  type: number
+                  example: 5
+      responses:
+        "200":
+          description: Quest created successfully
+          content:
+            application/json:
+              example:
+                success: true
+                message: Quest created successfully
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: Invalid input data

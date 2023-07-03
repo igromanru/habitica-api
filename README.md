@@ -1,0 +1,1 @@
+# Habitica API v3 OpenAPI specification
