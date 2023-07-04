@@ -23,6 +23,18 @@ components:
       type: apiKey
       in: header
       name: x-api-key
+tags: 
+  - name: default
+  - name: user
+    description: User related requests
+  - name: tasks
+    description: Tasks related requests
+  - name: party
+    description: Party related requests
+  - name: groups
+    description: Groups related requests
+  - name: webhook
+    description: Webhooks
 paths:
   /status:
     get:
@@ -105,6 +117,8 @@ paths:
     get:
       summary: Get user information
       description: Retrieve information about the user.
+      tags:
+        - user
       security:
         - userId: []
           apiToken: []
@@ -135,6 +149,8 @@ paths:
     get:
       summary: Get user information
       description: Retrieve information about a specific user.
+      tags:
+        - user
       security:
         - userId: []
           apiToken: []
@@ -163,6 +179,8 @@ paths:
     get:
       summary: Get user's tasks
       description: Retrieve all tasks for the authenticated user.
+      tags:
+        - tasks
       security:
         - userId: []
           apiToken: []
@@ -193,6 +211,8 @@ paths:
     get:
       summary: Get user's groups
       description: Retrieve information about groups associated with the user.
+      tags:
+        - groups
       security:
         - userId: []
           apiToken: []
@@ -247,6 +267,8 @@ paths:
     post:
       summary: Create a new group
       description: Endpoint to create a new group.
+      tags:
+        - groups
       security:
         - userId: []
           apiToken: []
@@ -288,6 +310,8 @@ paths:
     get:
       summary: Get group information
       description: Retrieve information about a specific group.
+      tags:
+        - groups
       security:
         - userId: []
           apiToken: []
@@ -324,6 +348,8 @@ paths:
     get:
       summary: Get party information
       description: Retrieve information about the user's party.
+      tags:
+        - party
       security:
         - userId: []
           apiToken: []
@@ -353,6 +379,8 @@ paths:
     post:
       summary: Create a new party
       description: Endpoint to create a new party for the user.
+      tags:
+        - party
       security:
         - userId: []
           apiToken: []
@@ -403,6 +431,8 @@ paths:
     post:
       summary: Create a new quest
       description: Endpoint to create a new quest for the party.
+      tags:
+        - party
       security:
         - userId: []
           apiToken: []
@@ -441,6 +471,8 @@ paths:
     get:
       summary: Get user webhooks
       description: Retrieve all webhooks registered by the authenticated user.
+      tags:
+        - webhook
       security:
         - userId: []
           apiToken: []
@@ -465,6 +497,8 @@ paths:
     post:
       summary: Create user webhook
       description: "Create a new webhook for the authenticated user. (Possible types: taskActivity, groupChatReceived, userActivity, questActivity)"
+      tags:
+        - webhook
       security:
         - userId: []
           apiToken: []
@@ -550,6 +584,8 @@ paths:
     get:
       summary: Get user webhook by ID
       description: Retrieve information about a specific webhook by webhook ID.
+      tags:
+        - webhook
       security:
         - userId: []
           apiToken: []
@@ -577,6 +613,8 @@ paths:
     put:
       summary: Update user webhook by ID
       description: Update information of a specific webhook by webhook ID.
+      tags:
+        - webhook
       security:
         - userId: []
           apiToken: []
@@ -652,6 +690,8 @@ paths:
     delete:
       summary: Delete user webhook by ID
       description: Delete a specific webhook by webhook ID.
+      tags:
+        - webhook
       security:
         - userId: []
           apiToken: []
