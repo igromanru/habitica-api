@@ -38,7 +38,8 @@ paths:
   /cron:
     post:
       summary: Run cron
-      description: This causes cron to run. It assumes that the user has already been
+      description:
+        This causes cron to run. It assumes that the user has already been
         shown the Record Yesterday's Activity ("Check off any Dailies you did
         yesterday") screen and so it will immediately apply damage for
         incomplete due Dailies.
@@ -73,7 +74,7 @@ paths:
       summary: Get member by ID
       description: Retrieve information about a specific member by member ID.
       responses:
-        '200':
+        "200":
           description: Member retrieved successfully
           content:
             application/json:
@@ -81,13 +82,13 @@ paths:
                 id: member123
                 username: john_doe
                 displayName: John Doe
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-        '404':
+        "404":
           description: Member not found
           content:
             application/json:
@@ -101,7 +102,7 @@ paths:
         - userId: []
           apiToken: []
       responses:
-        '200':
+        "200":
           description: User information retrieved successfully
           content:
             application/json:
@@ -109,7 +110,7 @@ paths:
                 _id: a1780f33-xxxx-40e9-b50a-404e4964a09a
                 username: my_username
                 email: my_email@example.com
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -131,7 +132,7 @@ paths:
         - userId: []
           apiToken: []
       responses:
-        '200':
+        "200":
           description: User information retrieved successfully
           content:
             application/json:
@@ -139,13 +140,13 @@ paths:
                 _id: a1780f33-xxxx-40e9-b50a-404e4964a09a
                 username: my_username
                 email: my_email@example.com
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-        '404':
+        "404":
           description: User not found
           content:
             application/json:
@@ -159,7 +160,7 @@ paths:
         - userId: []
           apiToken: []
       responses:
-        '200':
+        "200":
           description: Tasks retrieved successfully
           content:
             application/json:
@@ -175,7 +176,7 @@ paths:
                   - id: todo789
                     text: Buy groceries
                     completed: false
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -216,7 +217,7 @@ paths:
             minimum: 1
           example: 1
       responses:
-        '200':
+        "200":
           description: User's groups retrieved successfully
           content:
             application/json:
@@ -230,7 +231,7 @@ paths:
                     type: guild
                 total: 2
                 page: 1
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -255,11 +256,11 @@ paths:
                 type:
                   type: string
                   enum:
-                  - party
-                  - guilds
-                  - privateGuilds
-                  - publicGuilds
-                  - tavern
+                    - party
+                    - guilds
+                    - privateGuilds
+                    - publicGuilds
+                    - tavern
                   example: party
       responses:
         "201":
@@ -292,7 +293,7 @@ paths:
             type: string
           example: a1780f33-gggg-40e9-b50a-404e4964a09a
       responses:
-        '200':
+        "200":
           description: Group information retrieved successfully
           content:
             application/json:
@@ -300,13 +301,13 @@ paths:
                 id: a1780f33-gggg-40e9-b50a-404e4964a09a
                 name: Example Group
                 type: guild
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-        '404':
+        "404":
           description: Group not found
           content:
             application/json:
@@ -437,7 +438,7 @@ paths:
         - userId: []
           apiToken: []
       responses:
-        '200':
+        "200":
           description: Webhooks retrieved successfully
           content:
             application/json:
@@ -448,7 +449,7 @@ paths:
                 - id: webhook456
                   url: https://example.com/webhook/endpoint2
                   event: task.updated
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -510,7 +511,7 @@ paths:
               required:
                 - url
       responses:
-        '201':
+        "201":
           description: Webhook created successfully
           content:
             application/json:
@@ -518,13 +519,13 @@ paths:
                 id: webhook123
                 url: https://example.com/webhook/endpoint
                 event: task.completed
-        '400':
+        "400":
           description: Bad Request
           content:
             application/json:
               example:
                 error: Invalid webhook data provided
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -546,7 +547,7 @@ paths:
         - userId: []
           apiToken: []
       responses:
-        '200':
+        "200":
           description: Webhook retrieved successfully
           content:
             application/json:
@@ -554,13 +555,13 @@ paths:
                 id: webhook123
                 url: https://example.com/webhook/endpoint
                 event: task.completed
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-        '404':
+        "404":
           description: Webhook not found
           content:
             application/json:
@@ -615,7 +616,7 @@ paths:
                       type: boolean
                       example: true
       responses:
-        '200':
+        "200":
           description: Webhook updated successfully
           content:
             application/json:
@@ -623,42 +624,42 @@ paths:
                 id: webhook123
                 url: https://example.com/webhook/new-endpoint
                 event: task.updated
-        '400':
+        "400":
           description: Bad Request
           content:
             application/json:
               example:
                 error: Invalid webhook data provided
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-        '404':
+        "404":
           description: Webhook not found
           content:
             application/json:
               example:
                 error: Webhook with ID webhook123 not found
-      delete:
-        summary: Delete user webhook by ID
-        description: Delete a specific webhook by webhook ID.
-        security:
-          - userId: []
-            apiToken: []
-        responses:
-          '204':
-            description: Webhook deleted successfully
-          '401':
-            description: Unauthorized
-            content:
-              application/json:
-                example:
-                  error: Authentication failed. Please provide valid userId and apiToken.
-          '404':
-            description: Webhook not found
-            content:
-              application/json:
-                example:
-                  error: Webhook with ID webhook123 not found
+    delete:
+      summary: Delete user webhook by ID
+      description: Delete a specific webhook by webhook ID.
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        "204":
+          description: Webhook deleted successfully
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+        "404":
+          description: Webhook not found
+          content:
+            application/json:
+              example:
+                error: Webhook with ID webhook123 not found
