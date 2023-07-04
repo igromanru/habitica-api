@@ -175,6 +175,44 @@ paths:
             application/json:
               example:
                 error: User with ID a1780f33-xxxx-40e9-b50a-404e4964a09a not found
+  /user/custom-day-start:
+    post:
+      summary: Set Custom Day Start time for user
+      description: Set the custom day start time for a user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dayStart:
+                  type: number
+                  description: The hour number (0-23) for the day to begin. If not supplied, it will default to 0.
+                  default: 0
+                  example: 2
+      responses:
+        "200":
+          description: Custom day start time set successfully
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  message: Your custom day start has changed.
+                notifications: []
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                error: BadRequest
+                message: User validation failed
+                errors:
+                  - message: Path `preferences.dayStart` (25) is more than the maximum allowed value (23).
+                    path: preferences.dayStart
+                    value: 25
   /tasks/user:
     get:
       summary: Get user's tasks
