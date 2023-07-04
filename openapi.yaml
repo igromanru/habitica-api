@@ -3,6 +3,13 @@ openapi: 3.0.3
 info:
   title: Habitica API
   version: 3.0.0
+  description: Habitica API v3 representation as OpenAPI spec
+  contact: 
+    name: Specification repository
+    url: https://github.com/igromanru/habitica-api
+externalDocs:
+  url: https://habitica.com/apidoc/
+  description: Official Habitica V3 API Documentation
 servers:
   - url: https://habitica.com/api/v3/
     description: Habitica API server
