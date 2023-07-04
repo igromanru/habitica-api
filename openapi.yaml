@@ -179,6 +179,11 @@ paths:
     post:
       summary: Set Custom Day Start time for user
       description: Set the custom day start time for a user.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
       requestBody:
         required: true
         content:
