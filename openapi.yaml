@@ -60,6 +60,39 @@ paths:
               example:
                 success: false
                 message: Invalid input data
+  /members/{memberId}:
+    parameters:
+      - name: memberId
+        in: path
+        description: ID of the member to retrieve
+        required: true
+        schema:
+          type: string
+        example: member123
+    get:
+      summary: Get member by ID
+      description: Retrieve information about a specific member by member ID.
+      responses:
+        '200':
+          description: Member retrieved successfully
+          content:
+            application/json:
+              example:
+                id: member123
+                username: john_doe
+                displayName: John Doe
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+        '404':
+          description: Member not found
+          content:
+            application/json:
+              example:
+                error: Member with ID member123 not found
   /user:
     get:
       summary: Get user information
@@ -396,3 +429,236 @@ paths:
               example:
                 success: false
                 message: Invalid input data
+  /user/webhook:
+    get:
+      summary: Get user webhooks
+      description: Retrieve all webhooks registered by the authenticated user.
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Webhooks retrieved successfully
+          content:
+            application/json:
+              example:
+                - id: webhook123
+                  url: https://example.com/webhook/endpoint
+                  event: task.completed
+                - id: webhook456
+                  url: https://example.com/webhook/endpoint2
+                  event: task.updated
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+    post:
+      summary: Create user webhook
+      description: "Create a new webhook for the authenticated user. (Possible types: taskActivity, groupChatReceived, userActivity, questActivity)"
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  description: "The webhook's id (Default value: Randomly Generated UUID)."
+                label:
+                  type: string
+                  description: A label to remind you what this webhook does
+                url:
+                  type: string
+                  description: The URL where the webhook events will be sent.
+                  example: https://example.com/webhook/endpoint
+                enabled:
+                  type: boolean
+                  description: If the webhook should be enabled (default true)
+                  example: true
+                type:
+                  type: string
+                  description: The webhook's type.
+                  enum:
+                    - taskActivity
+                    - groupChatReceived
+                    - userActivity
+                    - questActivity
+                  example: taskActivity
+                options:
+                  type: object
+                  description: "The webhook's options. Will differ depending on type. Required for 'groupChatReceived' type. If a webhook supports options, the default values are displayed in the examples below."
+                  properties:
+                    created:
+                      type: boolean
+                      example: false
+                    updated:
+                      type: boolean
+                      example: false
+                    deleted:
+                      type: boolean
+                      example: false
+                    scored:
+                      type: boolean
+                      example: true
+              required:
+                - url
+      responses:
+        '201':
+          description: Webhook created successfully
+          content:
+            application/json:
+              example:
+                id: webhook123
+                url: https://example.com/webhook/endpoint
+                event: task.completed
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error: Invalid webhook data provided
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+  /user/webhook/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: ID (UUID) of the webhook to retrieve
+        required: true
+        schema:
+          type: string
+        example: webhook123
+    get:
+      summary: Get user webhook by ID
+      description: Retrieve information about a specific webhook by webhook ID.
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Webhook retrieved successfully
+          content:
+            application/json:
+              example:
+                id: webhook123
+                url: https://example.com/webhook/endpoint
+                event: task.completed
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+        '404':
+          description: Webhook not found
+          content:
+            application/json:
+              example:
+                error: Webhook with ID webhook123 not found
+    put:
+      summary: Update user webhook by ID
+      description: Update information of a specific webhook by webhook ID.
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  description: The URL where the webhook events will be sent.
+                  example: https://example.com/webhook/endpoint
+                label:
+                  type: string
+                  description: A label to remind you what this webhook does
+                enabled:
+                  type: boolean
+                  description: If the webhook should be enabled (default true)
+                  example: true
+                type:
+                  type: string
+                  description: The webhook's type.
+                  enum:
+                    - taskActivity
+                    - groupChatReceived
+                    - userActivity
+                    - questActivity
+                  example: taskActivity
+                options:
+                  type: object
+                  description: "The webhook's options. Will differ depending on type. Required for 'groupChatReceived' type. If a webhook supports options, the default values are displayed in the examples below."
+                  properties:
+                    created:
+                      type: boolean
+                      example: false
+                    updated:
+                      type: boolean
+                      example: false
+                    deleted:
+                      type: boolean
+                      example: false
+                    scored:
+                      type: boolean
+                      example: true
+      responses:
+        '200':
+          description: Webhook updated successfully
+          content:
+            application/json:
+              example:
+                id: webhook123
+                url: https://example.com/webhook/new-endpoint
+                event: task.updated
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error: Invalid webhook data provided
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+        '404':
+          description: Webhook not found
+          content:
+            application/json:
+              example:
+                error: Webhook with ID webhook123 not found
+      delete:
+        summary: Delete user webhook by ID
+        description: Delete a specific webhook by webhook ID.
+        security:
+          - userId: []
+            apiToken: []
+        responses:
+          '204':
+            description: Webhook deleted successfully
+          '401':
+            description: Unauthorized
+            content:
+              application/json:
+                example:
+                  error: Authentication failed. Please provide valid userId and apiToken.
+          '404':
+            description: Webhook not found
+            content:
+              application/json:
+                example:
+                  error: Webhook with ID webhook123 not found
