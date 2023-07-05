@@ -33,6 +33,8 @@ tags:
     description: Party related requests
   - name: groups
     description: Groups related requests
+  - name: challenges
+    description: Challenges related requests
   - name: webhook
     description: Webhooks
 paths:
@@ -218,6 +220,94 @@ paths:
                   - message: Path `preferences.dayStart` (25) is more than the maximum allowed value (23).
                     path: preferences.dayStart
                     value: 25
+  /user/reroll:
+    post:
+      summary: Reroll user stats
+      description: Reroll a user (reset tasks) using the Fortify Potion.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: User stats rerolled successfully
+          content:
+            application/json:
+              example:
+                message: User stats rerolled successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+  /user/revive:
+    post:
+      summary: Revive user
+      description: Revive the authenticated user, restoring health and removing any penalties.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: User revived successfully
+          content:
+            application/json:
+              example:
+                message: User successfully revived
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+  /user/reset:
+    post:
+      summary: Reset user data
+      description: Reset the authenticated user's data, removing all progress and starting over.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: User data reset successful
+          content:
+            application/json:
+              example:
+                message: User data reset successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+  /user/rebirth:
+      post:
+        summary: Use Orb of Rebirth on user
+        description: Rebirth the authenticated user, resetting their stats and granting rewards.
+        tags:
+        - user
+        security:
+          - userId: []
+            apiToken: []
+        responses:
+          '200':
+            description: User rebirth successful
+            content:
+              application/json:
+                example:
+                  message: User rebirth completed successfully
+          '401':
+            description: Unauthorized
+            content:
+              application/json:
+                example:
+                  error: Authentication failed. Please provide valid userId and apiToken.
   /tasks/user:
     get:
       summary: Get user's tasks
