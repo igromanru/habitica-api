@@ -13,16 +13,6 @@ externalDocs:
 servers:
   - url: https://habitica.com/api/v3/
     description: Habitica API server
-components:
-  securitySchemes:
-    userId:
-      type: apiKey
-      in: header
-      name: x-api-user
-    apiToken:
-      type: apiKey
-      in: header
-      name: x-api-key
 tags: 
   - name: default
   - name: user
@@ -37,6 +27,16 @@ tags:
     description: Challenges related requests
   - name: webhook
     description: Webhooks
+components:
+  securitySchemes:
+    userId:
+      type: apiKey
+      in: header
+      name: x-api-user
+    apiToken:
+      type: apiKey
+      in: header
+      name: x-api-key
 paths:
   /status:
     get:
@@ -695,7 +695,7 @@ paths:
         - userId: []
           apiToken: []
       requestBody:
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -724,19 +724,15 @@ paths:
                 official:
                   type: boolean
                   description: Specifies whether the challenge is an official Habitica challenge.
-                  example: true
+                  example: false
                 prize:
                   type: number
                   description: The prize or reward associated with the challenge.
-                  example: 100
+                  example: 0
               required:
                 - group
                 - name
                 - shortName
-                - summary
-                - description
-                - official
-                - prize
       responses:
         '201':
           description: Challenge created successfully
@@ -744,13 +740,8 @@ paths:
             application/json:
               example:
                 id: challenge123
-                group: group123
                 name: Fitness Challenge
-                shortName: Fit Challenge
-                summary: Join our fitness challenge and stay active!
-                description: This challenge aims to promote regular exercise and healthy habits.
-                official: true
-                prize: 100
+                active: true
         '400':
           description: Bad Request
           content:
@@ -789,6 +780,155 @@ paths:
                 id: challenge123
                 name: Fitness Challenge
                 active: true
+        '404':
+          description: Challenge not found
+          content:
+            application/json:
+              example:
+                error: Challenge with ID challenge123 not found
+    put:
+      summary: Update a challenge
+      description: Update the specified challenge by challenge ID.
+      tags:
+        - challenges
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+              name:
+                type: string
+                description: The new full name of the challenge.
+                example: Updated Challenge
+              summary:
+                type: string
+                description: The new challenge summary.
+              description:
+                type: string
+                description: The new challenge description.
+      responses:
+        '200':
+          description: Challenge updated successfully
+          content:
+            application/json:
+              example:
+                id: challenge123
+                name: Updated Challenge
+                active: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error: Invalid challenge data provided
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+        '404':
+          description: Challenge not found
+          content:
+            application/json:
+              example:
+                error: Challenge with ID challenge123 not found
+    delete:
+      summary: Delete a challenge
+      description: Delete the specified challenge by challenge ID.
+      tags:
+        - challenges
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '204':
+          description: Challenge deleted successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+        '404':
+          description: Challenge not found
+          content:
+            application/json:
+              example:
+                error: Challenge with ID challenge123 not found
+  /challenges/{challengeId}/join:
+    parameters:
+      - name: challengeId
+        in: path
+        description: ID of the challenge
+        required: true
+        schema:
+          type: string
+        example: challenge123
+    post:
+      summary: Join a challenge
+      description: Join the specified challenge.
+      tags:
+        - challenges
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Challenge joined successfully
+          content:
+            application/json:
+              example:
+                message: You have successfully joined the challenge
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+        '404':
+          description: Challenge not found
+          content:
+            application/json:
+              example:
+                error: Challenge with ID challenge123 not found
+  /challenges/{challengeId}/clone:
+    parameters:
+      - name: challengeId
+        in: path
+        description: ID of the challenge to clone
+        required: true
+        schema:
+          type: string
+        example: challenge123
+    post:
+      summary: Clone a challenge
+      description: Create a clone of the specified challenge by challenge ID.
+      tags:
+        - challenges
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '201':
+          description: Challenge cloned successfully
+          content:
+            application/json:
+              example:
+                id: clonedChallenge456
+                name: Cloned Challenge
+                active: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
         '404':
           description: Challenge not found
           content:
