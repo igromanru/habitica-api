@@ -64,6 +64,8 @@ paths:
         shown the Record Yesterday's Activity ("Check off any Dailies you did
         yesterday") screen and so it will immediately apply damage for
         incomplete due Dailies.
+      tags:
+        - user
       security:
         - userId: []
           apiToken: []
@@ -477,6 +479,89 @@ paths:
             application/json:
               example:
                 error: Group with ID group123 not found
+  /groups/{groupId}/chat:
+    parameters:
+      - name: groupId
+        in: path
+        description: ID of the group
+        required: true
+        schema:
+          type: string
+        example: group123
+    get:
+      summary: Get group chat messages
+      description: Retrieve the chat messages from the group's chat.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Chat messages retrieved successfully
+          content:
+            application/json:
+              example:
+                - id: chat456
+                  groupId: group123
+                  userId: user789
+                  message: Hello everyone!
+                  timestamp: 1645678900
+                - id: chat789
+                  groupId: group123
+                  userId: user456
+                  message: How are you doing?
+                  timestamp: 1645678920
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+    post:
+      summary: Send a chat message in a group
+      description: Send a chat message in the specified group's chat.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: The content of the chat message.
+                  example: Hello everyone!
+              required:
+                - message
+      responses:
+        '201':
+          description: Chat message sent successfully
+          content:
+            application/json:
+              example:
+                id: chat456
+                groupId: group123
+                userId: user789
+                message: Hello everyone!
+                timestamp: 1645678900
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error: Invalid chat message data provided
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
   /groups/party:
     get:
       summary: Get party information
@@ -600,6 +685,116 @@ paths:
               example:
                 success: false
                 message: Invalid input data
+  /challenges:
+    post:
+      summary: Create a challenge
+      description: Create a new challenge.
+      tags:
+        - challenges
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                group:
+                  type: string
+                  description: The UUID of the group associated with the challenge.
+                  example: group123
+                name:
+                  type: string
+                  description: The name of the challenge.
+                  example: Fitness Challenge
+                shortName:
+                  type: string
+                  description: The short name or abbreviation of the challenge.
+                  example: Fit Challenge
+                summary:
+                  type: string
+                  description: A brief summary of the challenge.
+                  example: Join our fitness challenge and stay active!
+                description:
+                  type: string
+                  description: The detailed description of the challenge.
+                  example: This challenge aims to promote regular exercise and healthy habits.
+                official:
+                  type: boolean
+                  description: Specifies whether the challenge is an official Habitica challenge.
+                  example: true
+                prize:
+                  type: number
+                  description: The prize or reward associated with the challenge.
+                  example: 100
+              required:
+                - group
+                - name
+                - shortName
+                - summary
+                - description
+                - official
+                - prize
+      responses:
+        '201':
+          description: Challenge created successfully
+          content:
+            application/json:
+              example:
+                id: challenge123
+                group: group123
+                name: Fitness Challenge
+                shortName: Fit Challenge
+                summary: Join our fitness challenge and stay active!
+                description: This challenge aims to promote regular exercise and healthy habits.
+                official: true
+                prize: 100
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error: Invalid challenge data provided
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+  /challenges/{challengeId}:
+    parameters:
+      - name: challengeId
+        in: path
+        description: ID of the challenge to retrieve
+        required: true
+        schema:
+          type: string
+        example: challenge123
+    get:
+      summary: Get challenge by ID
+      description: Retrieve information about a specific challenge by challenge ID.
+      tags:
+        - challenges
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Challenge retrieved successfully
+          content:
+            application/json:
+              example:
+                id: challenge123
+                name: Fitness Challenge
+                active: true
+        '404':
+          description: Challenge not found
+          content:
+            application/json:
+              example:
+                error: Challenge with ID challenge123 not found
   /user/webhook:
     get:
       summary: Get user webhooks
