@@ -141,6 +141,29 @@ paths:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
+  /user/anonymized:
+    get:
+      summary: Get anonymized user data
+      description: Retrieve anonymized data for the authenticated user.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Anonymized user data retrieved successfully
+          content:
+            application/json:
+              example:
+                id: user123
+                username: anonymousUser
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
   /user/{userId}:
     parameters:
       - name: userId
@@ -222,6 +245,28 @@ paths:
                   - message: Path `preferences.dayStart` (25) is more than the maximum allowed value (23).
                     path: preferences.dayStart
                     value: 25
+  /user/buy-health-potion:
+    post:
+      summary: Buy a health potion
+      description: Purchase a health potion for the authenticated user.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Health potion purchased successfully
+          content:
+            application/json:
+              example:
+                message: Health potion purchased successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
   /user/reroll:
     post:
       summary: Reroll user stats
@@ -1178,3 +1223,44 @@ paths:
             application/json:
               example:
                 error: Webhook with ID webhook123 not found
+  /models/{model}/paths:
+    parameters:
+      - name: model
+        in: path
+        description: Model name
+        required: true
+        schema:
+          type: string
+          enum:
+            - user
+            - group
+            - challenge
+            - tag
+            - habit
+            - daily
+            - todo
+            - reward
+        example: user
+    get:
+      summary: Get paths for a specific model
+      description: Retrieve the paths associated with the specified model.
+      responses:
+        '200':
+          description: Paths retrieved successfully
+          content:
+            application/json:
+              example:
+                - /models/model123/paths/path1
+                - /models/model123/paths/path2
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+        '404':
+          description: Model not found
+          content:
+            application/json:
+              example:
+                error: Model with name model123 not found
