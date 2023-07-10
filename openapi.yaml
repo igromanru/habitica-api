@@ -242,44 +242,6 @@ paths:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-  /v3/user/{userId}:
-    parameters:
-      - name: userId
-        in: path
-        description: ID of the user to retrieve information for
-        required: true
-        schema:
-          type: string
-        example: a1780f33-xxxx-40e9-b50a-404e4964a09a
-    get:
-      summary: Get user information
-      description: Retrieve information about a specific user.
-      tags:
-        - user
-      security:
-        - userId: []
-          apiToken: []
-      responses:
-        "200":
-          description: User information retrieved successfully
-          content:
-            application/json:
-              example:
-                _id: a1780f33-xxxx-40e9-b50a-404e4964a09a
-                username: my_username
-                email: my_email@example.com
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
-        "404":
-          description: User not found
-          content:
-            application/json:
-              example:
-                error: User with ID a1780f33-xxxx-40e9-b50a-404e4964a09a not found
   /v3/user/custom-day-start:
     post:
       summary: Set Custom Day Start time for user
