@@ -14,6 +14,8 @@ servers:
     description: Habitica API server
 tags: 
   - name: default
+  - name: members
+    description: Habitica members related requests
   - name: user
     description: User related requests
   - name: tasks
@@ -27,7 +29,7 @@ tags:
   - name: webhook
     description: Webhooks
   - name: news
-    description: News
+    description: Habitica news
 components:
   securitySchemes:
     userId:
@@ -118,7 +120,7 @@ paths:
   /v4/bug-report:
     post:
       summary: Submit a bug report
-      description: Submit a bug report for the Habitica application.
+      description: Submit a bug report for the Habitica application.      
       security:
         - userId: []
           apiToken: []
@@ -170,6 +172,8 @@ paths:
     get:
       summary: Get member by ID
       description: Retrieve information about a specific member by member ID.
+      tags:
+        - members
       responses:
         "200":
           description: Member retrieved successfully
@@ -835,7 +839,7 @@ paths:
               example:
                 success: false
                 message: Invalid input data
-  /challenges:
+  /v3/challenges:
     post:
       summary: Create a challenge
       description: Create a new challenge.
