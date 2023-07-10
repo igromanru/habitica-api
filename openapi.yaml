@@ -2,16 +2,15 @@
 openapi: 3.0.3
 info:
   title: Habitica API
-  version: 3.0.0
-  description: Habitica API v3 representation as OpenAPI spec
+  description: Habitica API representation as OpenAPI spec
   contact: 
     name: Specification repository
     url: https://github.com/igromanru/habitica-api
 externalDocs:
   url: https://habitica.com/apidoc/
-  description: Official Habitica V3 API Documentation
+  description: Official Habitica API Documentation
 servers:
-  - url: https://habitica.com/api/v3/
+  - url: https://habitica.com/api
     description: Habitica API server
 tags: 
   - name: default
@@ -27,6 +26,8 @@ tags:
     description: Challenges related requests
   - name: webhook
     description: Webhooks
+  - name: news
+    description: News
 components:
   securitySchemes:
     userId:
@@ -37,8 +38,38 @@ components:
       type: apiKey
       in: header
       name: x-api-key
+  schemas:
+    NewsPost:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the news article.
+        text:
+          type: string
+          description: The content or body of the news article.
+        credits:
+          type: string
+          description: The credits or source of the news article.
+        author:
+          type: string
+          description: The author of the news article.
+        publishDate:
+          type: string
+          format: date-time
+          description: The timestamp of the news article publication.
+        published:
+          type: boolean
+          description: Specifies whether the news article is published.
+      required:
+        - title
+        - text
+        - credits
+        - author
+        - publishDate
+        - published
 paths:
-  /status:
+  /v3/status:
     get:
       summary: Get Habitica API status
       description: Endpoint to get the current status of the Habitica API.
@@ -56,7 +87,7 @@ paths:
               example:
                 status: down
                 message: The Habitica API is currently experiencing issues
-  /cron:
+  /v3/cron:
     post:
       summary: Run cron
       description:
@@ -84,7 +115,50 @@ paths:
               example:
                 success: false
                 message: Invalid input data
-  /members/{memberId}:
+  /v4/bug-report:
+    post:
+      summary: Submit a bug report
+      description: Submit a bug report for the Habitica application.
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: The bug report message.
+                email:
+                  type: string
+                  format: email
+                  description: The email address of the bug reporter.
+              required:
+                - message
+                - email
+      responses:
+        '201':
+          description: Bug report submitted successfully
+          content:
+            application/json:
+              example:
+                message: Bug report submitted successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error: Invalid bug report data provided
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+  /v3/members/{memberId}:
     parameters:
       - name: memberId
         in: path
@@ -117,7 +191,7 @@ paths:
             application/json:
               example:
                 error: Member with ID member123 not found
-  /user:
+  /v3/user:
     get:
       summary: Get user information
       description: Retrieve information about the user.
@@ -141,7 +215,7 @@ paths:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-  /user/anonymized:
+  /v3/user/anonymized:
     get:
       summary: Get anonymized user data
       description: Retrieve anonymized data for the authenticated user.
@@ -164,7 +238,7 @@ paths:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-  /user/{userId}:
+  /v3/user/{userId}:
     parameters:
       - name: userId
         in: path
@@ -202,7 +276,7 @@ paths:
             application/json:
               example:
                 error: User with ID a1780f33-xxxx-40e9-b50a-404e4964a09a not found
-  /user/custom-day-start:
+  /v3/user/custom-day-start:
     post:
       summary: Set Custom Day Start time for user
       description: Set the custom day start time for a user.
@@ -245,7 +319,7 @@ paths:
                   - message: Path `preferences.dayStart` (25) is more than the maximum allowed value (23).
                     path: preferences.dayStart
                     value: 25
-  /user/buy-health-potion:
+  /v3/user/buy-health-potion:
     post:
       summary: Buy a health potion
       description: Purchase a health potion for the authenticated user.
@@ -267,7 +341,7 @@ paths:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-  /user/reroll:
+  /v3/user/reroll:
     post:
       summary: Reroll user stats
       description: Reroll a user (reset tasks) using the Fortify Potion.
@@ -289,7 +363,7 @@ paths:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-  /user/revive:
+  /v3/user/revive:
     post:
       summary: Revive user
       description: Revive the authenticated user, restoring health and removing any penalties.
@@ -311,7 +385,7 @@ paths:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-  /user/reset:
+  /v3/user/reset:
     post:
       summary: Reset user data
       description: Reset the authenticated user's data, removing all progress and starting over.
@@ -333,7 +407,7 @@ paths:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-  /user/rebirth:
+  /v3/user/rebirth:
       post:
         summary: Use Orb of Rebirth on user
         description: Rebirth the authenticated user, resetting their stats and granting rewards.
@@ -355,7 +429,38 @@ paths:
               application/json:
                 example:
                   error: Authentication failed. Please provide valid userId and apiToken.
-  /tasks/user:
+  /v4/user/purchase-history:
+    get:
+      summary: Get user purchase history
+      description: Retrieve the purchase history for the authenticated user.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Purchase history retrieved successfully
+          content:
+            application/json:
+              example:
+                - purchaseId: purchase123
+                  itemId: item456
+                  itemName: Health Potion
+                  price: 10
+                  timestamp: 1645678900
+                - purchaseId: purchase789
+                  itemId: item012
+                  itemName: Stamina Potion
+                  price: 15
+                  timestamp: 1645678920
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+  /v3/tasks/user:
     get:
       summary: Get user's tasks
       description: Retrieve all tasks for the authenticated user.
@@ -387,7 +492,7 @@ paths:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-  /groups:
+  /v3/groups:
     get:
       summary: Get user's groups
       description: Retrieve information about groups associated with the user.
@@ -486,7 +591,7 @@ paths:
             application/json:
               example:
                 error: You must be logged in to create a new group
-  /groups/{groupId}:
+  /v3/groups/{groupId}:
     get:
       summary: Get group information
       description: Retrieve information about a specific group.
@@ -524,7 +629,7 @@ paths:
             application/json:
               example:
                 error: Group with ID group123 not found
-  /groups/{groupId}/chat:
+  /v3/groups/{groupId}/chat:
     parameters:
       - name: groupId
         in: path
@@ -607,7 +712,7 @@ paths:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-  /groups/party:
+  /v3/groups/party:
     get:
       summary: Get party information
       description: Retrieve information about the user's party.
@@ -690,7 +795,7 @@ paths:
             application/json:
               example:
                 error: Party already exists for the user
-  /groups/party/quests:
+  /v3/groups/party/quests:
     post:
       summary: Create a new quest
       description: Endpoint to create a new quest for the party.
@@ -799,7 +904,7 @@ paths:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-  /challenges/{challengeId}:
+  /v3/challenges/{challengeId}:
     parameters:
       - name: challengeId
         in: path
@@ -906,7 +1011,7 @@ paths:
             application/json:
               example:
                 error: Challenge with ID challenge123 not found
-  /challenges/{challengeId}/join:
+  /v3/challenges/{challengeId}/join:
     parameters:
       - name: challengeId
         in: path
@@ -942,7 +1047,7 @@ paths:
             application/json:
               example:
                 error: Challenge with ID challenge123 not found
-  /challenges/{challengeId}/clone:
+  /v3/challenges/{challengeId}/clone:
     parameters:
       - name: challengeId
         in: path
@@ -980,7 +1085,7 @@ paths:
             application/json:
               example:
                 error: Challenge with ID challenge123 not found
-  /user/webhook:
+  /v3/user/webhook:
     get:
       summary: Get user webhooks
       description: Retrieve all webhooks registered by the authenticated user.
@@ -1085,7 +1190,7 @@ paths:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
-  /user/webhook/{id}:
+  /v3/user/webhook/{id}:
     parameters:
       - name: id
         in: path
@@ -1223,7 +1328,7 @@ paths:
             application/json:
               example:
                 error: Webhook with ID webhook123 not found
-  /models/{model}/paths:
+  /v3/models/{model}/paths:
     parameters:
       - name: model
         in: path
@@ -1264,3 +1369,205 @@ paths:
             application/json:
               example:
                 error: Model with name model123 not found
+  /v3/news:
+    get:
+      summary: Get latest Bailey announcement
+      description: Get latest Bailey announcement
+      tags:
+        - news
+      responses:
+        '200':
+          description: News article retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  html:
+                    type: string
+                    description: News article.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error: Invalid request parameters
+  /v4/news/read:
+    post:
+      summary: Mark the latest Bailey announcement as read
+      description: Mark the latest Bailey announcement as read
+      tags:
+        - news
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: News articles marked as read successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error: Invalid request data provided
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+  /v4/news:
+    post:
+      summary: Create news article
+      description: Create a new news article in the Habitica application.
+      tags:
+        - news
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewsPost'
+      responses:
+        '201':
+          description: News article created successfully
+          content:
+            application/json:
+              example:
+                id: article123
+                title: New Feature Release
+                text: We are excited to announce the release of a new feature that will enhance your Habitica experience.
+                credits: OpenAI
+                author: John Doe
+                publishDate: "2017-07-21T17:32:28Z"
+                published: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error: Invalid news article data provided
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+  /v4/news/{postId}:
+    parameters:
+      - name: postId
+        in: path
+        description: ID of the news post to retrieve
+        required: true
+        schema:
+          type: string
+        example: article123
+    get:
+      summary: Get news post by ID
+      description: Retrieve a news post by its ID.
+      tags:
+        - news
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: News post retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsPost'
+              example:
+                id: article123
+                title: New Feature Release
+                text: We are excited to announce the release of a new feature that will enhance your Habitica experience.
+                credits: OpenAI
+                author: John Doe
+                publishDate: "2017-07-21T17:32:28Z"
+                published: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+        '404':
+          description: News post not found
+          content:
+            application/json:
+              example:
+                error: News post with ID article123 not found
+    put:
+      summary: Update news post by ID
+      description: Update a news post by its ID.
+      tags:
+        - news
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewsPost'
+      responses:
+        '200':
+          description: News post updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsPost'
+              example:
+                id: article123
+                title: Updated Feature Release
+                text: Updated content of the news post.
+                credits: OpenAI
+                author: John Doe
+                publishDate: '2023-07-05T10:00:00Z'
+                published: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error: Invalid news post data provided
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+        '404':
+          description: News post not found
+          content:
+            application/json:
+              example:
+                error: News post with ID article123 not found
+
+    delete:
+      summary: Delete news post by ID
+      description: Delete a news post by its ID.
+      tags:
+        - news
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '204':
+          description: News post deleted successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+        '404':
+          description: News post not found
+          content:
+            application/json:
+              example:
+                error: News post with ID article123 not found
