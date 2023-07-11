@@ -70,6 +70,29 @@ components:
         - author
         - publishDate
         - published
+    StatAllocation:
+      type: object
+      properties:
+        stats:
+          type: object
+          properties:
+            int:
+              type: number
+              description: The number of points to allocate to INT (Intelligence) stat.
+            str:
+              type: number
+              description: The number of points to allocate to STR (Strength) stat.
+            con:
+              type: number
+              description: The number of points to allocate to CON (Constitution) stat.
+            per:
+              type: number
+              description: The number of points to allocate to PER (Perception) stat.
+          required:
+            - int
+            - str
+            - con
+            - per
 paths:
   /v3/status:
     get:
@@ -301,6 +324,98 @@ paths:
             application/json:
               example:
                 message: Health potion purchased successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+  /v3/user/allocate:
+    post:
+      summary: Allocate a single Stat Point 
+      description: Put a single Stat Point into a specific stat.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      parameters:
+        - name: stat
+          in: query
+          description: The stat to increase (str, con, int, or per)
+          required: true
+          schema:
+            type: string
+            enum: [str, con, int, per]
+      responses:
+        '200':
+          description: Stat Point allocated successfully
+          content:
+            application/json:
+              example:
+                message: Stat Point allocated successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error: Invalid request parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+  /v3/user/allocate-now:
+    post:
+      summary: Allocate all Stat Points
+      description: "Uses the user's chosen automatic allocation method, or if none, assigns all to STR. Note: will return success, even if there are 0 points to allocate."
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Stat points allocated successfully
+          content:
+            application/json:
+              example:
+                message: Stat points allocated successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+  /v3/user/allocate-bulk:
+    post:
+      summary: Allocate multiple Stat Points
+      description: Allocate multiple stat points for the authenticated user.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatAllocation'
+      responses:
+        '200':
+          description: Stat points allocated successfully
+          content:
+            application/json:
+              example:
+                message: Stat points allocated successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error: Invalid request data provided
         '401':
           description: Unauthorized
           content:
