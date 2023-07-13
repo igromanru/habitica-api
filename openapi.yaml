@@ -3,6 +3,7 @@ openapi: 3.0.3
 info:
   title: Habitica API
   description: Habitica API representation as OpenAPI spec
+  version: 1.0.0
   contact: 
     name: Specification repository
     url: https://github.com/igromanru/habitica-api
@@ -1032,16 +1033,16 @@ paths:
             schema:
               type: object
               properties:
-              name:
-                type: string
-                description: The new full name of the challenge.
-                example: Updated Challenge
-              summary:
-                type: string
-                description: The new challenge summary.
-              description:
-                type: string
-                description: The new challenge description.
+                name:
+                  type: string
+                  description: The new full name of the challenge.
+                  example: Updated Challenge
+                summary:
+                  type: string
+                  description: The new challenge summary.
+                description:
+                  type: string
+                  description: The new challenge description.
       responses:
         '200':
           description: Challenge updated successfully
