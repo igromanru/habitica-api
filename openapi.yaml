@@ -270,11 +270,13 @@ paths:
     post:
       summary: Cast a skill (spell) on yourself or a target
       description: |
-        Mage: fireball="Burst of Flames", mpheal="Ethereal Surge", earth="Earthquake", frost="Chilling Frost" \
-        Warrior: smash="Brutal Smash", defensiveStance="Defensive Stance", valorousPresence="Valorous Presence", intimidate="Intimidating Gaze" \
-        Rogue: pickPocket="Pickpocket", backStab="Backstab", toolsOfTrade="Tools of the Trade", stealth="Stealth" \
-        Healer: heal="Healing Light", protectAura="Protective Aura", brightness="Searing Brightness", healAll="Blessing" \
-        Transformation Items: snowball="Snowball", spookySparkles="Spooky Sparkles", seafoam="Seafoam", shinySeed="Shiny Seed"
+        Mage: fireball = "Burst of Flames", mpheal = "Ethereal Surge", earth = "Earthquake", frost = "Chilling Frost" \
+        Warrior: smash = "Brutal Smash", defensiveStance = "Defensive Stance", valorousPresence = "Valorous Presence", intimidate = "Intimidating Gaze" \
+        Rogue: pickPocket = "Pickpocket", backStab = "Backstab", toolsOfTrade = "Tools of the Trade", stealth = "Stealth" \
+        Healer: heal = "Healing Light", protectAura = "Protective Aura", brightness = "Searing Brightness", healAll = "Blessing" \
+        Transformation Items: snowball = "Snowball", spookySparkles = "Spooky Sparkles", seafoam = "Seafoam", shinySeed = "Shiny Seed"
+      tags:
+        - user
       security:
         - userId: []
           apiToken: []
