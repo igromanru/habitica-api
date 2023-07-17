@@ -266,6 +266,52 @@ paths:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
+  /v3/user/class/cast/{spellId}:
+    post:
+      summary: Cast a skill (spell) on yourself or a target
+      description: |
+        Mage: fireball="Burst of Flames", mpheal="Ethereal Surge", earth="Earthquake", frost="Chilling Frost" \
+        Warrior: smash="Brutal Smash", defensiveStance="Defensive Stance", valorousPresence="Valorous Presence", intimidate="Intimidating Gaze" \
+        Rogue: pickPocket="Pickpocket", backStab="Backstab", toolsOfTrade="Tools of the Trade", stealth="Stealth" \
+        Healer: heal="Healing Light", protectAura="Protective Aura", brightness="Searing Brightness", healAll="Blessing" \
+        Transformation Items: snowball="Snowball", spookySparkles="Spooky Sparkles", seafoam="Seafoam", shinySeed="Shiny Seed"
+      security:
+        - userId: []
+          apiToken: []
+      parameters:
+        - name: spellId
+          in: path
+          description: ID of the spell to cast
+          required: true
+          schema:
+            type: string
+            enum: [fireball, mpheal, earth, frost, smash, defensiveStance, valorousPresence, intimidate, pickPocket, backStab, toolsOfTrade, stealth, heal, protectAura, brightness, healAll, snowball, spookySparkles, seafoam, shinySeed]
+        - name: targetId
+          in: query
+          description: ID of the target (optional)
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Spell cast successfully
+          content:
+            application/json:
+              example:
+                message: Spell cast successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error: Invalid request parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
   /v3/user/custom-day-start:
     post:
       summary: Set Custom Day Start time for user
