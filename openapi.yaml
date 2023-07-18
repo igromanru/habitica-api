@@ -290,7 +290,7 @@ paths:
             enum: [fireball, mpheal, earth, frost, smash, defensiveStance, valorousPresence, intimidate, pickPocket, backStab, toolsOfTrade, stealth, heal, protectAura, brightness, healAll, snowball, spookySparkles, seafoam, shinySeed]
         - name: targetId
           in: query
-          description: ID of the target (optional)
+          description: User ID of the target (optional)
           required: false
           schema:
             type: string
