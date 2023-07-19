@@ -314,6 +314,45 @@ paths:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
+  /v3/user/change-class:
+    post:
+      summary: Change the class of the authenticated user
+      description: | 
+        User must be at least level 10. \
+        If "class" is defined and user.flags.classSelected is false it'll change the class. \
+        If user.preferences.disableClasses it'll enable classes, otherwise it sets user.flags.classSelected to false (costs 3 gems).
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      parameters:
+        - name: class
+          in: query
+          description: The new class to change to
+          required: true
+          schema:
+            type: string
+            enum: [warrior, rogue, wizard, healer]
+      responses:
+        '200':
+          description: User class changed successfully
+          content:
+            application/json:
+              example:
+                message: User class changed successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error: Invalid request parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
   /v3/user/custom-day-start:
     post:
       summary: Set Custom Day Start time for user
