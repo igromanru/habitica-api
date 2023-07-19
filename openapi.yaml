@@ -65,6 +65,21 @@ components:
           type: string
           description: The app version.
           example: "4.276.0"
+    ErrorMessageResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates the success status of the response.
+          example: false
+        error:
+          type: string
+          description: The error code or identifier.
+          example: "NotAuthorized"
+        message:
+          type: string
+          description: The error message.
+          example: "Missing authentication headers."
     LeaveChallengeRequest:
       type: object
       properties:
@@ -286,7 +301,7 @@ paths:
       description: Endpoint to get the current status of the Habitica API.
       responses:
         "200":
-          description: Habitica API status retrieved successfully
+          description: Habitica API status, 'up' if everything is ok
           content:
             application/json:
               example:
@@ -316,9 +331,8 @@ paths:
           description: Cron executed successfully
           content:
             application/json:
-              example:
-                success: true
-                message: Cron executed successfully
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "400":
           description: Bad Request
           content:
@@ -367,8 +381,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/members/{memberId}:
     parameters:
       - name: memberId
@@ -394,14 +408,14 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         "404":
           description: Member not found
           content:
             application/json:
-              example:
-                error: Member with ID member123 not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user:
     get:
       summary: Get user information
@@ -422,8 +436,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     delete:
       summary: Delete User Account [Danger Zone]
       description: |
@@ -451,8 +465,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/anonymized:
     get:
       summary: Get anonymized user data
@@ -473,8 +487,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/class/cast/{spellId}:
     post:
       summary: Cast a skill (spell) on yourself or a target
@@ -523,8 +537,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/change-class:
     post:
       summary: Change the class of the authenticated user
@@ -562,6 +576,46 @@ paths:
           description: Unauthorized
           content:
             application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/disable-classes:
+    post:
+      summary: Disable Classes
+      description: Disable the classes feature for the user.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: User classes disabled successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'                
+  /v3/user/messages:
+    delete:
+      summary: Delete User Messages
+      description: Delete all user messages.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Messages deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteMessagesResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
   /v3/user/messages/{id}:
@@ -585,7 +639,7 @@ paths:
         '200':
           description: |
            Message deleted successfully
-           Contains user.inbox.messages
+           Contains all user.inbox.messages
           content:
             application/json:
               schema:
@@ -594,36 +648,14 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Message not found
           content:
             application/json:
-              example:
-                error: Message with ID {id} not found
-  /v3/user/messages:
-    delete:
-      summary: Delete User Messages
-      description: Delete all user messages.
-      tags:
-        - user
-      security:
-        - userId: []
-          apiToken: []
-      responses:
-        '200':
-          description: Messages deleted successfully
-          content:
-            application/json:
               schema:
-                $ref: '#/components/schemas/DeleteMessagesResponse'
-      '401':
-        description: Unauthorized
-        content:
-          application/json:
-            example:
-              error: Authentication failed. Please provide valid userId and apiToken.
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/custom-day-start:
     post:
       summary: Set Custom Day Start time for user
@@ -684,8 +716,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/allocate:
     post:
       summary: Allocate a single Stat Point 
@@ -720,8 +752,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/allocate-now:
     post:
       summary: Allocate all Stat Points
@@ -742,8 +774,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/allocate-bulk:
     post:
       summary: Allocate multiple Stat Points
@@ -776,8 +808,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/reroll:
     post:
       summary: Reroll user stats
@@ -798,8 +830,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/revive:
     post:
       summary: Revive user
@@ -820,8 +852,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/rebirth:
       post:
         summary: Use Orb of Rebirth on user
@@ -864,8 +896,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/reset:
     post:
       summary: Reset user data
@@ -886,8 +918,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   
   /v3/tasks/user:
     get:
@@ -909,8 +941,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     post:
       summary: Create User Task
       description: Create a new task for the user.
@@ -943,8 +975,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/groups:
     get:
       summary: Get user's groups
@@ -1051,14 +1083,14 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         "404":
           description: Group not found
           content:
             application/json:
-              example:
-                error: Group with ID group123 not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/groups/{groupId}/chat:
     parameters:
       - name: groupId
@@ -1087,8 +1119,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     post:
       summary: Send a chat message in a group
       description: Send a chat message in the specified group's chat.
@@ -1127,8 +1159,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/groups/party:
     get:
       summary: Get party information
@@ -1155,8 +1187,8 @@ paths:
           description: Party not found
           content:
             application/json:
-              example:
-                error: Party not found for the user
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     post:
       summary: Create a new party
       description: Endpoint to create a new party for the user.
@@ -1308,8 +1340,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/challenges/user:
     get:
       summary: Get challenges for a user
@@ -1362,8 +1394,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/challenges/{challengeId}:
     parameters:
       - name: challengeId
@@ -1437,8 +1469,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Challenge not found
           content:
@@ -1464,8 +1496,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Challenge not found
           content:
@@ -1500,8 +1532,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Challenge not found
           content:
@@ -1542,8 +1574,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Challenge not found
           content:
@@ -1578,8 +1610,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Challenge not found
           content:
@@ -1615,8 +1647,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Challenge not found
           content:
@@ -1643,8 +1675,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     post:
       summary: Create user webhook
       description: "Create a new webhook for the authenticated user. (Possible types: taskActivity, groupChatReceived, userActivity, questActivity)"
@@ -1719,8 +1751,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/webhook/{id}:
     parameters:
       - name: id
@@ -1749,14 +1781,14 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         "404":
           description: Webhook not found
           content:
             application/json:
-              example:
-                error: Webhook with ID webhook123 not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     put:
       summary: Update user webhook by ID
       description: Update information of a specific webhook by webhook ID.
@@ -1824,14 +1856,14 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         "404":
           description: Webhook not found
           content:
             application/json:
-              example:
-                error: Webhook with ID webhook123 not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     delete:
       summary: Delete user webhook by ID
       description: Delete a specific webhook by webhook ID.
@@ -1847,14 +1879,14 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         "404":
           description: Webhook not found
           content:
             application/json:
-              example:
-                error: Webhook with ID webhook123 not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/models/{model}/paths:
     parameters:
       - name: model
@@ -1887,14 +1919,14 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Model not found
           content:
             application/json:
-              example:
-                error: Model with name model123 not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/news:
     get:
       summary: Get latest Bailey announcement
@@ -1936,8 +1968,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v4/news:
     post:
       summary: Create news article
@@ -1970,8 +2002,8 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v4/news/{postId}:
     parameters:
       - name: postId
@@ -2000,14 +2032,14 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: News post not found
           content:
             application/json:
-              example:
-                error: News post with ID article123 not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     put:
       summary: Update news post by ID
       description: Update a news post by its ID.
@@ -2039,14 +2071,14 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: News post not found
           content:
             application/json:
-              example:
-                error: News post with ID article123 not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
 
     delete:
       summary: Delete news post by ID
@@ -2063,11 +2095,11 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: News post not found
           content:
             application/json:
-              example:
-                error: News post with ID article123 not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
