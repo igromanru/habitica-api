@@ -80,6 +80,12 @@ components:
           type: string
           description: The error message.
           example: "Missing authentication headers."
+    NewsResponse:
+      type: object
+      properties:
+        html:
+          type: string
+          description: Latest Bailey announcement as HTML.
     LeaveChallengeRequest:
       type: object
       properties:
@@ -1929,22 +1935,16 @@ paths:
   /v3/news:
     get:
       summary: Get latest Bailey announcement
-      description: Get latest Bailey announcement
+      description: Get latest Bailey announcement as HTML
       tags:
         - news
       responses:
         '200':
-          description: News article retrieved successfully
+          description: News article as HTML
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: '#/components/schemas/NewsResponse'
   /v4/news/read:
     post:
       summary: Mark the latest Bailey announcement as read
@@ -2005,18 +2005,12 @@ paths:
             schema:
               $ref: '#/components/schemas/NewsPost'
       responses:
-        '201':
+        '200':
           description: News article created successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
