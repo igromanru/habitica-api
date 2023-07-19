@@ -30,7 +30,9 @@ tags:
   - name: webhook
     description: Webhooks
   - name: news
-    description: Habitica news
+    description: Habitica News related requests
+  - name: notifications
+    description: Notifications related requests
 components:
   securitySchemes:
     userId:
@@ -2128,6 +2130,108 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: News post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/notifications/read:
+    post:
+      summary: Mark Notifications as Read
+      description: Mark all notifications as read.
+      tags:
+        - notifications
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Notifications marked as read successfully, returns user.notifications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/notifications/see:
+    post:
+      summary: Mark Notifications as Seen
+      description: Mark all notifications as seen.
+      tags:
+        - notifications
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Notifications marked as seen successfully, returns user.notifications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/notifications/{notificationId}/read:
+    parameters:
+      - name: notificationId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The ID of the notification to mark as read.
+    post:
+      summary: Mark Notification as Read
+      description: Mark a specific notification as read.
+      tags:
+        - notifications
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Notification marked as read successfully, returns user.notifications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/notifications/{notificationId}/see:
+    parameters:
+      - name: notificationId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The ID of the notification to mark as seen.
+    post:
+      summary: Mark Notification as Seen
+      description: Mark a specific notification as seen.
+      tags:
+        - notifications
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Notification marked as seen successfully, returns user.notifications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
