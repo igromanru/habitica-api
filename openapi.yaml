@@ -42,6 +42,37 @@ components:
       in: header
       name: x-api-key
   schemas:
+    DataResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates the success status of the response.
+        data:
+          type: object
+          description: The data object.
+          additionalProperties: true
+        notifications:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+          description: An array of notifications.
+        userV:
+          type: number
+          example: 4212
+        appVersion:
+          type: string
+          description: The app version.
+          example: "4.276.0"
+    LeaveChallengeRequest:
+      type: object
+      properties:
+        keep:
+          type: string
+          enum: [remove-all, keep-all]
+          default: keep-all
+          description: Specify whether to remove all or keep all challenge-related tasks upon leaving.
     NewsPost:
       type: object
       properties:
@@ -94,6 +125,160 @@ components:
             - str
             - con
             - per
+    UserTaskRequestBody:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The text to be displayed for the task.
+        type:
+          type: string
+          description: 'Task type, options are: "habit", "daily", "todo", "reward".'
+          enum:
+            - habit
+            - daily
+            - todo
+            - reward
+          example: habit
+        tags:
+          type: array
+          items:
+            type: string
+          description: Array of UUIDs of tags.
+        alias:
+          type: string
+          description: Alias to assign to task.
+        attribute:
+          type: string
+          description: "User's attribute to use, options are: \"str\", \"int\", \"per\", \"con\""
+          enum:
+            - str
+            - int
+            - per
+            - con
+          example: str
+        checklist:
+          type: array
+          items:
+            type: object
+            properties:
+              text:
+                type: string
+                description: The text description of the checklist item.
+              completed:
+                type: boolean
+                description: Indicates whether the checklist item is completed or not.
+          description: An array of checklist items.
+        collapseChecklist:
+          type: boolean
+          description: Determines if a checklist will be displayed.
+          example: false
+        notes:
+          type: string
+          description: Additional notes or details about the task.
+        date:
+          type: string
+          format: date-time
+          description: Due date to be shown in task list. Only valid for type "todo."
+        priority:
+          type: number
+          description: Difficulty, options are 0.1, 1, 1.5, 2; equivalent of Trivial, Easy, Medium, Hard.
+          example: 1
+          enum:
+            - 0.1
+            - 1
+            - 1.5
+            - 2
+        reminders:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              startDate:
+                type: string
+                format: date
+                example: "1/16/17"
+              time:
+                type: string
+                format: date
+                example: "1/16/17"
+          description: "Array of reminders, each an object that must include: a UUID, startDate and time."
+        frequency:
+          type: string
+          description: Values "weekly" and "monthly" enable use of the "repeat" field. All frequency values enable use of the "everyX" field. Value "monthly" enables use of the "weeksOfMonth" and "daysOfMonth" fields. Frequency is only valid for type "daily".
+          example: weekly
+          enum:
+            - daily
+            - weekly
+            - monthly
+            - yearly
+        repeat:
+          type: boolean
+          description: 'List of objects for days of the week, Days that are true will be repeated upon. Only valid for type "daily". Any days not specified will be marked as true. Days are: su, m, t, w, th, f, s. Value of frequency must be "weekly".'
+          example: true
+        everyX:
+          type: number
+          description: Value of frequency must be "daily", the number of days until this daily task is available again.
+          example: 1
+        streak:
+          type: number
+          description: Number of days that the task has consecutively been checked off. Only valid for type "daily".
+          example: 0
+        daysOfMonth:
+          type: array
+          items:
+            type: number
+          description: Array of integers. Only valid for type "daily".
+        weeksOfMonth:
+          type: array
+          items:
+            type: string
+          description: Array of integers. Only valid for type "daily".
+        startDate:
+          type: string
+          format: date
+          description: Date when the task will first become available. Only valid for type "daily".
+        up:
+          type: boolean
+          description: Only valid for type "habit" If true, enables the "+" under "Directions/Action" for "Good habits".
+          example: true
+        down:
+          type: boolean
+          description: Only valid for type "habit" If true, enables the "-" under "Directions/Action" for "Bad habits".
+          example: true
+        value:
+          type: number
+          description: Only valid for type "reward." The cost in gold of the reward. Should be greater then or equal to 0.
+          example: 0
+      required:
+        - text
+        - type
+    DeleteMessagesResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates the success status of the operation.
+        data:
+          type: object
+          description: An empty object for the "data" property.
+        notifications:
+          type: array
+          items:
+            type: string
+          description: An array of notifications.
+    DeleteUserRequest:
+      type: object
+      properties:
+        password:
+          type: string
+          description: The user's password for confirmation.
+        feedback:
+          type: string
+          description: Any additional feedback or reason for deleting the account.
 paths:
   /v3/status:
     get:
@@ -166,12 +351,12 @@ paths:
                 - message
                 - email
       responses:
-        '201':
+        '200':
           description: Bug report submitted successfully
           content:
             application/json:
-              example:
-                message: Bug report submitted successfully
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '400':
           description: Bad Request
           content:
@@ -203,10 +388,8 @@ paths:
           description: Member retrieved successfully
           content:
             application/json:
-              example:
-                id: member123
-                username: john_doe
-                displayName: John Doe
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "401":
           description: Unauthorized
           content:
@@ -233,11 +416,38 @@ paths:
           description: User information retrieved successfully
           content:
             application/json:
-              example:
-                _id: a1780f33-xxxx-40e9-b50a-404e4964a09a
-                username: my_username
-                email: my_email@example.com
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "401":
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+    delete:
+      summary: Delete User Account [Danger Zone]
+      description: |
+        ## !!!Danger Zone!!!
+        Delete the user account associated with the authenticated user.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteUserRequest'
+      responses:
+        '200':
+          description: User account deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
           description: Unauthorized
           content:
             application/json:
@@ -257,9 +467,8 @@ paths:
           description: Anonymized user data retrieved successfully
           content:
             application/json:
-              example:
-                id: user123
-                username: anonymousUser
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
@@ -297,11 +506,13 @@ paths:
             format: uuid
       responses:
         '200':
-          description: Spell cast successfully
+          description: |
+            Spell cast successfully. \
+            Will return the modified targets. For party members only the necessary fields will be populated. The user is always returned.
           content:
             application/json:
-              example:
-                message: Spell cast successfully
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '400':
           description: Bad Request
           content:
@@ -339,8 +550,8 @@ paths:
           description: User class changed successfully
           content:
             application/json:
-              example:
-                message: User class changed successfully
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '400':
           description: Bad Request
           content:
@@ -353,6 +564,66 @@ paths:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
+  /v3/user/messages/{id}:
+    delete:
+      summary: Delete User Message
+      description: Delete a user message by its ID.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of the message to delete
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: |
+           Message deleted successfully
+           Contains user.inbox.messages
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+        '404':
+          description: Message not found
+          content:
+            application/json:
+              example:
+                error: Message with ID {id} not found
+  /v3/user/messages:
+    delete:
+      summary: Delete User Messages
+      description: Delete all user messages.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Messages deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteMessagesResponse'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            example:
+              error: Authentication failed. Please provide valid userId and apiToken.
   /v3/user/custom-day-start:
     post:
       summary: Set Custom Day Start time for user
@@ -379,11 +650,8 @@ paths:
           description: Custom day start time set successfully
           content:
             application/json:
-              example:
-                success: true
-                data:
-                  message: Your custom day start has changed.
-                notifications: []
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "400":
           description: Bad Request
           content:
@@ -410,8 +678,8 @@ paths:
           description: Health potion purchased successfully
           content:
             application/json:
-              example:
-                message: Health potion purchased successfully
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
@@ -440,8 +708,8 @@ paths:
           description: Stat Point allocated successfully
           content:
             application/json:
-              example:
-                message: Stat Point allocated successfully
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '400':
           description: Bad Request
           content:
@@ -468,8 +736,8 @@ paths:
           description: Stat points allocated successfully
           content:
             application/json:
-              example:
-                message: Stat points allocated successfully
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
@@ -496,8 +764,8 @@ paths:
           description: Stat points allocated successfully
           content:
             application/json:
-              example:
-                message: Stat points allocated successfully
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '400':
           description: Bad Request
           content:
@@ -524,8 +792,8 @@ paths:
           description: User stats rerolled successfully
           content:
             application/json:
-              example:
-                message: User stats rerolled successfully
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
@@ -546,30 +814,8 @@ paths:
           description: User revived successfully
           content:
             application/json:
-              example:
-                message: User successfully revived
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
-  /v3/user/reset:
-    post:
-      summary: Reset user data
-      description: Reset the authenticated user's data, removing all progress and starting over.
-      tags:
-        - user
-      security:
-        - userId: []
-          apiToken: []
-      responses:
-        '200':
-          description: User data reset successful
-          content:
-            application/json:
-              example:
-                message: User data reset successfully
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
@@ -590,8 +836,8 @@ paths:
             description: User rebirth successful
             content:
               application/json:
-                example:
-                  message: User rebirth completed successfully
+                schema:
+                  $ref: '#/components/schemas/DataResponse'
           '401':
             description: Unauthorized
             content:
@@ -612,23 +858,37 @@ paths:
           description: Purchase history retrieved successfully
           content:
             application/json:
-              example:
-                - purchaseId: purchase123
-                  itemId: item456
-                  itemName: Health Potion
-                  price: 10
-                  timestamp: 1645678900
-                - purchaseId: purchase789
-                  itemId: item012
-                  itemName: Stamina Potion
-                  price: 15
-                  timestamp: 1645678920
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
             application/json:
               example:
                 error: Authentication failed. Please provide valid userId and apiToken.
+  /v3/user/reset:
+    post:
+      summary: Reset user data
+      description: Reset the authenticated user's data, removing all progress and starting over.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: User data reset successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+  
   /v3/tasks/user:
     get:
       summary: Get user's tasks
@@ -643,19 +903,43 @@ paths:
           description: Tasks retrieved successfully
           content:
             application/json:
-              example:
-                dailies:
-                  - id: daily123
-                    text: Complete daily exercise
-                    completed: false
-                  - id: daily456
-                    text: Read 30 minutes
-                    completed: true
-                todos:
-                  - id: todo789
-                    text: Buy groceries
-                    completed: false
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "401":
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+    post:
+      summary: Create User Task
+      description: Create a new task for the user.
+      tags:
+        - tasks
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTaskRequestBody'
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
           description: Unauthorized
           content:
             application/json:
@@ -702,16 +986,8 @@ paths:
           description: User's groups retrieved successfully
           content:
             application/json:
-              example:
-                data:
-                  - id: a1780f33-xxxx-40e9-b50a-404e4964a09a
-                    name: Group One
-                    type: party
-                  - id: a1780f33-xxyy-40e9-b50a-404e4964a09a
-                    name: Group Two
-                    type: guild
-                total: 2
-                page: 1
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "401":
           description: Unauthorized
           content:
@@ -729,22 +1005,9 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: My Group
-                type:
-                  type: string
-                  enum:
-                    - party
-                    - guilds
-                    - privateGuilds
-                    - publicGuilds
-                    - tavern
-                  example: party
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
       responses:
         "201":
           description: Group created successfully
@@ -782,10 +1045,8 @@ paths:
           description: Group information retrieved successfully
           content:
             application/json:
-              example:
-                id: a1780f33-gggg-40e9-b50a-404e4964a09a
-                name: Example Group
-                type: guild
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "401":
           description: Unauthorized
           content:
@@ -820,17 +1081,8 @@ paths:
           description: Chat messages retrieved successfully
           content:
             application/json:
-              example:
-                - id: chat456
-                  groupId: group123
-                  userId: user789
-                  message: Hello everyone!
-                  timestamp: 1645678900
-                - id: chat789
-                  groupId: group123
-                  userId: user456
-                  message: How are you doing?
-                  timestamp: 1645678920
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
@@ -863,12 +1115,8 @@ paths:
           description: Chat message sent successfully
           content:
             application/json:
-              example:
-                id: chat456
-                groupId: group123
-                userId: user789
-                message: Hello everyone!
-                timestamp: 1645678900
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '400':
           description: Bad Request
           content:
@@ -895,12 +1143,8 @@ paths:
           description: Party information retrieved successfully
           content:
             application/json:
-              example:
-                name: The Party
-                leader: a1780f33-xxxx-40e9-b50a-404e4964a09a
-                members:
-                  - a1780f33-xxxx-40e9-b50a-404e4964a09a
-                  - a1780f33-yyyy-40e9-b50a-404e4964a09a
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "401":
           description: Unauthorized
           content:
@@ -946,12 +1190,8 @@ paths:
           description: Party created successfully
           content:
             application/json:
-              example:
-                name: My Party
-                leader: a1780f33-xxxx-40e9-b50a-404e4964a09a
-                members:
-                  - a1780f33-xxxx-40e9-b50a-404e4964a09a
-                  - a1780f33-yyyy-40e9-b50a-404e4964a09a
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "401":
           description: Unauthorized
           content:
@@ -994,9 +1234,8 @@ paths:
           description: Quest created successfully
           content:
             application/json:
-              example:
-                success: true
-                message: Quest created successfully
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "400":
           description: Bad Request
           content:
@@ -1057,10 +1296,8 @@ paths:
           description: Challenge created successfully
           content:
             application/json:
-              example:
-                id: challenge123
-                name: Fitness Challenge
-                active: true
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '400':
           description: Bad Request
           content:
@@ -1120,7 +1357,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
@@ -1135,6 +1372,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
         example: challenge123
     get:
       summary: Get challenge by ID
@@ -1149,10 +1387,8 @@ paths:
           description: Challenge retrieved successfully
           content:
             application/json:
-              example:
-                id: challenge123
-                name: Fitness Challenge
-                active: true
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '404':
           description: Challenge not found
           content:
@@ -1189,10 +1425,8 @@ paths:
           description: Challenge updated successfully
           content:
             application/json:
-              example:
-                id: challenge123
-                name: Updated Challenge
-                active: true
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '400':
           description: Bad Request
           content:
@@ -1220,8 +1454,12 @@ paths:
         - userId: []
           apiToken: []
       responses:
-        '204':
+        '200':
           description: Challenge deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
@@ -1256,8 +1494,8 @@ paths:
           description: Challenge joined successfully
           content:
             application/json:
-              example:
-                message: You have successfully joined the challenge
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
@@ -1270,6 +1508,48 @@ paths:
             application/json:
               example:
                 error: Challenge with ID challenge123 not found
+  /v3/challenges/{challengeId}/leave:
+    parameters:
+        - name: challengeId
+          in: path
+          description: ID of the challenge to leave
+          required: true
+          schema:
+            type: string
+            format: uuid
+    post:
+      summary: Leave Challenge
+      description: Leave a challenge by its ID.
+      tags:
+        - challenges
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaveChallengeRequest'
+      responses:
+        '200':
+          description: Successfully left the challenge
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
+        '404':
+          description: Challenge not found
+          content:
+            application/json:
+              example:
+                error: Challenge with ID {challengeId} not found
   /v3/challenges/{challengeId}/clone:
     parameters:
       - name: challengeId
@@ -1288,14 +1568,12 @@ paths:
         - userId: []
           apiToken: []
       responses:
-        '201':
+        '200':
           description: Challenge cloned successfully
           content:
             application/json:
-              example:
-                id: clonedChallenge456
-                name: Cloned Challenge
-                active: true
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
@@ -1310,13 +1588,13 @@ paths:
                 error: Challenge with ID challenge123 not found
   /v3/challenges/{challengeId}/export/csv:
     parameters:
-          - name: challengeId
-            in: path
-            description: ID of the challenge to export
-            required: true
-            schema:
-              type: string
-            example: challenge123
+      - name: challengeId
+        in: path
+        description: ID of the challenge to export
+        required: true
+        schema:
+          type: string
+        example: challenge123
     get:
       summary: Export Challenge to CSV
       description: Export the specified challenge to a CSV file.
@@ -1359,13 +1637,8 @@ paths:
           description: Webhooks retrieved successfully
           content:
             application/json:
-              example:
-                - id: webhook123
-                  url: https://example.com/webhook/endpoint
-                  event: task.completed
-                - id: webhook456
-                  url: https://example.com/webhook/endpoint2
-                  event: task.updated
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "401":
           description: Unauthorized
           content:
@@ -1434,10 +1707,8 @@ paths:
           description: Webhook created successfully
           content:
             application/json:
-              example:
-                id: webhook123
-                url: https://example.com/webhook/endpoint
-                event: task.completed
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "400":
           description: Bad Request
           content:
@@ -1472,10 +1743,8 @@ paths:
           description: Webhook retrieved successfully
           content:
             application/json:
-              example:
-                id: webhook123
-                url: https://example.com/webhook/endpoint
-                event: task.completed
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "401":
           description: Unauthorized
           content:
@@ -1543,10 +1812,8 @@ paths:
           description: Webhook updated successfully
           content:
             application/json:
-              example:
-                id: webhook123
-                url: https://example.com/webhook/new-endpoint
-                event: task.updated
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "400":
           description: Bad Request
           content:
@@ -1614,9 +1881,8 @@ paths:
           description: Paths retrieved successfully
           content:
             application/json:
-              example:
-                - /models/model123/paths/path1
-                - /models/model123/paths/path2
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
@@ -1641,11 +1907,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  html:
-                    type: string
-                    description: News article.
+                $ref: '#/components/schemas/DataResponse'
         '400':
           description: Bad Request
           content:
@@ -1696,14 +1958,8 @@ paths:
           description: News article created successfully
           content:
             application/json:
-              example:
-                id: article123
-                title: New Feature Release
-                text: We are excited to announce the release of a new feature that will enhance your Habitica experience.
-                credits: OpenAI
-                author: John Doe
-                publishDate: "2017-07-21T17:32:28Z"
-                published: true
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '400':
           description: Bad Request
           content:
@@ -1739,15 +1995,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NewsPost'
-              example:
-                id: article123
-                title: New Feature Release
-                text: We are excited to announce the release of a new feature that will enhance your Habitica experience.
-                credits: OpenAI
-                author: John Doe
-                publishDate: "2017-07-21T17:32:28Z"
-                published: true
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
@@ -1780,15 +2028,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NewsPost'
-              example:
-                id: article123
-                title: Updated Feature Release
-                text: Updated content of the news post.
-                credits: OpenAI
-                author: John Doe
-                publishDate: '2023-07-05T10:00:00Z'
-                published: true
+                $ref: '#/components/schemas/DataResponse'
         '400':
           description: Bad Request
           content:
