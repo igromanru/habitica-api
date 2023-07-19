@@ -375,8 +375,8 @@ paths:
           description: Bad Request
           content:
             application/json:
-              example:
-                error: Invalid bug report data provided
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
@@ -531,8 +531,8 @@ paths:
           description: Bad Request
           content:
             application/json:
-              example:
-                error: Invalid request parameters
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
@@ -570,8 +570,8 @@ paths:
           description: Bad Request
           content:
             application/json:
-              example:
-                error: Invalid request parameters
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
@@ -746,8 +746,8 @@ paths:
           description: Bad Request
           content:
             application/json:
-              example:
-                error: Invalid request parameters
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
@@ -802,8 +802,8 @@ paths:
           description: Bad Request
           content:
             application/json:
-              example:
-                error: Invalid request data provided
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
@@ -969,8 +969,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
@@ -1153,8 +1152,8 @@ paths:
           description: Bad Request
           content:
             application/json:
-              example:
-                error: Invalid chat message data provided
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
@@ -1334,8 +1333,8 @@ paths:
           description: Bad Request
           content:
             application/json:
-              example:
-                error: Invalid challenge data provided
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
@@ -1463,8 +1462,8 @@ paths:
           description: Bad Request
           content:
             application/json:
-              example:
-                error: Invalid challenge data provided
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
@@ -1944,8 +1943,8 @@ paths:
           description: Bad Request
           content:
             application/json:
-              example:
-                error: Invalid request parameters
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v4/news/read:
     post:
       summary: Mark the latest Bailey announcement as read
@@ -1958,12 +1957,32 @@ paths:
       responses:
         '200':
           description: News articles marked as read successfully
-        '400':
-          description: Bad Request
           content:
             application/json:
-              example:
-                error: Invalid request data provided
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/news/tell-me-later:
+    post:
+      summary: Allow latest Bailey announcement to be read later
+      description: Add a notification to allow viewing of the latest "New Stuff by Bailey" message. Prevent this specific Bailey message from appearing automatically
+      tags:
+        - news
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Request to be notified later successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
@@ -1996,8 +2015,8 @@ paths:
           description: Bad Request
           content:
             application/json:
-              example:
-                error: Invalid news article data provided
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
@@ -2028,12 +2047,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+        
         '404':
           description: News post not found
           content:
@@ -2065,8 +2091,8 @@ paths:
           description: Bad Request
           content:
             application/json:
-              example:
-                error: Invalid news post data provided
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
@@ -2079,7 +2105,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
-
     delete:
       summary: Delete news post by ID
       description: Delete a news post by its ID.
@@ -2089,8 +2114,18 @@ paths:
         - userId: []
           apiToken: []
       responses:
-        '204':
+        '200':
           description: News post deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
