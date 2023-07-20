@@ -431,6 +431,161 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/members/{memberId}/achievements:
+    parameters:
+        - name: memberId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the member whose achievements are to be retrieved.
+    get:
+      summary: Get member achievements object
+      description: et a list of achievements of the requested member, grouped by basic / seasonal / special.
+      responses:
+        '200':
+          description: Successfully retrieved member achievements
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Member not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/challenges/{challengeId}/members:
+    parameters:
+      - name: challengeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The UUID of the challenge whose members are to be retrieved.
+    get:
+      summary: Get members for a challenge
+      description: With a limit of 30 member per request (by default). To get all members run requests against this routes (updating the lastId query parameter) until you get less than 30 results. BETA You can also use ?includeAllMembers=true. This option is currently in BETA and may be removed in future. Its use is discouraged and its performances are not optimized especially for large challenges.
+      tags:
+        - members
+      parameters:
+        - name: lastId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: Query parameter to specify the last member returned in a previous request to this route and get the next batch of results.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 60
+            default: 30
+          description: BETA Query parameter to specify the number of results to return. Max is 60.
+        - name: includeTasks
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: BETA Query parameter - If 'true' then include challenge tasks of each member.
+        - name: includeAllPublicFields
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: If set to true then all public fields for members will be returned (similar to when making a request for a single member).
+      responses:
+        '200':
+          description: Successfully retrieved challenge members
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Challenge not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/members:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The UUID of the group whose members are to be retrieved.
+    get:
+      summary: Get members for a group
+      description: With a limit of 30 member per request (by default). To get all members run requests against this routes (updating the lastId query parameter) until you get less than 30 results (or the specified limit).
+      tags:
+        - members
+      parameters:
+        - name: lastId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: Query parameter to specify the last member returned in a previous request to this route and get the next batch of results.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 60
+            default: 30
+          description: BETA Query parameter to specify the number of results to return. Max is 60.
+        - name: includeTasks
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: BETA Query parameter - If 'true' then include challenge tasks of each member.
+        - name: includeAllPublicFields
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: If set to true then all public fields for members will be returned (similar to when making a request for a single member).
+      responses:
+        '200':
+          description: Successfully retrieved group members
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Group not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user:
     get:
       summary: Get user information
