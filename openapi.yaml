@@ -67,6 +67,14 @@ components:
           type: string
           description: The app version.
           example: "4.276.0"
+    DataWithMessageResponse:
+      allOf:
+      - $ref: '#/components/schemas/DataResponse'
+      - type: object
+        properties:
+          message:
+            type: string
+            description: Success message.
     ErrorMessageResponse:
       type: object
       properties:
@@ -279,6 +287,14 @@ components:
       required:
         - text
         - type
+    PurchaseItemRequest:
+      type: object
+      properties:
+        quantity:
+          type: integer
+          minimum: 1
+          default: 1
+          description: Count of items to buy. Defaults to 1 and is ignored for items where quantity is irrelevant.
     DeleteMessagesResponse:
       type: object
       properties:
@@ -697,6 +713,225 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/sleep:
+    post:
+      summary: Make the user start / stop sleeping (resting in the Inn)
+      description: Toggles the sleep key under user preference true and false.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: '"data" current user.preferences.sleep state (true/false)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/mark-pms-read:
+    post:
+      summary: Mark Private Messages as read
+      description: Mark all private messages as read for the current user.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Returns user.inbox.newMessages
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/open-mystery-item:
+    post:
+      summary: Open the Mystery Item box
+      description: Open a mystery item box.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Returns Obtained items in data and a success message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataWithMessageResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/purchase/{type}/{key}:
+    parameters:
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum: [gems, eggs, hatchingPotions, premiumHatchingPotions, food, quests, gear, pets]
+          default: food
+        description: Type of item to purchase. Can be gems, eggs, hatchingPotions, premiumHatchingPotions, food, quests, gear, or pets.
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Item's key (use "gem" for purchasing gems).
+    post:
+      summary: Purchase Item
+      description: Purchase an item of the specified type using the provided key.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseItemRequest'
+      responses:
+        '200':
+          description: Item purchased successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataWithMessageResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/purchase-hourglass/{type}/{key}:
+    parameters:
+      - name: type
+        in: path
+        required: true
+        schema:
+        type: string
+        enum: [pets, mounts]
+        default: pets
+        description: The type of item to purchase.
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The key for the mount/pet.
+    post:
+      summary: Purchase Hourglass-purchasable item
+      description: Purchases an Hourglass-purchasable item. Does not include Mystery Item sets (use /api/v3/user/buy-mystery-set/{key}).
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseItemRequest'
+      responses:
+        '200':
+          description: Hourglass item purchased successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataWithMessageResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/read-card/{cardType}:
+    parameters:
+      - name: cardType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum: [birthday, greeting, nye, thankyou, valentine]
+          description: Type of card to read
+        description: The of card to read (e.g. birthday, greeting, nye, thankyou, valentine).
+    post:
+      summary: Read a card
+      description: Read a card of the specified type for the current user.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Returns user.items.special, user.flags.cardReceived and a success message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataWithMessageResponse'
         '400':
           description: Bad Request
           content:
