@@ -90,6 +90,19 @@ components:
           type: string
           description: The error message.
           example: "Missing authentication headers."
+    PrivateMessageRequest:
+      type: object
+      required:
+        - message
+        - toUserId
+      properties:
+        message:
+          type: string
+          description: The private message to be sent.
+        toUserId:
+          type: string
+          format: uuid
+          description: The UUID of the user to whom the message will be sent.
     NewsResponse:
       type: object
       properties:
@@ -449,16 +462,18 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/members/{memberId}/achievements:
     parameters:
-        - name: memberId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-          description: The ID of the member whose achievements are to be retrieved.
+      - name: memberId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The ID of the member whose achievements are to be retrieved.
     get:
       summary: Get member achievements object
       description: et a list of achievements of the requested member, grouped by basic / seasonal / special.
+      tags:
+        - members
       responses:
         '200':
           description: Successfully retrieved member achievements
@@ -474,6 +489,40 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Member not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/members/send-private-message:
+    post:
+      summary: Send Private Message
+      description: Send a private message to another user.
+      tags:
+        - members
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrivateMessageRequest'
+      responses:
+        '200':
+          description: Private message sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
