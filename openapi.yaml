@@ -858,10 +858,10 @@ paths:
         in: path
         required: true
         schema:
-        type: string
-        enum: [pets, mounts]
-        default: pets
-        description: The type of item to purchase.
+          type: string
+          enum: [pets, mounts]
+          default: pets
+          description: The type of item to purchase.
       - name: key
         in: path
         required: true
