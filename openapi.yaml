@@ -338,6 +338,35 @@ components:
           type: number
           description: The hour number (0-23) for the day to begin. If not supplied, it will default to 0.
           default: 0
+    CreateGroupRequest:
+      type: object
+      required:
+        - name
+        - type
+        - privacy
+      properties:
+        name:
+          type: string
+          description: The name of the new group.
+        type:
+          type: string
+          enum: ['guild', 'party']
+          example: guild
+          description: Type of group (guild or party)
+        privacy:
+          type: string
+          enum: ['private', 'public']
+          example: public
+          description: Privacy of group (party MUST be private)
+    AddManagerRequest:
+      type: object
+      required:
+        - managerId
+      properties:
+        managerId:
+          type: string
+          format: uuid
+          description: The UUID of the user to be added as a manager.
 paths:
   /v3/status:
     get:
@@ -1471,11 +1500,14 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: You must be logged in to access this information
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     post:
-      summary: Create a new group
-      description: Endpoint to create a new group.
+      summary: Create a Group
+      description: | 
+        Create a group in Habitica. \
+        Possible types: `guild` or `party` \
+        Possible privacy: `public` or `private` (party MUST be private)
       tags:
         - groups
       security:
@@ -1484,24 +1516,28 @@ paths:
       requestBody:
         required: true
         content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGroupRequest'
       responses:
-        "201":
+        '201':
           description: Group created successfully
           content:
             application/json:
-              example:
-                id: a1780f33-gggg-40e9-b50a-404e4964a09a
-                name: My Group
-                type: party
-        "401":
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: You must be logged in to create a new group
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/groups/{groupId}:
     get:
       summary: Get group information
@@ -1628,10 +1664,52 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: You must be logged in to access this information
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         "404":
           description: Party not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/add-manager:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The UUID of the group to which the new manager will be added.
+    post:
+      summary: Add Group Manager
+      description: Add a new manager to the specified group.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddManagerRequest'
+      responses:
+        '200':
+          description: Manager added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -1647,7 +1725,7 @@ paths:
         description: The UUID of the group (party) for which the quest will be accepted.
     post:
       summary: Accept Group Quest
-      description: Accept a group (party) quest in the specified group.
+      description: Accept a pending group (party) quest.
       tags:
         - groups
       security:
@@ -1689,7 +1767,7 @@ paths:
         description: The UUID of the group (party) for which the quest will be rejected.
     post:
       summary: Reject Group Quest
-      description: Reject a group quest (party) in the specified group.
+      description: Reject a pending group (party) quest.
       tags:
         - groups
       security:
@@ -1714,6 +1792,94 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (Group not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/quests/cancel:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The UUID of the group for which the active quest will be canceled.
+    post:
+      summary: Cancel Group Quest
+      description: | 
+        Cancel current not active quest. \
+        **Required Permissions**: `QuestLeader` or `GroupLeader`.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Group quest canceled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (Group not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/quests/abort:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The UUID of the group for which the active quest will be aborted.
+    post:
+      summary: Abort Group Quest
+      description: | 
+        Abort the active group quest. \
+        **Required Permissions**: `QuestLeader` or `GroupLeader`.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Group quest aborted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse' 
         '404':
           description: Not Found (Group not found)
           content:
