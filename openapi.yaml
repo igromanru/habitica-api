@@ -1636,92 +1636,90 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/quests/accept:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The UUID of the group (party) for which the quest will be accepted.
     post:
-      summary: Create a new party
-      description: Endpoint to create a new party for the user.
+      summary: Accept Group Quest
+      description: Accept a group (party) quest in the specified group.
       tags:
-        - party
+        - groups
       security:
         - userId: []
           apiToken: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: My Party
-                leader:
-                  type: string
-                  example: a1780f33-xxxx-40e9-b50a-404e4964a09a
-                members:
-                  type: array
-                  items:
-                    type: string
-                  example:
-                    - a1780f33-xxxx-40e9-b50a-404e4964a09a
-                    - a1780f33-yyyy-40e9-b50a-404e4964a09a
       responses:
-        "201":
-          description: Party created successfully
+        '200':
+          description: Group quest accepted successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataResponse'
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              example:
-                error: You must be logged in to create a new party
-        "409":
-          description: Conflict
-          content:
-            application/json:
-              example:
-                error: Party already exists for the user
-  /v3/groups/party/quests:
-    post:
-      summary: Create a new quest
-      description: Endpoint to create a new quest for the party.
-      tags:
-        - party
-      security:
-        - userId: []
-          apiToken: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                key:
-                  type: string
-                  example: my_quest
-                text:
-                  type: string
-                  example: Defeat the Dragon
-                challengeRating:
-                  type: number
-                  example: 5
-      responses:
-        "200":
-          description: Quest created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        "400":
+        '400':
           description: Bad Request
           content:
             application/json:
-              example:
-                success: false
-                message: Invalid input data
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (Group not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/quests/reject:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The UUID of the group (party) for which the quest will be rejected.
+    post:
+      summary: Reject Group Quest
+      description: Reject a group quest (party) in the specified group.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Group quest rejected successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (Group not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/challenges:
     post:
       summary: Create a challenge
