@@ -109,6 +109,55 @@ components:
         html:
           type: string
           description: Latest Bailey announcement as HTML.
+    ChallengeRequest:
+      type: object
+      properties:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                group:
+                  type: string
+                  format: uuid
+                  description: The UUID of the group to which the challenge belongs.
+                name:
+                  type: string
+                  description: The full name of the challenge.
+                  example: Fitness Challenge
+                shortName:
+                  type: string
+                  description: A shortened name for the challenge, to be used as a tag.
+                summary:
+                  type: string
+                  description: A short summary advertising the main purpose of the challenge; maximum 250 characters; if not supplied, challenge.name will be used.
+                description:
+                  type: string
+                  description: A detailed description of the challenge.
+                official:
+                  type: boolean
+                  description: Specifies whether the challenge is an official Habitica challenge.
+                  default: false
+                prize:
+                  type: number
+                  description: The prize or reward associated with the challenge.
+                  default: 0
+              required:
+                - group
+                - name
+                - shortName
+    ChallengeUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The new full name of the challenge.
+        summary:
+          type: string
+          description: The new challenge summary.
+        description:
+          type: string
+          description: The new challenge description.
     LeaveChallengeRequest:
       type: object
       properties:
@@ -367,6 +416,54 @@ components:
           type: string
           format: uuid
           description: The UUID of the user to be added as a manager.
+    WebhookCreateRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The webhook's id.
+        url:
+          type: string
+          description: The webhook's URL.
+        label:
+          type: string
+          description: A label to remind you what this webhook does.
+        enabled:
+          type: boolean
+          description: If the webhook should be enabled.
+          default: true
+        type:
+          type: string
+          description: The webhook's type.
+          enum: ['taskActivity', 'groupChatReceived', 'userActivity', 'questActivity']
+          default: taskActivity
+        options:
+          type: object
+          description: The webhook's options. Will differ depending on type. Required for `groupChatReceived` type. If a webhook supports options, the default values are displayed in the examples below.
+          additionalProperties: true
+      required:
+        - url
+    WebhookUpdateRequest:
+      type: object
+      properties:
+        url:
+          type: string
+          description: The webhook's URL.
+        label:
+          type: string
+          description: A label to remind you what this webhook does.
+        enabled:
+          type: boolean
+          description: If the webhook should be enabled.
+        type:
+          type: string
+          enum: ['taskActivity', 'groupChatReceived', 'userActivity', 'questActivity']
+          description: The webhook's type.
+        options:
+          type: object
+          description: The webhook's options. Will differ depending on type. The options are enumerated in the [add webhook examples](https://habitica.com/apidoc/#api-Webhook-UserAddWebhook).
+          additionalProperties: true
 paths:
   /v3/status:
     get:
@@ -1751,7 +1848,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
-          description: Not Found (Group not found)
+          description: Not Found (Group or Quest not found)
           content:
             application/json:
               schema:
@@ -1793,7 +1890,49 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
-          description: Not Found (Group not found)
+          description: Not Found (Group or Quest not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/quests/leave:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The UUID of the group from which the user wants to leave the quest.
+    post:
+      summary: Leave Group Quest
+      description: Leave the ongoing quest.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Successfully left the group quest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (Group or Quest not found)
           content:
             application/json:
               schema:
@@ -1837,7 +1976,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
-          description: Not Found (Group not found)
+          description: Not Found (Group or Quest not found)
           content:
             application/json:
               schema:
@@ -1881,7 +2020,99 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse' 
         '404':
-          description: Not Found (Group not found)
+          description: Not Found (Group or Quest not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/quests/force-start:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The UUID of the group for which the quest will be force-started.
+    post:
+      summary: Force-Start Group Quest
+      description: | 
+        Force-start the quest, allowing the quest to begin immediately. \
+        **Required Permissions**: `QuestLeader` or `GroupLeader`.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Group quest force-started successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (Group or Quest not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/quests/invite/{questKey}:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The UUID of the group to which the quest invitation will be sent.
+      - name: questKey
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The unique key of the quest.
+    post:
+      summary: Invite users to a quest
+      description: Send a quest invitation to a user to join a group quest.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Quest invitation sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (Group or Quest not found)
           content:
             application/json:
               schema:
@@ -1900,55 +2131,34 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                group:
-                  type: string
-                  description: The UUID of the group associated with the challenge.
-                  example: group123
-                name:
-                  type: string
-                  description: The name of the challenge.
-                  example: Fitness Challenge
-                shortName:
-                  type: string
-                  description: The short name or abbreviation of the challenge.
-                  example: Fit Challenge
-                summary:
-                  type: string
-                  description: A brief summary of the challenge.
-                  example: Join our fitness challenge and stay active!
-                description:
-                  type: string
-                  description: The detailed description of the challenge.
-                  example: This challenge aims to promote regular exercise and healthy habits.
-                official:
-                  type: boolean
-                  description: Specifies whether the challenge is an official Habitica challenge.
-                  example: false
-                prize:
-                  type: number
-                  description: The prize or reward associated with the challenge.
-                  example: 0
-              required:
-                - group
-                - name
-                - shortName
+              $ref: '#/components/schemas/ChallengeRequest'
       responses:
-        '201':
+        '200':
           description: Challenge created successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataResponse'
+        '201':
+          description: The newly created challenge
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '400':
-          description: Bad Request
+          description: Bad Request (Invalid or missing parameter in challenge body)
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
-          description: Unauthorized
+          description: Unauthorized (Not Authorized or User does not have enough gems to offer this prize)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (Group or User not found)
           content:
             application/json:
               schema:
@@ -2016,10 +2226,9 @@ paths:
         schema:
           type: string
           format: uuid
-        example: challenge123
     get:
-      summary: Get challenge by ID
-      description: Retrieve information about a specific challenge by challenge ID.
+      summary: Get challenges for a group
+      description: Get challenges hosted in the specified group.
       tags:
         - challenges
       security:
@@ -2036,11 +2245,13 @@ paths:
           description: Challenge not found
           content:
             application/json:
-              example:
-                error: Challenge with ID challenge123 not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     put:
       summary: Update a challenge
-      description: Update the specified challenge by challenge ID.
+      description: | 
+        Update a challenge's name, description, or summary. \
+        Required Permission: `ChallengeLeader`
       tags:
         - challenges
       security:
@@ -2051,18 +2262,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: The new full name of the challenge.
-                  example: Updated Challenge
-                summary:
-                  type: string
-                  description: The new challenge summary.
-                description:
-                  type: string
-                  description: The new challenge description.
+              $ref: '#/components/schemas/ChallengeUpdateRequest'
       responses:
         '200':
           description: Challenge updated successfully
@@ -2086,8 +2286,8 @@ paths:
           description: Challenge not found
           content:
             application/json:
-              example:
-                error: Challenge with ID challenge123 not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     delete:
       summary: Delete a challenge
       description: Delete the specified challenge by challenge ID.
@@ -2113,8 +2313,8 @@ paths:
           description: Challenge not found
           content:
             application/json:
-              example:
-                error: Challenge with ID challenge123 not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/challenges/{challengeId}/join:
     parameters:
       - name: challengeId
@@ -2149,8 +2349,8 @@ paths:
           description: Challenge not found
           content:
             application/json:
-              example:
-                error: Challenge with ID challenge123 not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/challenges/{challengeId}/leave:
     parameters:
         - name: challengeId
@@ -2191,8 +2391,8 @@ paths:
           description: Challenge not found
           content:
             application/json:
-              example:
-                error: Challenge with ID {challengeId} not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/challenges/{challengeId}/clone:
     parameters:
       - name: challengeId
@@ -2227,8 +2427,8 @@ paths:
           description: Challenge not found
           content:
             application/json:
-              example:
-                error: Challenge with ID challenge123 not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/challenges/{challengeId}/export/csv:
     parameters:
       - name: challengeId
@@ -2264,8 +2464,8 @@ paths:
           description: Challenge not found
           content:
             application/json:
-              example:
-                error: Challenge with ID challenge123 not found
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/webhook:
     get:
       summary: Get user webhooks
@@ -2290,7 +2490,9 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
     post:
       summary: Create user webhook
-      description: "Create a new webhook for the authenticated user. (Possible types: taskActivity, groupChatReceived, userActivity, questActivity)"
+      description: | 
+        Create a new webhook for the authenticated user. \
+        Possible types: `taskActivity`, `groupChatReceived`, `userActivity`, `questActivity`
       tags:
         - webhook
       security:
@@ -2301,50 +2503,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                id:
-                  type: string
-                  format: uuid
-                  description: "The webhook's id (Default value: Randomly Generated UUID)."
-                label:
-                  type: string
-                  description: A label to remind you what this webhook does
-                url:
-                  type: string
-                  description: The URL where the webhook events will be sent.
-                  example: https://example.com/webhook/endpoint
-                enabled:
-                  type: boolean
-                  description: If the webhook should be enabled (default true)
-                  example: true
-                type:
-                  type: string
-                  description: The webhook's type.
-                  enum:
-                    - taskActivity
-                    - groupChatReceived
-                    - userActivity
-                    - questActivity
-                  example: taskActivity
-                options:
-                  type: object
-                  description: "The webhook's options. Will differ depending on type. Required for 'groupChatReceived' type. If a webhook supports options, the default values are displayed in the examples below."
-                  properties:
-                    created:
-                      type: boolean
-                      example: false
-                    updated:
-                      type: boolean
-                      example: false
-                    deleted:
-                      type: boolean
-                      example: false
-                    scored:
-                      type: boolean
-                      example: true
-              required:
-                - url
+              $ref: '#/components/schemas/WebhookCreateRequest'
       responses:
         "201":
           description: Webhook created successfully
@@ -2356,8 +2515,8 @@ paths:
           description: Bad Request
           content:
             application/json:
-              example:
-                error: Invalid webhook data provided
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         "401":
           description: Unauthorized
           content:
@@ -2401,69 +2560,33 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
     put:
-      summary: Update user webhook by ID
-      description: Update information of a specific webhook by webhook ID.
+      summary: Edit a webhook
+      description: Can change `url`, `enabled`, `type`, and `options` properties. Cannot change `id`.
       tags:
         - webhook
       security:
         - userId: []
           apiToken: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                url:
-                  type: string
-                  description: The URL where the webhook events will be sent.
-                  example: https://example.com/webhook/endpoint
-                label:
-                  type: string
-                  description: A label to remind you what this webhook does
-                enabled:
-                  type: boolean
-                  description: If the webhook should be enabled (default true)
-                  example: true
-                type:
-                  type: string
-                  description: The webhook's type.
-                  enum:
-                    - taskActivity
-                    - groupChatReceived
-                    - userActivity
-                    - questActivity
-                  example: taskActivity
-                options:
-                  type: object
-                  description: "The webhook's options. Will differ depending on type. Required for 'groupChatReceived' type. If a webhook supports options, the default values are displayed in the examples below."
-                  properties:
-                    created:
-                      type: boolean
-                      example: false
-                    updated:
-                      type: boolean
-                      example: false
-                    deleted:
-                      type: boolean
-                      example: false
-                    scored:
-                      type: boolean
-                      example: true
+              $ref: '#/components/schemas/WebhookUpdateRequest'
       responses:
-        "200":
+        '200':
           description: Webhook updated successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataResponse'
-        "400":
+        '400':
           description: Bad Request
           content:
             application/json:
-              example:
-                error: Invalid webhook data provided
-        "401":
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
           description: Unauthorized
           content:
             application/json:
@@ -2476,7 +2599,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
     delete:
-      summary: Delete user webhook by ID
+      summary: Delete a webhook
       description: Delete a specific webhook by webhook ID.
       tags:
         - webhook
@@ -2484,8 +2607,12 @@ paths:
         - userId: []
           apiToken: []
       responses:
-        "204":
+        "200":
           description: Webhook deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "401":
           description: Unauthorized
           content:
