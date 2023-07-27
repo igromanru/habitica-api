@@ -112,40 +112,35 @@ components:
     ChallengeRequest:
       type: object
       properties:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                group:
-                  type: string
-                  format: uuid
-                  description: The UUID of the group to which the challenge belongs.
-                name:
-                  type: string
-                  description: The full name of the challenge.
-                  example: Fitness Challenge
-                shortName:
-                  type: string
-                  description: A shortened name for the challenge, to be used as a tag.
-                summary:
-                  type: string
-                  description: A short summary advertising the main purpose of the challenge; maximum 250 characters; if not supplied, challenge.name will be used.
-                description:
-                  type: string
-                  description: A detailed description of the challenge.
-                official:
-                  type: boolean
-                  description: Specifies whether the challenge is an official Habitica challenge.
-                  default: false
-                prize:
-                  type: number
-                  description: The prize or reward associated with the challenge.
-                  default: 0
-              required:
-                - group
-                - name
-                - shortName
+        group:
+          type: string
+          format: uuid
+          description: The UUID of the group to which the challenge belongs.
+        name:
+          type: string
+          description: The full name of the challenge.
+          example: Fitness Challenge
+        shortName:
+          type: string
+          description: A shortened name for the challenge, to be used as a tag.
+        summary:
+          type: string
+          description: A short summary advertising the main purpose of the challenge; maximum 250 characters; if not supplied, challenge.name will be used.
+        description:
+          type: string
+          description: A detailed description of the challenge.
+        official:
+          type: boolean
+          description: Specifies whether the challenge is an official Habitica challenge.
+          default: false
+        prize:
+          type: number
+          description: The prize or reward associated with the challenge.
+          default: 0
+      required:
+        - group
+        - name
+        - shortName
     ChallengeUpdateRequest:
       type: object
       properties:
