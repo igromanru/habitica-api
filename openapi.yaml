@@ -21,6 +21,8 @@ tags:
     description: User related requests
   - name: tasks
     description: Tasks related requests
+  - name: tags
+    description: Tags related requests
   - name: party
     description: Party related requests
   - name: groups
@@ -221,7 +223,7 @@ components:
           description: The text to be displayed for the task.
         type:
           type: string
-          description: 'Task type, options are: "habit", "daily", "todo", "reward".'
+          description: "Task type, options are: `habit`, `daily`, `todo`, `reward`."
           enum:
             - habit
             - daily
@@ -238,7 +240,7 @@ components:
           description: Alias to assign to task.
         attribute:
           type: string
-          description: "User's attribute to use, options are: \"str\", \"int\", \"per\", \"con\""
+          description: "User's attribute to use, options are: `str`, `int`, `per`, `con`"
           enum:
             - str
             - int
@@ -459,25 +461,39 @@ components:
           type: object
           description: The webhook's options. Will differ depending on type. The options are enumerated in the [add webhook examples](https://habitica.com/apidoc/#api-Webhook-UserAddWebhook).
           additionalProperties: true
+    TagCreateOrUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the new tag.
+          example: morning
+    TagReorderRequest:
+      type: object
+      properties:
+        tagId:
+          type: string
+          format: uuid
+          description: The ID of the tag to reorder.
+        to:
+          type: number
+          description: The new position of the tag in the order.
 paths:
   /v3/status:
     get:
       summary: Get Habitica API status
-      description: Endpoint to get the current status of the Habitica API.
+      description: | 
+        Endpoint to get the current status of the Habitica API. \
+        Returns typical data object with string property "status" that has the value `up`, if the server is running.
       responses:
-        "200":
-          description: Habitica API status, 'up' if everything is ok
+        '200':
+          description: OK
           content:
             application/json:
-              example:
-                status: up
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              example:
-                status: down
-                message: The Habitica API is currently experiencing issues
+          description: Internal Server Error (The server is down)
   /v3/cron:
     post:
       summary: Run cron
@@ -502,9 +518,14 @@ paths:
           description: Bad Request
           content:
             application/json:
-              example:
-                success: false
-                message: Invalid input data
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v4/bug-report:
     post:
       summary: Submit a bug report
@@ -2960,6 +2981,218 @@ paths:
                 $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tags:
+    get:
+      summary: Get all user's tags
+      description: Get the list of tags for the user's tasks in Habitica.
+      tags:
+        - tags
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+    post:
+      summary: Create a new tag
+      description: Create a new tag for the user's tasks in Habitica.
+      tags:
+        - tags
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagCreateOrUpdateRequest'
+      responses:
+        '201':
+          description: Tag created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tags/{tagId}:
+    parameters:
+      - name: tagId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The ID of the tag.
+    get:
+      summary: Get a Tag
+      description: Get the details of a specific tag for the user's tasks in Habitica.
+      tags:
+        - tags
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request ("tagId" must be a valid UUID corresponding to a tag belonging to the user.)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified tag could not be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+    put:
+      summary: Update Tag
+      description: Update the details of a specific tag for the user's tasks in Habitica.
+      tags:
+        - tags
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagCreateOrUpdateRequest'
+      responses:
+        '200':
+          description: Tag updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request ("tagId" must be a valid UUID corresponding to a tag belonging to the user)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified tag could not be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+    delete:
+      summary: Delete a user tag
+      description: Delete a specific tag for the user's tasks in Habitica.
+      tags:
+        - tags
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Tag deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request ("tagId" must be a valid UUID corresponding to a tag belonging to the user)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified tag could not be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/reorder-tags:
+    post:
+      summary: Reorder Tags
+      description: | 
+        Reorder the user's tags for tasks in Habitica. \
+        **tagId**: Id of the tag to move \
+        **to**: Position the tag is moving to
+      tags:
+        - tags
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagReorderRequest'
+      responses:
+        '200':
+          description: Tags reordered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified tag could not be found)
           content:
             application/json:
               schema:
