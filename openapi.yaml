@@ -569,6 +569,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/world-state:
+    get:
+      summary: Get World State
+      description: Get the state for the game world
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
   /v3/members/{memberId}:
     parameters:
       - name: memberId
