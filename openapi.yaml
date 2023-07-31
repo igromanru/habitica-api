@@ -569,6 +569,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/i18n/browser-script:
+    get:
+      summary: Returns the i18n JS script
+      description: Returns the i18n JS script to make all the i18n strings available in the browser under window.i18n.strings. Does not require authentication.
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: (function() {})()
   /v3/world-state:
     get:
       summary: Get World State
