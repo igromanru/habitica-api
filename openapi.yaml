@@ -1325,6 +1325,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (Not enough gold for the purchase or health is already full)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
@@ -1472,7 +1478,7 @@ paths:
         summary: Use Orb of Rebirth on user
         description: Rebirth the authenticated user, resetting their stats and granting rewards.
         tags:
-        - user
+          - user
         security:
           - userId: []
             apiToken: []
@@ -1533,7 +1539,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
-  
+  /v3/user/block/{uuid}:
+    parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The UUID of the user to block.
+    post:
+      summary: Block/Unlock User
+      description: Block / unblock a user from sending you a PM.
+      tags:
+          - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (Invalid UUID)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/tasks/user:
     get:
       summary: Get user's tasks
