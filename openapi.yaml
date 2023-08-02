@@ -92,6 +92,15 @@ components:
           type: string
           description: The error message.
           example: "Missing authentication headers."
+    BugReportRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          description: User's Email.
+        email:
+          type: string
+          description: Bug Report Message to sent.
     PrivateMessageRequest:
       type: object
       required:
@@ -215,6 +224,12 @@ components:
             - str
             - con
             - per
+    ChatMessageRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The content of the chat message.
     UserTaskRequest:
       type: object
       properties:
@@ -538,18 +553,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  description: The bug report message.
-                email:
-                  type: string
-                  format: email
-                  description: The email address of the bug reporter.
-              required:
-                - message
-                - email
+              $ref: '#/components/schemas/BugReportRequest'
       responses:
         '200':
           description: Bug report submitted successfully
@@ -558,13 +562,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/DataResponse'
         '400':
-          description: Bad Request
+          description: Bad Request (The report message is missing)
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified user could not be found)
           content:
             application/json:
               schema:
@@ -1759,7 +1769,7 @@ paths:
         required: true
         schema:
           type: string
-        example: group123
+          format: uuid
     get:
       summary: Get group chat messages
       description: Retrieve the chat messages from the group's chat.
@@ -1789,19 +1799,19 @@ paths:
       security:
         - userId: []
           apiToken: []
+      parameters:
+        - name: previousMsg
+          in: query
+          required: false
+          schema:
+            type: string
+            description: The previous chat message's UUID which will force a return of the full group chat.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  description: The content of the chat message.
-                  example: Hello everyone!
-              required:
-                - message
+              $ref: '#/components/schemas/ChatMessageRequest'
       responses:
         '201':
           description: Chat message sent successfully
@@ -1810,13 +1820,65 @@ paths:
               schema:
                 $ref: '#/components/schemas/DataResponse'
         '400':
-          description: Bad Request
+          description: Bad Request  (Your chat privileges have been revoked or the group ID is invalid)
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified group could not be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/chat/{chatId}/like:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The UUID of the group containing the chat message.
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The UUID of the chat message to like.
+    post:
+      summary: Like Group Chat Message
+      description: Like a message in the group chat of a specific group.
+      tags:
+        - groups
+      responses:
+        '200':
+          description: Message liked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (A user can't like his own message, invalid group or chat ID)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified group or message could't be found)
           content:
             application/json:
               schema:
