@@ -2608,6 +2608,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/challenges/{challengeId}/selectWinner/{winnerId}:
+    parameters:
+      - name: challengeId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The Challenge ID for the challenge to close with a winner.
+      - name: winnerId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The User ID of the winning user.
+    post:
+      summary: Select Challenge Winner
+      description: Select winner for a challenge.
+      tags:
+        - challenges
+      responses:
+        '200':
+          description: Winner selected successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The challenge or the user could't be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse' 
   /v3/user/webhook:
     get:
       summary: Get user webhooks
