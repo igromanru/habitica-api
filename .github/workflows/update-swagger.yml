@@ -1,7 +1,7 @@
 name: Update Swagger UI
 on:
   schedule:
-    - cron:  '0 10 * * *'
+    - cron:  '0 10 * * 6'
   workflow_dispatch:
 
 jobs:
