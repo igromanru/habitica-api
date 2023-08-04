@@ -1883,6 +1883,54 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/chat/{chatId}/clearflags:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The UUID of the group containing the chat message.
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The UUID of the chat message to clear flags from.
+    post:
+      summary: Clear flags
+      description: | 
+        Resets the flag count on a chat message. Retains the id of the user's that have flagged the message. (Only visible to moderators). \
+        Permission Required: Habitica `Admin`
+      tags:
+        - groups
+      responses:
+        '200':
+          description: Chat flags cleared successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (Group ID or Chat ID are missing)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (Insufficient Permissions or Group ID or Chat ID couldn't be find)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/groups/party:
     get:
       summary: Get party information
