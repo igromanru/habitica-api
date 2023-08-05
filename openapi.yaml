@@ -1805,7 +1805,7 @@ paths:
           required: false
           schema:
             type: string
-            description: The previous chat message's UUID which will force a return of the full group chat.
+          description: The previous chat message's UUID which will force a return of the full group chat.
       requestBody:
         required: true
         content:
@@ -1837,6 +1837,62 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/chat/{chatId}:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The UUID of the group containing the chat message.
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The UUID of the chat message to delete.
+    delete:
+      summary: Delete chat message from a group
+      description: Delete's a chat message from a group.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      parameters:
+        - name: previousMsg
+          in: query
+          required: false
+          schema:
+            type: string
+          description: The last message's ID fetched by the client so that the whole chat will be returned only if new messages have been posted in the meantime.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified group or message could't be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/groups/{groupId}/chat/{chatId}/like:
     parameters:
       - name: groupId
@@ -1858,6 +1914,9 @@ paths:
       description: Like a message in the group chat of a specific group.
       tags:
         - groups
+      security:
+        - userId: []
+          apiToken: []
       responses:
         '200':
           description: Message liked successfully
