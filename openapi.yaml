@@ -2460,8 +2460,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (Page query parameter must be a positive integer)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (User could not be found)
           content:
             application/json:
               schema:
@@ -2711,6 +2723,48 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Challenge not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/challenges/groups/{groupId}:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The group id ('party' for the user party and 'habitrpg' for tavern are accepted).
+    get:
+      summary: Get challenges for a group
+      description: Get challenges hosted in the specified group.
+      tags:
+        - challenges
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
