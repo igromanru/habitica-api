@@ -27,6 +27,8 @@ tags:
     description: Party related requests
   - name: groups
     description: Groups related requests
+  - name: chat
+    description: Chat related requests
   - name: challenges
     description: Challenges related requests
   - name: webhook
@@ -230,6 +232,13 @@ components:
         message:
           type: string
           description: The content of the chat message.
+    ChatFlagRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Explanation why the message was flagged.
+          example: The message is not appropriate.
     UserTaskRequest:
       type: object
       properties:
@@ -1761,235 +1770,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
-  /v3/groups/{groupId}/chat:
-    parameters:
-      - name: groupId
-        in: path
-        description: ID of the group
-        required: true
-        schema:
-          type: string
-          format: uuid
-    get:
-      summary: Get group chat messages
-      description: Retrieve the chat messages from the group's chat.
-      tags:
-        - groups
-      security:
-        - userId: []
-          apiToken: []
-      responses:
-        '200':
-          description: Chat messages retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-    post:
-      summary: Send a chat message in a group
-      description: Send a chat message in the specified group's chat.
-      tags:
-        - groups
-      security:
-        - userId: []
-          apiToken: []
-      parameters:
-        - name: previousMsg
-          in: query
-          required: false
-          schema:
-            type: string
-          description: The previous chat message's UUID which will force a return of the full group chat.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ChatMessageRequest'
-      responses:
-        '201':
-          description: Chat message sent successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
-          description: Bad Request  (Your chat privileges have been revoked or the group ID is invalid)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
-          description: Not Found (The specified group could not be found)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-  /v3/groups/{groupId}/chat/{chatId}:
-    parameters:
-      - name: groupId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-          description: The UUID of the group containing the chat message.
-      - name: chatId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-          description: The UUID of the chat message to delete.
-    delete:
-      summary: Delete chat message from a group
-      description: Delete's a chat message from a group.
-      tags:
-        - groups
-      security:
-        - userId: []
-          apiToken: []
-      parameters:
-        - name: previousMsg
-          in: query
-          required: false
-          schema:
-            type: string
-          description: The last message's ID fetched by the client so that the whole chat will be returned only if new messages have been posted in the meantime.
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
-          description: Not Found (The specified group or message could't be found)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-  /v3/groups/{groupId}/chat/{chatId}/like:
-    parameters:
-      - name: groupId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-          description: The UUID of the group containing the chat message.
-      - name: chatId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-          description: The UUID of the chat message to like.
-    post:
-      summary: Like Group Chat Message
-      description: Like a message in the group chat of a specific group.
-      tags:
-        - groups
-      security:
-        - userId: []
-          apiToken: []
-      responses:
-        '200':
-          description: Message liked successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
-          description: Bad Request (A user can't like his own message, invalid group or chat ID)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
-          description: Not Found (The specified group or message could't be found)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-  /v3/groups/{groupId}/chat/{chatId}/clearflags:
-    parameters:
-      - name: groupId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-          description: The UUID of the group containing the chat message.
-      - name: chatId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-          description: The UUID of the chat message to clear flags from.
-    post:
-      summary: Clear flags
-      description: | 
-        Resets the flag count on a chat message. Retains the id of the user's that have flagged the message. (Only visible to moderators). \
-        Permission Required: Habitica `Admin`
-      tags:
-        - groups
-      responses:
-        '200':
-          description: Chat flags cleared successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
-          description: Bad Request (Group ID or Chat ID are missing)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
-          description: Not Found (Insufficient Permissions or Group ID or Chat ID couldn't be find)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/groups/party:
     get:
       summary: Get party information
@@ -2362,6 +2142,290 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Not Found (Group or Quest not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/chat:
+    parameters:
+      - name: groupId
+        in: path
+        description: ID of the group
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Get group chat messages
+      description: Retrieve the chat messages from the group's chat.
+      tags:
+        - chat
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Chat messages retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+    post:
+      summary: Send a chat message in a group
+      description: Send a chat message in the specified group's chat.
+      tags:
+        - chat
+      security:
+        - userId: []
+          apiToken: []
+      parameters:
+        - name: previousMsg
+          in: query
+          required: false
+          schema:
+            type: string
+          description: The previous chat message's UUID which will force a return of the full group chat.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageRequest'
+      responses:
+        '201':
+          description: Chat message sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request  (Your chat privileges have been revoked or the group ID is invalid)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified group could not be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/chat/{chatId}:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The UUID of the group containing the chat message.
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The UUID of the chat message to delete.
+    delete:
+      summary: Delete chat message from a group
+      description: Delete's a chat message from a group.
+      tags:
+        - chat
+      security:
+        - userId: []
+          apiToken: []
+      parameters:
+        - name: previousMsg
+          in: query
+          required: false
+          schema:
+            type: string
+          description: The last message's ID fetched by the client so that the whole chat will be returned only if new messages have been posted in the meantime.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified group or message could't be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/chat/{chatId}/like:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The UUID of the group containing the chat message.
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The UUID of the chat message to like.
+    post:
+      summary: Like Group Chat Message
+      description: Like a message in the group chat of a specific group.
+      tags:
+        - chat
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Message liked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (A user can't like his own message, invalid group or chat ID)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified group or message could't be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/chat/{chatId}/flag:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The group id ('party' for the user party and 'habitrpg' for tavern are accepted).
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The chat message id.
+    post:
+      summary: Flag a group chat message
+      description: A message will be hidden from chat if two or more users flag a message. It will be hidden immediately if a moderator flags the message. An email is sent to the moderators about every flagged message.
+      tags:
+        - chat
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatFlagRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/chat/{chatId}/clearflags:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The UUID of the group containing the chat message.
+      - name: chatId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The UUID of the chat message to clear flags from.
+    post:
+      summary: Clear flags
+      description: | 
+        Resets the flag count on a chat message. Retains the id of the user's that have flagged the message. (Only visible to moderators). \
+        Permission Required: Habitica `Admin`
+      tags:
+        - chat
+      responses:
+        '200':
+          description: Chat flags cleared successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (Group ID or Chat ID are missing)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (Insufficient Permissions or Group ID or Chat ID couldn't be find)
           content:
             application/json:
               schema:
