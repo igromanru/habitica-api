@@ -611,6 +611,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataResponse'
+  /v3/content:
+    get:
+      summary: Get Content
+      description: Get all available content objects.
+      parameters:
+        - name: language
+          in: query
+          schema:
+            type: string
+            enum: ["bg", "cs", "da", "de", "en", "en@pirate", "en_GB", "es", "es_419", "fr", "he", "hu", "id", "it", "ja", "nl", "pl", "pt", "pt_BR", "ro", "ru", "sk", "sr", "sv", "uk", "zh", "zh_TW"]
+            default: "en"
+          description: The desired language for the content data.
+      responses:
+        '200':
+          description: Content data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
   /v3/members/{memberId}:
     parameters:
       - name: memberId
@@ -2323,6 +2342,48 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Not Found (The specified group or message could't be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/chat/seen:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The UUID of the group containing the chat messages.
+    post:
+      summary: Mark Group Chat Messages as Seen
+      description: Mark all chat messages in a group as seen.
+      tags:
+        - chat
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Chat messages marked as seen successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
