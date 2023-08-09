@@ -37,6 +37,8 @@ tags:
     description: Habitica News related requests
   - name: notifications
     description: Notifications related requests
+  - name: coupons
+    description: Coupons related requests
 components:
   securitySchemes:
     userId:
@@ -3651,6 +3653,49 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Not Found (The specified tag could not be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/coupons/generate/{event}:
+    parameters:
+      - name: event
+        in: path
+        required: true
+        schema:
+          type: string
+          enum: [wondercon, google_6mo]
+        description: The event for which the coupon should be generated.
+      - name: count
+        in: query
+        schema:
+          type: number
+        description: The number of coupon codes to generate.
+    post:
+      summary: Generate Coupons for Event
+      description: | 
+        Generate coupons for an event in Habitica. \
+        Permission Required: `sudo` *(whatever it means)*
+      tags:
+        - coupons
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Coupons generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (The request was missing the count query parameter or used an invalid event)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
