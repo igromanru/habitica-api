@@ -1051,116 +1051,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
-  /v3/user/purchase/{type}/{key}:
-    parameters:
-      - name: type
-        in: path
-        required: true
-        schema:
-          type: string
-          enum: [gems, eggs, hatchingPotions, premiumHatchingPotions, food, quests, gear, pets]
-          default: food
-        description: Type of item to purchase. Can be gems, eggs, hatchingPotions, premiumHatchingPotions, food, quests, gear, or pets.
-      - name: key
-        in: path
-        required: true
-        schema:
-          type: string
-        description: Item's key (use "gem" for purchasing gems).
-    post:
-      summary: Purchase Item
-      description: Purchase an item of the specified type using the provided key.
-      tags:
-        - user
-      security:
-        - userId: []
-          apiToken: []
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PurchaseItemRequest'
-      responses:
-        '200':
-          description: Item purchased successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataWithMessageResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-  /v3/user/purchase-hourglass/{type}/{key}:
-    parameters:
-      - name: type
-        in: path
-        required: true
-        schema:
-          type: string
-          enum: [pets, mounts]
-          default: pets
-          description: The type of item to purchase.
-      - name: key
-        in: path
-        required: true
-        schema:
-          type: string
-        description: The key for the mount/pet.
-    post:
-      summary: Purchase Hourglass-purchasable item
-      description: Purchases an Hourglass-purchasable item. Does not include Mystery Item sets (use /api/v3/user/buy-mystery-set/{key}).
-      tags:
-        - user
-      security:
-        - userId: []
-          apiToken: []
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PurchaseItemRequest'
-      responses:
-        '200':
-          description: Hourglass item purchased successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataWithMessageResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/read-card/{cardType}:
     parameters:
       - name: cardType
@@ -1338,21 +1228,131 @@ paths:
               schema:
                 $ref: '#/components/schemas/DataResponse'
         "400":
+          description: Bad Request (Value provided is not a number or is outside the range of 0-23)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/purchase/{type}/{key}:
+    parameters:
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum: [gems, eggs, hatchingPotions, premiumHatchingPotions, food, quests, gear, pets]
+          default: food
+        description: Type of item to purchase. Can be gems, eggs, hatchingPotions, premiumHatchingPotions, food, quests, gear, or pets.
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Item's key (use "gem" for purchasing gems).
+    post:
+      summary: Purchase Item
+      description: Purchase an item of the specified type using the provided key.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseItemRequest'
+      responses:
+        '200':
+          description: Item purchased successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataWithMessageResponse'
+        '400':
           description: Bad Request
           content:
             application/json:
-              example:
-                success: false
-                error: BadRequest
-                message: User validation failed
-                errors:
-                  - message: Path `preferences.dayStart` (25) is more than the maximum allowed value (23).
-                    path: preferences.dayStart
-                    value: 25
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/purchase-hourglass/{type}/{key}:
+    parameters:
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum: [pets, mounts]
+          default: pets
+          description: The type of item to purchase.
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The key for the mount/pet.
+    post:
+      summary: Purchase Hourglass-purchasable item
+      description: Purchases an Hourglass-purchasable item. Does not include Mystery Item sets (use /api/v3/user/buy-mystery-set/{key}).
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseItemRequest'
+      responses:
+        '200':
+          description: Hourglass item purchased successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataWithMessageResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/buy-health-potion:
     post:
       summary: Buy a health potion
-      description: Purchase a health potion for the authenticated user.
+      description: Purchase a health potion.
       tags:
         - user
       security:
@@ -1360,13 +1360,146 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Health potion purchased successfully
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataResponse'
         '400':
           description: Bad Request (Not enough gold for the purchase or health is already full)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/buy-mystery-set/{key}:
+    parameters:
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The key of the mystery set to be purchased.
+    post:
+      summary: Buy a Mystery Item set
+      description: Purchase a Mystery Item set using an Hourglass.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (Not enough Mystic Hourglasses or specified item doesn't exist or already owned)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/buy-gear/{key}:
+    parameters:
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The key of the gear to be purchased.
+    post:
+      summary: Buy a piece of gear
+      description: Purchase a piece of gear.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (Not enough gold for the purchase or already own equipment)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/buy-quest/{key}:
+    parameters:
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The key of the quest to be purchased.
+    post:
+      summary: Buy a quest with gold
+      description: Purchase a quest with gold.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (Specified quest does not exist or not enough gold for the purchase)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/buy-armoire:
+    post:
+      summary: Buy Enchanted Armoire
+      description: Purchase an Enchanted Armoire item.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (Not enough gold for the purchase)
           content:
             application/json:
               schema:
