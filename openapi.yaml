@@ -3691,7 +3691,7 @@ paths:
               $ref: '#/components/schemas/TagCreateOrUpdateRequest'
       responses:
         '200':
-          description: Tag updated successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -3724,7 +3724,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Tag deleted successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -3767,7 +3767,7 @@ paths:
               $ref: '#/components/schemas/TagReorderRequest'
       responses:
         '200':
-          description: Tags reordered successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -3816,13 +3816,112 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Coupons generated successfully
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataResponse'
         '400':
           description: Bad Request (The request was missing the count query parameter or used an invalid event)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/coupons:
+    get:
+      summary: Get Coupons
+      description: Retrieve a list of available coupons.
+      tags:
+        - coupons
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: List of available coupons retrieved successfully
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/coupons/enter/{code}:
+    parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The coupon code to apply.
+    post:
+      summary: Redeem a coupon code
+      description: Enter a coupon code to redeem rewards.
+      tags:
+        - coupons
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/coupons/validate/{code}:
+    parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The coupon code to validate.
+    post:
+      summary: Validate a coupon code
+      description: Validate a coupon code.
+      tags:
+        - coupons
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
