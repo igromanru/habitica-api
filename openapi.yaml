@@ -39,6 +39,8 @@ tags:
     description: Notifications related requests
   - name: coupons
     description: Coupons related requests
+  - name: data-export
+    description: Data Export related requests
 components:
   securitySchemes:
     userId:
@@ -3926,6 +3928,106 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /export/userdata.json:
+    servers:
+      - url:  https://habitica.com
+    get:
+      summary: Export user data in JSON format
+      description: Export user data in JSON format.
+      tags:
+        - data-export
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /export/userdata.xml:
+    servers:
+      - url:  https://habitica.com
+    get:
+      summary: Export user data in XML format
+      description: Export user data in XML format.
+      tags:
+        - data-export
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/xml:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /export/inbox.html:
+    servers:
+      - url:  https://habitica.com
+    get:
+      summary: Export Inbox Data in HTML
+      description: Export user private messages as HTML document.
+      tags:
+        - data-export
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /export/history.csv:
+    servers:
+      - url:  https://habitica.com
+    get:
+      summary: Export user tasks history in CSV format
+      description: History is only available for habits and dailies so todos and rewards won't be included. Can only be used on https://habitica.com.
+      tags:
+        - data-export
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
         '401':
           description: Unauthorized
           content:
