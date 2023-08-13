@@ -41,6 +41,10 @@ tags:
     description: Coupons related requests
   - name: data-export
     description: Data Export related requests
+  - name: development
+    description: | 
+      Development related requests \
+      **These routes only exist while Habitica is in development mode. (Such as running a local instance on your computer)**
 components:
   securitySchemes:
     userId:
@@ -2774,7 +2778,7 @@ paths:
       summary: Update a challenge
       description: | 
         Update a challenge's name, description, or summary. \
-        Required Permission: `ChallengeLeader`
+        **Required Permission:** `ChallengeLeader`
       tags:
         - challenges
       security:
@@ -3810,7 +3814,7 @@ paths:
       summary: Generate Coupons for Event
       description: | 
         Generate coupons for an event in Habitica. \
-        Permission Required: `sudo` *(whatever it means)*
+        **Required Permission:** `sudo` *(whatever it means)*
       tags:
         - coupons
       security:
@@ -4028,6 +4032,90 @@ paths:
               schema:
                 type: string
                 format: binary
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /export/avatar-{uuid}.png:
+    servers:
+      - url:  https://habitica.com
+    parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The UUID of the user.
+    get:
+      summary: Render a user avatar as a PNG file
+      description: '**This PNG export feature is not currently working (https://github.com/HabitRPG/habitica/issues/9489).**'
+      tags:
+        - data-export
+      responses:
+        '200':
+          description: OK
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /export/avatar-{uuid}.html:
+    servers:
+      - url:  https://habitica.com
+    parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The UUID of the user.
+    get:
+      summary: Render a user avatar as an HTML page
+      description: '**This HTML export feature is not currently working (https://github.com/HabitRPG/habitica/issues/9489).**'
+      tags:
+        - data-export
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/debug/add-hourglass:
+    post:
+      summary: Add Hourglass to the current user
+      description: | 
+        Add an hourglass to the user's account for debugging purposes. \
+        **Required Permissions**: `Developers`
+      tags:
+        - development
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
