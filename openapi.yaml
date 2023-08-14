@@ -510,6 +510,41 @@ components:
         to:
           type: number
           description: The new position of the tag in the order.
+    InventoryModificationRequest:
+      type: object
+      properties:
+        gear:
+          type: object
+          description: Object to replace user's `gear.owned` object.
+          additionalProperties: true
+        special:
+          type: object
+          description: Object to replace user's `special` object.
+          additionalProperties: true
+        pets:
+          type: object
+          description: Object to replace user's `pets` object.
+          additionalProperties: true
+        mounts:
+          type: object
+          description: Object to replace user's `mounts` object.
+          additionalProperties: true
+        eggs:
+          type: object
+          description: Object to replace user's `eggs` object.
+          additionalProperties: true
+        hatchingPotions:
+          type: object
+          description: Object to replace user's `hatchingPotions` object.
+          additionalProperties: true
+        food:
+          type: object
+          description: Object to replace user's `food` object.
+          additionalProperties: true
+        quests:
+          type: object
+          description: Object to replace user's `quests` object.
+          additionalProperties: true
 paths:
   /v3/status:
     get:
@@ -4104,6 +4139,109 @@ paths:
       description: | 
         Add an hourglass to the user's account for debugging purposes. \
         **Required Permissions**: `Developers`
+      tags:
+        - development
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/debug/add-ten-gems:
+    post:
+      summary: Add ten gems to the current user
+      description: |
+        Add ten gems to the user's account for debugging purposes. \
+        **Required Permissions**: `Developers`
+      tags:
+        - development
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/debug/quest-progress:
+    post:
+      summary: Artificially accelerate quest progress
+      description: |
+        Artificially accelerate quest progress for debugging purposes. \
+        **Required Permissions**: `Developers`
+      tags:
+        - development
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/debug/modify-inventory:
+    post:
+      summary: Manipulate user's inventory
+      description:  | 
+        Modify user's inventory items for debugging purposes. \
+        **Required Permissions**: `Developers`
+      tags:
+        - development
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryModificationRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/debug/set-cron:
+    post:
+      summary: Set lastCron for user
+      description: |
+        Set lastCron to the user's account for debugging purposes. \
+        **Required Permissions**: `Developers` \
+        *The official Habitica Doc hasn't provided any parameters for the request*
       tags:
         - development
       security:
