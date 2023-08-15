@@ -409,6 +409,21 @@ components:
         feedback:
           type: string
           description: Any additional feedback or reason for deleting the account.
+    GroupPlanCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the group plan.
+        description:
+          type: string
+          description: The description of the group plan.
+        gems:
+          type: integer
+          description: The number of gems required for the plan.
+        interval:
+          type: string
+          description: The interval of the plan in cron syntax.
     CustomDayStartRequest:
       type: object
       properties:
@@ -2341,6 +2356,58 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/group-plans:
+    get:
+      summary: Get Group Plans
+      description: Get a list of available group plans.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK (An array of the requested groups with a group plan (See [/website/server/models/group.js](https://github.com/HabitRPG/habitica/blob/develop/website/server/models/group.js)))
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupPlansResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/create-plan:
+    post:
+      summary: Create Group Plan
+      description: | 
+        Create a new group plan. \
+        *The official Habitica Doc doesn't provide infomation about the request body, it might be wrong.*
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupPlanCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/groups/{groupId}/chat:
     parameters:
       - name: groupId
@@ -2499,7 +2566,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Message liked successfully
+          description: OK
           content:
             application/json:
               schema:
