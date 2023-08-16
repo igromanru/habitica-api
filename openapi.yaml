@@ -2821,6 +2821,9 @@ paths:
         Permission Required: Habitica `Admin`
       tags:
         - chat
+      security:
+        - userId: []
+          apiToken: []
       responses:
         '200':
           description: Chat flags cleared successfully
@@ -3270,9 +3273,12 @@ paths:
       description: Select winner for a challenge.
       tags:
         - challenges
+      security:
+        - userId: []
+          apiToken: []
       responses:
         '200':
-          description: Winner selected successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -3306,7 +3312,7 @@ paths:
           apiToken: []
       responses:
         "200":
-          description: Webhooks retrieved successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -3335,7 +3341,7 @@ paths:
               $ref: '#/components/schemas/WebhookCreateRequest'
       responses:
         "201":
-          description: Webhook created successfully
+          description: Created
           content:
             application/json:
               schema:
