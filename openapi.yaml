@@ -460,6 +460,30 @@ components:
           type: string
           format: uuid
           description: The UUID of the user to be added as a manager.
+    GroupInviteRequest:
+      type: object
+      properties:
+        emails:
+          type: array
+          description: An array of objects, each representing one email address to invite.
+          items:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+                description: The email address of the user being invited.
+              name:
+                type: string
+                description: The name of the user being invited.
+            required:
+             - email
+        uuids:
+          type: array
+          description: An array of user IDs to invite.
+          items:
+            type: string
+            format: uuid
     WebhookCreateRequest:
       type: object
       properties:
@@ -1859,6 +1883,72 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/party:
+    get:
+      summary: Get party information
+      description: Retrieve information about the user's party.
+      tags:
+        - party
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        "200":
+          description: Party information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        "404":
+          description: Party not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/looking-for-party:
+    get:
+      summary:  Get users in search of parties
+      description: | 
+        Get users who are looking for a party. \
+        *You must be the leader of a party to be able to use this endpoint.*
+      tags:
+        - party
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: Number
+            default: 0
+          description: Page number, defaults to 0.
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (You are not the leader of a Party)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/groups:
     get:
       summary: Get user's groups
@@ -1980,34 +2070,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
-  /v3/groups/party:
-    get:
-      summary: Get party information
-      description: Retrieve information about the user's party.
-      tags:
-        - party
-      security:
-        - userId: []
-          apiToken: []
-      responses:
-        "200":
-          description: Party information retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        "404":
-          description: Party not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/groups/{groupId}/add-manager:
     parameters:
       - name: groupId
@@ -2046,6 +2108,56 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/invite:
+    post:
+      summary: Invite users to a group
+      description: | 
+        Invite a user to join a group. \
+        You can provide both `emails` and `uuids`, or just one. You must provide at least one.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the group to invite to.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupInviteRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
