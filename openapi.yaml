@@ -409,6 +409,16 @@ components:
         feedback:
           type: string
           description: Any additional feedback or reason for deleting the account.
+    LeaveGroupRequest:
+      type: object
+      properties:
+        keepChallenges:
+          type: string
+          enum:
+            - remain-in-challenges
+            - leave-challenges
+          default: leave-challenges
+          description: Specify whether to remain in challenges or leave challenges upon leaving the group.
     GroupPlanCreateRequest:
       type: object
       properties:
@@ -2158,6 +2168,106 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/join:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The ID of the group to join.
+    post:
+      summary: Join a group
+      description: Join a group.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (A groupId is required or Group requires an invitation to join (e.g. private group, party))
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified group could not be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/leave:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The ID of the group to leave.
+      - name: keep
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+            - remove-all
+            - keep-all
+          default: keep-all
+        description: Specify whether to remove or keep challenges when leaving the group.
+    post:
+      summary: Leave a group
+      description: Leave a group.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaveGroupRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified group could not be found)
           content:
             application/json:
               schema:
