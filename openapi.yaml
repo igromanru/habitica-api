@@ -461,7 +461,7 @@ components:
           enum: ['private', 'public']
           example: public
           description: Privacy of group (party MUST be private)
-    AddManagerRequest:
+    AddOrRemoveManagerRequest:
       type: object
       required:
         - managerId
@@ -469,7 +469,7 @@ components:
         managerId:
           type: string
           format: uuid
-          description: The UUID of the user to be added as a manager.
+          description: The UUID of the user.
     GroupInviteRequest:
       type: object
       properties:
@@ -2102,7 +2102,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AddManagerRequest'
+              $ref: '#/components/schemas/AddOrRemoveManagerRequest'
       responses:
         '200':
           description: Manager added successfully
@@ -2122,6 +2122,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/remove-manager:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The ID of the group from which to remove a manager.
+    post:
+      summary: Remove a manager from a group
+      description: Remove a manager from a group.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []   
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddOrRemoveManagerRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+
   /v3/groups/{groupId}/invite:
     post:
       summary: Invite users to a group
@@ -2268,6 +2311,42 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Not Found (The specified group could not be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/reject-invite:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The ID of the group invitation to reject.
+    post:
+      summary: Reject a group invitation
+      description: Reject an invitation to join a group.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
