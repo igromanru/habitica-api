@@ -2164,7 +2164,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
-
   /v3/groups/{groupId}/invite:
     post:
       summary: Invite users to a group
@@ -2190,6 +2189,61 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/GroupInviteRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/removeMember/{memberId}:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The ID of the group from which to remove a member.
+      - name: memberId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The ID of the member to be removed from the group.
+      - name: message
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The message to send to the removed members.
+    post:
+      summary: Remove a member from a group
+      description: Remove a member from a group.
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
       responses:
         '200':
           description: OK
