@@ -15,6 +15,8 @@ servers:
     description: Habitica API server
 tags: 
   - name: default
+  - name: hall
+    description: Hall of Fame related requests
   - name: members
     description: Habitica members related requests
   - name: user
@@ -441,7 +443,7 @@ components:
           type: number
           description: The hour number (0-23) for the day to begin. If not supplied, it will default to 0.
           default: 0
-    CreateGroupRequest:
+    CreateOrUpdateGroupRequest:
       type: object
       required:
         - name
@@ -717,7 +719,7 @@ paths:
           description: The desired language for the content data.
       responses:
         '200':
-          description: Content data retrieved successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -2024,7 +2026,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateGroupRequest'
+              $ref: '#/components/schemas/CreateOrUpdateGroupRequest'
       responses:
         '201':
           description: Group created successfully
@@ -2045,6 +2047,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/groups/{groupId}:
+    parameters:
+      - name: groupId
+        in: path
+        description: ID of the group
+        required: true
+        schema:
+          type: string
+          format: uuid
     get:
       summary: Get group information
       description: Retrieve information about a specific group.
@@ -2053,17 +2063,9 @@ paths:
       security:
         - userId: []
           apiToken: []
-      parameters:
-        - name: groupId
-          in: path
-          description: ID of the group to retrieve information for
-          required: true
-          schema:
-            type: string
-          example: a1780f33-gggg-40e9-b50a-404e4964a09a
       responses:
         "200":
-          description: Group information retrieved successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -2076,6 +2078,47 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         "404":
           description: Group not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+    put:
+      summary: Update Group
+      description: | 
+        Update a group. \
+        **Required Permissions:** `GroupLeader`, `Admin`
+      tags:
+        - groups
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrUpdateGroupRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -2544,7 +2587,7 @@ paths:
       summary: Cancel Group Quest
       description: | 
         Cancel current not active quest. \
-        **Required Permissions**: `QuestLeader` or `GroupLeader`.
+        **Required Permissions:** `QuestLeader` or `GroupLeader`.
       tags:
         - groups
       security:
@@ -2588,7 +2631,7 @@ paths:
       summary: Abort Group Quest
       description: | 
         Abort the active group quest. \
-        **Required Permissions**: `QuestLeader` or `GroupLeader`.
+        **Required Permissions:** `QuestLeader` or `GroupLeader`.
       tags:
         - groups
       security:
@@ -2632,7 +2675,7 @@ paths:
       summary: Force-Start Group Quest
       description: | 
         Force-start the quest, allowing the quest to begin immediately. \
-        **Required Permissions**: `QuestLeader` or `GroupLeader`.
+        **Required Permissions:** `QuestLeader` or `GroupLeader`.
       tags:
         - groups
       security:
@@ -3061,7 +3104,7 @@ paths:
       summary: Clear flags
       description: | 
         Resets the flag count on a chat message. Retains the id of the user's that have flagged the message. (Only visible to moderators). \
-        Permission Required: Habitica `Admin`
+        **Required Permissions:** Habitica `Admin`
       tags:
         - chat
       security:
@@ -3739,6 +3782,57 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Model not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/hall/heroes:
+    get:
+      summary: Get all Heroes (contributors)
+      description: Returns an array of objects containing the heroes who have contributed for Habitica. The array is sorted by the contribution level in descending order.
+      tags:
+        - hall
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/hall/patrons:
+    parameters:
+      - name: page
+        in: query
+        schema:
+          type: integer
+          default: 0
+        description: Page number for pagination (optional)
+    get:
+      summary: Get all patrons
+      description: Returns an array of objects containing the patrons who backed Habitica's original kickstarter. The array is sorted by the backer tier in descending order. By default, only the first 50 patrons are returned. More can be accessed by passing ?page=n.
+      tags:
+        - hall
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -4566,7 +4660,7 @@ paths:
       summary: Add Hourglass to the current user
       description: | 
         Add an hourglass to the user's account for debugging purposes. \
-        **Required Permissions**: `Developers`
+        **Required Permissions:** `Developers`
       tags:
         - development
       security:
@@ -4590,7 +4684,7 @@ paths:
       summary: Add ten gems to the current user
       description: |
         Add ten gems to the user's account for debugging purposes. \
-        **Required Permissions**: `Developers`
+        **Required Permissions:** `Developers`
       tags:
         - development
       security:
@@ -4614,7 +4708,7 @@ paths:
       summary: Artificially accelerate quest progress
       description: |
         Artificially accelerate quest progress for debugging purposes. \
-        **Required Permissions**: `Developers`
+        **Required Permissions:** `Developers`
       tags:
         - development
       security:
@@ -4638,7 +4732,7 @@ paths:
       summary: Manipulate user's inventory
       description:  | 
         Modify user's inventory items for debugging purposes. \
-        **Required Permissions**: `Developers`
+        **Required Permissions:** `Developers`
       tags:
         - development
       security:
@@ -4668,7 +4762,7 @@ paths:
       summary: Set lastCron for user
       description: |
         Set lastCron to the user's account for debugging purposes. \
-        **Required Permissions**: `Developers` \
+        **Required Permissions:** `Developers` \
         *The official Habitica Doc hasn't provided any parameters for the request*
       tags:
         - development
