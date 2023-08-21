@@ -3729,7 +3729,7 @@ paths:
           apiToken: []
       responses:
         "200":
-          description: Webhook deleted successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -3769,7 +3769,7 @@ paths:
       description: Retrieve the paths associated with the specified model.
       responses:
         '200':
-          description: Paths retrieved successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -3837,6 +3837,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/hall/heroes/party/{groupId}:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The ID of the group
+    get:
+      summary: Get any Party given its ID
+      description: | 
+       Returns some basic information about a given Party, to assist admins with user support. \
+       **Required Permissions:** `userSupport`
+      tags:
+        - hall
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/news:
     get:
       summary: Get latest Bailey announcement
@@ -3845,7 +3888,7 @@ paths:
         - news
       responses:
         '200':
-          description: News article as HTML
+          description: OK
           content:
             application/json:
               schema:
