@@ -596,6 +596,9 @@ components:
           type: object
           description: Object to replace user's `quests` object.
           additionalProperties: true
+    HeroUpdateRequest:
+      type: object
+      additionalProperties: true
 paths:
   /v3/status:
     get:
@@ -3868,6 +3871,79 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/hall/heroes/{heroId}:
+    parameters:
+      - name: heroId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The ID of the hero
+    get:
+      summary: Get any user ("hero") given the UUID or Username
+      description: |
+        Returns various data about the user. User does not need to be a contributor. \
+        **Required Permissions:** `Admin`
+      tags:
+        - hall
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+    put:
+      summary: Update any user ("hero")
+      description: |
+        Update various details in the user's User document, including but not limited to privileges, gems, contributions, items. \
+        **Required Permissions:** `Admin`
+      tags:
+        - hall
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HeroUpdateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
