@@ -1843,6 +1843,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/inbox/messages:
+    get:
+      summary: Get Inbox Messages
+      description: Get inbox messages for a user.
+      tags:
+          - user
+      security:
+        - userId: []
+          apiToken: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Load the messages of the selected Page - 10 Messages per Page
+        - name: conversation
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Loads only the messages of a conversation
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/tasks/user:
     get:
       summary: Get user's tasks
