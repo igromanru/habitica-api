@@ -2160,6 +2160,59 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/{groupId}/invites:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The ID of the group
+    get:
+      summary: Get invites for a group
+      description: With a limit of 30 member per request (by default). To get all invites run requests against this routes (updating the lastId query parameter) until you get less than 30 results.
+      tags:
+        - groups
+      parameters:
+        - name: lastId
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Query parameter to specify the last invite returned in a previous request to this route and get the next batch of results.
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 30
+            maximum: 60
+          description: BETA Query parameter to specify the number of results to return. Max is 60.
+        - name: includeAllPublicFields
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: If set to `true` then all public fields for members will be returned (similar to when making a request for a single member).
+      responses:
+        '200':
+          description: Group invites retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/groups/{groupId}/add-manager:
     parameters:
       - name: groupId
