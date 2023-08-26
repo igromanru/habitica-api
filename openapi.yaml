@@ -496,6 +496,19 @@ components:
           items:
             type: string
             format: uuid
+    TransferGemsRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The message to the user
+        toUserId:
+          type: string
+          format: uuid
+          description: The user to send the gift to
+        gemAmount:
+          type: integer
+          description: The number of gems to send
     WebhookCreateRequest:
       type: object
       properties:
@@ -823,6 +836,84 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/members/{toUserId}/objections/{interaction}:
+    parameters:
+      - name: toUserId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The user to interact with
+      - name: interaction
+        in: path
+        required: true
+        schema:
+          type: string
+          enum: [send-private-message, transfer-gems]
+          default: send-private-message
+        description: Name of the interaction to query.
+    get:
+      summary: Get objections to interaction
+      description: Get any objections that would occur if the given interaction was attempted - BETA.
+      tags:
+        - members
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: Member objections retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/members/transfer-gems:
+    post:
+      summary: Transfer Gems
+      description: Transfer gems from one user to another.
+      tags:
+        - members
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferGemsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified user could not be found)
           content:
             application/json:
               schema:
