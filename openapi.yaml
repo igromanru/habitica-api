@@ -574,6 +574,18 @@ components:
         to:
           type: number
           description: The new position of the tag in the order.
+    AddItemToChecklistRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The text of the checklist item
+        completed:
+          type: boolean
+          default: false
+          description: Whether the checklist item is checked off
+      required:
+        - text
     InventoryModificationRequest:
       type: object
       properties:
@@ -4272,7 +4284,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: News post retrieved successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -4312,7 +4324,7 @@ paths:
               $ref: '#/components/schemas/NewsPost'
       responses:
         '200':
-          description: News post updated successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -4345,7 +4357,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: News post deleted successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -4379,7 +4391,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Notifications marked as read successfully, returns user.notifications
+          description: OK (Notifications marked as read successfully, returns user.notifications)
           content:
             application/json:
               schema:
@@ -4401,7 +4413,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Notifications marked as seen successfully, returns user.notifications
+          description: OK (Notifications marked as seen successfully, returns user.notifications)
           content:
             application/json:
               schema:
@@ -4431,7 +4443,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Notification marked as read successfully, returns user.notifications
+          description: OK (Notification marked as read successfully, returns user.notifications)
           content:
             application/json:
               schema:
@@ -4461,7 +4473,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Notification marked as seen successfully, returns user.notifications
+          description: OK (Notification marked as seen successfully, returns user.notifications)
           content:
             application/json:
               schema:
@@ -4510,7 +4522,7 @@ paths:
               $ref: '#/components/schemas/TagCreateOrUpdateRequest'
       responses:
         '201':
-          description: Tag created successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -4637,6 +4649,103 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Not Found (The specified tag could not be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tasks/{taskId}/tags/{tagId}:
+    parameters:
+      - name: taskId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The task _id or alias
+      - name: tagId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The tag id
+    post:
+      summary: Add a tag to a task
+      description: Add a tag to a specific task.
+      tags:
+        - tasks
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tasks/{taskId}/checklist:
+    parameters:
+      - name: taskId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The task _id or alias
+    post:
+      summary: Add an item to the task's checklist
+      description: Add an item to the checklist of a specific task.
+      tags:
+        - tasks
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddItemToChecklistRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
