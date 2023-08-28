@@ -586,6 +586,12 @@ components:
           description: Whether the checklist item is checked off
       required:
         - text
+    TaskAssignRequest:
+      type: array
+      items:
+        type: string
+        format: uuid
+      description: The ID of the user to whom the task will be assigned
     InventoryModificationRequest:
       type: object
       properties:
@@ -4746,6 +4752,45 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tasks/{taskId}/assign:
+    post:
+      summary: Assign a group task to a user or users
+      description: Assign users to a group task.
+      tags:
+        - tasks
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The id of the task that will be assigned
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskAssignRequest'
+      responses:
+        '200':
+          description: OK (The assigned task)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
