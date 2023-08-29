@@ -592,6 +592,87 @@ components:
         type: string
         format: uuid
       description: The ID of the user to whom the task will be assigned
+    TaskAddToChallengeRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The text to be displayed for the task
+        type:
+          type: string
+          enum: [habit, daily, todo, reward]
+          description: "Task type, options are: `habit`, `daily`, `todo`, `reward`"
+        attribute:
+          type: string
+          enum: [str, int, per, con]
+          description: "User's attribute to use, options are: `str`, `int`, `per`, `con`"
+        collapseChecklist:
+          type: boolean
+          default: false
+          description: Determines if a checklist will be displayed
+        notes:
+          type: string
+          description: Extra notes
+        date:
+          type: string
+          format: date
+          description: Due date to be shown in task list. Only valid for type "todo"
+        priority:
+          type: integer
+          enum: [0.1, 1, 1.5, 2]
+          default: 1
+          description: Difficulty, options are 0.1, 1, 1.5, 2; equivalent of Trivial, Easy, Medium, Hard
+        reminders:
+          type: array
+          items:
+            type: string
+          description: 'Array of reminders, each an object that must include: a UUID, startDate and time.\nFor example: {"id":"ed427623-9a69-4aac-9852-13deb9c190c3", "startDate":"1/16/17","time":"1/16/17" }'
+        frequency:
+          type: string
+          enum: [daily, weekly, monthly, yearly]
+          default: weekly
+          description: Values "weekly" and "monthly" enable use of the "repeat" field. All frequency values enable use of the "everyX" field. Value "monthly" enables use of the "weeksOfMonth" and "daysOfMonth" fields. Frequency is only valid for type "daily".
+        repeat:
+          type: string
+          default: 'true'
+          description: 'List of objects for days of the week, Days that are true will be repeated upon. Only valid for type "daily". Any days not specified will be marked as true. Days are: su, m, t, w, th, f, s. Value of frequency must be "weekly". For example, to skip repeats on Mon and Fri: "repeat":{"f":false,"m":false}'
+        everyX:
+          type: integer
+          default: 1
+          description: Value of frequency must be "daily", the number of days until this daily task is available again
+        streak:
+          type: integer
+          default: 0
+          description: Number of days that the task has consecutively been checked off. Only valid for type "daily"
+        daysOfMonth:
+          type: array
+          items:
+            type: integer
+          description: Array of integers. Only valid for type "daily"
+        weeksOfMonth:
+          type: array
+          items:
+            type: integer
+          description: Array of integers. Only valid for type "daily"
+        startDate:
+          type: string
+          format: date
+          description: Date when the task will first become available. Only valid for type "daily"
+        up:
+          type: boolean
+          default: true
+          description: Only valid for type "habit" If true, enables the "+" under "Directions/Action" for "Good habits"
+        down:
+          type: boolean
+          default: true
+          description: Only valid for type "habit" If true, enables the "-" under "Directions/Action" for "Bad habits"
+        value:
+          type: integer
+          default: 0
+          description: Only valid for type "reward." The cost in gold of the reward
+      required:
+        - text
+        - type
     InventoryModificationRequest:
       type: object
       properties:
@@ -4791,6 +4872,51 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tasks/challenge/{challengeId}:
+    parameters:
+      - name: challengeId
+        in: path
+        required: true
+        description: The id of the challenge the new task(s) will belong to
+        schema:
+          type: string
+          format: uuid
+    post:
+      summary: Create a new task belonging to a challenge
+      description: Can be passed an object to create a single task or an array of objects to create multiple tasks.
+      tags:
+        - tasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskAddToChallengeRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
