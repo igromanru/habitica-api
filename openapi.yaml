@@ -673,6 +673,9 @@ components:
       required:
         - text
         - type
+    TaskAddToGroupRequest:
+      type: object
+      additionalProperties: true
     InventoryModificationRequest:
       type: object
       properties:
@@ -4917,6 +4920,45 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tasks/group/{groupId}:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        description: The id of the group the new task(s) will belong to
+        schema:
+          type: string
+          format: uuid
+    post:
+      summary:  Create a new task belonging to a group
+      description: Can be passed an object to create a single task or an array of objects to create multiple tasks.
+      tags:
+        - tasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskAddToGroupRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
