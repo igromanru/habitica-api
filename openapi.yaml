@@ -2093,8 +2093,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
     post:
-      summary: Create User Task
-      description: Create a new task for the user.
+      summary: Create a new task belonging to the user
+      description: Can be passed an object to create a single task or an array of objects to create multiple tasks.
       tags:
         - tasks
       security:
@@ -2121,6 +2121,44 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tasks/{taskId}:
+    parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: The task _id or alias
+        schema:
+          type: string
+    delete:
+      summary: Delete a task
+      description: Delete a task.
+      tags:
+        - tasks
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -4792,6 +4830,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+    delete:
+      summary: Delete a tag from a task
+      description: Remove a tag from a task.
+      tags:
+        - tasks
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/tasks/{taskId}/checklist:
     parameters:
       - name: taskId
@@ -4815,6 +4883,52 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AddItemToChecklistRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tasks/{taskId}/checklist/{itemId}:
+    parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: The ID of the task containing the checklist item
+        schema:
+          type: string
+          format: uuid
+      - name: itemId
+        in: path
+        required: true
+        description: The ID of the checklist item to be deleted
+        schema:
+          type: string
+          format: uuid
+    delete:
+      summary: Delete a checklist item from a task
+      description: Delete a checklist item from a task.
+      tags:
+        - tasks
       responses:
         '200':
           description: OK
