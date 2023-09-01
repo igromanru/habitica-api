@@ -592,7 +592,7 @@ components:
         type: string
         format: uuid
       description: The ID of the user to whom the task will be assigned
-    TaskAddToChallengeRequest:
+    Task:
       type: object
       properties:
         text:
@@ -673,9 +673,6 @@ components:
       required:
         - text
         - type
-    TaskAddToGroupRequest:
-      type: object
-      additionalProperties: true
     InventoryModificationRequest:
       type: object
       properties:
@@ -2079,13 +2076,30 @@ paths:
       security:
         - userId: []
           apiToken: []
+      parameters:
+        - name: type
+          in: query
+          required: false
+          description: Optional query parameter to return just a type of tasks. By default all types will be returned except completed todos that must be requested separately. The "completedTodos" type returns only the 30 most recently completed.
+          schema:
+            type: string
+            enum: [habits, dailys, todos, rewards, completedTodos]
+        - name: dueDate
+          in: query
+          required: false
+          description: Optional date to use for computing the nextDue field for each returned task.
+          schema:
+            type: string
+            format: date
       responses:
         "200":
-          description: Tasks retrieved successfully
+          description: OK (An array of tasks)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
         "401":
           description: Unauthorized
           content:
@@ -2133,11 +2147,47 @@ paths:
         description: The task _id or alias
         schema:
           type: string
+    get:
+      summary: Get a task
+      description: Retrieve a task by its id.
+      tags:
+        - tasks
+      security:
+      - userId: []
+        apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     delete:
       summary: Delete a task
       description: Delete a task.
       tags:
         - tasks
+      security:
+      - userId: []
+        apiToken: []
       responses:
         '200':
           description: OK
@@ -2159,6 +2209,28 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tasks/clearCompletedTodos:
+    post:
+      summary: Delete user's completed todos
+      description: Deletes all of a user's completed To Do's except those belonging to active Challenges and Group Plans.
+      tags:
+        - tasks
+      security:
+      - userId: []
+        apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -4929,6 +5001,9 @@ paths:
       description: Delete a checklist item from a task.
       tags:
         - tasks
+      security:
+        - userId: []
+          apiToken: []
       responses:
         '200':
           description: OK
@@ -4955,19 +5030,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/tasks/{taskId}/assign:
+    parameters:
+      - name: taskId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The id of the task that will be assigned
     post:
       summary: Assign a group task to a user or users
       description: Assign users to a group task.
       tags:
         - tasks
-      parameters:
-        - name: taskId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-          description: The id of the task that will be assigned
+      security:
+        - userId: []
+          apiToken: []
       requestBody:
         required: false
         content:
@@ -4998,21 +5076,67 @@ paths:
       - name: challengeId
         in: path
         required: true
-        description: The id of the challenge the new task(s) will belong to
+        description: The id of the challenge
         schema:
           type: string
           format: uuid
+    get:
+      summary: Get a challenge's tasks
+      description: Retrieve tasks associated with a specific challenge.
+      tags:
+        - tasks
+      security:
+        - userId: []
+          apiToken: []
+      parameters:
+        - name: type
+          in: query
+          required: false
+          description: Query parameter to return just a type of tasks.
+          schema:
+            type: string
+            enum: [habits, dailys, todos, rewards]
+      responses:
+        '200':
+          description: OK (An array of tasks)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     post:
       summary: Create a new task belonging to a challenge
       description: Can be passed an object to create a single task or an array of objects to create multiple tasks.
       tags:
         - tasks
+      security:
+        - userId: []
+          apiToken: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TaskAddToChallengeRequest'
+              $ref: '#/components/schemas/Task'
       responses:
         '201':
           description: Created
@@ -5043,21 +5167,67 @@ paths:
       - name: groupId
         in: path
         required: true
-        description: The id of the group the new task(s) will belong to
+        description: The id of the group
         schema:
           type: string
           format: uuid
+    get:
+      summary: Get a group's tasks
+      description: Retrieve tasks associated with a specific group.
+      tags:
+        - tasks
+      security:
+        - userId: []
+          apiToken: []
+      parameters:
+        - name: type
+          in: query
+          required: false
+          description: Query parameter to return just a type of tasks.
+          schema:
+            type: string
+            enum: [habits, dailys, todos, rewards]
+      responses:
+        '200':
+          description: OK (An array of tasks)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     post:
       summary:  Create a new task belonging to a group
       description: Can be passed an object to create a single task or an array of objects to create multiple tasks.
       tags:
         - tasks
+      security:
+        - userId: []
+          apiToken: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TaskAddToGroupRequest'
+              $ref: '#/components/schemas/Task'
       responses:
         '200':
           description: OK
