@@ -2111,34 +2111,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
-  /v3/groups/party:
-    get:
-      summary: Get party information
-      description: Retrieve information about the user's party.
-      tags:
-        - party
-      security:
-        - userId: []
-          apiToken: []
-      responses:
-        "200":
-          description: Party information retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        "404":
-          description: Party not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/looking-for-party:
     get:
       summary:  Get users in search of parties
@@ -2173,97 +2145,6 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-  /v3/groups/party/members:
-    get:
-      summary: Get members for the party
-      description: Get members for the party of the current API user.
-      tags:
-        - party
-      security:
-        - userId: []
-          apiToken: []
-      parameters:
-        - name: lastId
-          in: query
-          required: false
-          schema:
-            type: string
-            format: uuid
-          description: Query parameter to specify the last member returned in a previous request to this route and get the next batch of results.
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 60
-            default: 30
-          description: BETA Query parameter to specify the number of results to return. Max is 60.
-        - name: includeTasks
-          in: query
-          required: false
-          schema:
-            type: boolean
-          description: BETA Query parameter - If 'true' then include challenge tasks of each member.
-        - name: includeAllPublicFields
-          in: query
-          required: false
-          schema:
-            type: boolean
-          description: If set to true then all public fields for members will be returned (similar to when making a request for a single member).
-      responses:
-        '200':
-          description: OK (data is an array of members, sorted by _id)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
-          description: Group not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-  /v3/groups/party/accept:
-    post:
-      summary: Accept Party Quest
-      description: Accept a pending party quest.
-      tags:
-        - party
-      security:
-        - userId: []
-          apiToken: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
-          description: Not Found (Group or Quest not found)
           content:
             application/json:
               schema:
@@ -2357,11 +2238,10 @@ paths:
     parameters:
       - name: groupId
         in: path
-        description: ID of the group
+        description: Id of the group or `party`
         required: true
         schema:
           type: string
-          format: uuid
     get:
       summary: Get group information
       description: Retrieve information about a specific group.
@@ -2437,8 +2317,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-        description: The UUID of the group whose members are to be retrieved.
+        description: Id of the group or `party`
     get:
       summary: Get members for a group
       description: With a limit of 30 member per request (by default). To get all members run requests against this routes (updating the lastId query parameter) until you get less than 30 results (or the specified limit).
@@ -2502,8 +2381,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-        description: The ID of the group
+        description: Id of the group or `party`
     get:
       summary: Get invites for a group
       description: With a limit of 30 member per request (by default). To get all invites run requests against this routes (updating the lastId query parameter) until you get less than 30 results.
@@ -2531,7 +2409,7 @@ paths:
           description: If set to `true` then all public fields for members will be returned (similar to when making a request for a single member).
       responses:
         '200':
-          description: Group invites retrieved successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -2555,8 +2433,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-        description: The UUID of the group to which the new manager will be added.
+        description: Id of the group or `party`
     post:
       summary: Add Group Manager
       description: Add a new manager to the specified group.
@@ -2573,7 +2450,7 @@ paths:
               $ref: '#/components/schemas/AddOrRemoveManagerRequest'
       responses:
         '200':
-          description: Manager added successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -2597,8 +2474,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-        description: The ID of the group from which to remove a manager.
+        description: Id of the group or `party`
     post:
       summary: Remove a manager from a group
       description: Remove a manager from a group.
@@ -2633,6 +2509,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/groups/{groupId}/invite:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Id of the group or `party`
     post:
       summary: Invite users to a group
       description: | 
@@ -2643,14 +2526,6 @@ paths:
       security:
         - userId: []
           apiToken: []
-      parameters:
-        - name: groupId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-          description: The ID of the group to invite to.
       requestBody:
         required: true
         content:
@@ -2689,8 +2564,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-        description: The ID of the group from which to remove a member.
+        description: Id of the group or `party`
       - name: memberId
         in: path
         required: true
@@ -2744,8 +2618,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-        description: The ID of the group to join.
+        description: Id of the group or `party`
     post:
       summary: Join a group
       description: Join a group.
@@ -2786,8 +2659,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-        description: The ID of the group to leave.
+        description: Id of the group or `party`
       - name: keep
         in: query
         required: false
@@ -2844,8 +2716,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-        description: The ID of the group invitation to reject.
+        description: Id of the group or `party`
     post:
       summary: Reject a group invitation
       description: Reject an invitation to join a group.
@@ -2880,8 +2751,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-        description: The UUID of the group (party) for which the quest will be accepted.
+        description: Id of the group or `party`
     post:
       summary: Accept Group Quest
       description: Accept a pending group (party) quest.
@@ -2922,8 +2792,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-        description: The UUID of the group (party) for which the quest will be rejected.
+        description: Id of the group or `party`
     post:
       summary: Reject Group Quest
       description: Reject a pending group (party) quest.
@@ -2964,8 +2833,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-        description: The UUID of the group from which the user wants to leave the quest.
+        description: Id of the group or `party`
     post:
       summary: Leave Group Quest
       description: Leave the ongoing quest.
@@ -3006,8 +2874,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-        description: The UUID of the group for which the active quest will be canceled.
+        description: Id of the group or `party`
     post:
       summary: Cancel Group Quest
       description: | 
@@ -3050,8 +2917,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-        description: The UUID of the group for which the active quest will be aborted.
+        description: Id of the group or `party`
     post:
       summary: Abort Group Quest
       description: | 
@@ -3094,8 +2960,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-        description: The UUID of the group for which the quest will be force-started.
+        description: Id of the group or `party`
     post:
       summary: Force-Start Group Quest
       description: | 
@@ -3138,8 +3003,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-        description: The UUID of the group to which the quest invitation will be sent.
+        description: Id of the group or `party`
       - name: questKey
         in: path
         required: true
