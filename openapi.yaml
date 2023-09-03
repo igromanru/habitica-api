@@ -2234,6 +2234,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/party/accept:
+    post:
+      summary: Accept Party Quest
+      description: Accept a pending party quest.
+      tags:
+        - party
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (Group or Quest not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/groups:
     get:
       summary: Get user's groups
@@ -2858,7 +2892,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Group quest accepted successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -3197,6 +3231,86 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/groups/party/chat:
+    get:
+      summary: Get party chat messages
+      description: Retrieve the chat messages from the party's chat.
+      tags:
+        - chat
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK (data is an array of chat messages)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+    post:
+      summary: Send a chat message to the party
+      description: Send a chat message in the party's chat.
+      tags:
+        - chat
+      security:
+        - userId: []
+          apiToken: []
+      parameters:
+        - name: previousMsg
+          in: query
+          required: false
+          schema:
+            type: string
+          description: The previous chat message's UUID which will force a return of the full group chat.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageRequest'
+      responses:
+        '201':
+          description: Created (Sent message)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request  (Your chat privileges have been revoked or the group ID is invalid)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (No party found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/groups/{groupId}/chat:
     parameters:
       - name: groupId
@@ -3216,13 +3330,25 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Chat messages retrieved successfully
+          description: OK (data is an array of chat messages)
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -3250,7 +3376,7 @@ paths:
               $ref: '#/components/schemas/ChatMessageRequest'
       responses:
         '201':
-          description: Chat message sent successfully
+          description: Created (Sent message)
           content:
             application/json:
               schema:
