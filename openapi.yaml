@@ -4128,38 +4128,11 @@ paths:
     parameters:
       - name: id
         in: path
-        description: ID (UUID) of the webhook to retrieve
+        description: Id (UUID) of the webhook to retrieve
         required: true
         schema:
           type: string
           format: uuid
-    get:
-      summary: Get user webhook by ID
-      description: Retrieve information about a specific webhook by webhook ID.
-      tags:
-        - webhook
-      security:
-        - userId: []
-          apiToken: []
-      responses:
-        "200":
-          description: Webhook retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        "404":
-          description: Webhook not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
     put:
       summary: Edit a webhook
       description: Can change `url`, `enabled`, `type`, and `options` properties. Cannot change `id`.
@@ -4176,7 +4149,7 @@ paths:
               $ref: '#/components/schemas/WebhookUpdateRequest'
       responses:
         '200':
-          description: Webhook updated successfully
+          description: OK
           content:
             application/json:
               schema:
