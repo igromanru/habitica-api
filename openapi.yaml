@@ -28,7 +28,10 @@ tags:
   - name: party
     description: Party related requests
   - name: groups
-    description: Groups related requests
+    description: |
+      Groups related requests \
+      Most endpoints accept 'party' and 'habitrpg' as the {groupId} \
+      Use `party` for user's current party and `habitrpg` for the tavern
   - name: chat
     description: Chat related requests
   - name: challenges
@@ -2238,13 +2241,16 @@ paths:
     parameters:
       - name: groupId
         in: path
-        description: Id of the group or `party`
+        description: The group _id ('party' for the user party and 'habitrpg' for tavern are accepted)
         required: true
         schema:
           type: string
     get:
       summary: Get group information
-      description: Retrieve information about a specific group.
+      description: |
+        Retrieve information about a specific group. \
+        Use `party` as the {groupId} for user's party \
+        Or 'habitrpg' for the tavern group
       tags:
         - groups
       security:
@@ -2317,7 +2323,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group id ('party' for the user party is accepted)
     get:
       summary: Get members for a group
       description: With a limit of 30 member per request (by default). To get all members run requests against this routes (updating the lastId query parameter) until you get less than 30 results (or the specified limit).
@@ -2381,7 +2387,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group id ('party' for the user party is accepted)
     get:
       summary: Get invites for a group
       description: With a limit of 30 member per request (by default). To get all invites run requests against this routes (updating the lastId query parameter) until you get less than 30 results.
@@ -2433,7 +2439,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group _id ('party' for the user party and 'habitrpg' for tavern are accepted)
     post:
       summary: Add Group Manager
       description: Add a new manager to the specified group.
@@ -2474,7 +2480,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group _id ('party' for the user party and 'habitrpg' for tavern are accepted)
     post:
       summary: Remove a manager from a group
       description: Remove a manager from a group.
@@ -2515,7 +2521,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group _id ('party' for the user party and 'habitrpg' for tavern are accepted)
     post:
       summary: Invite users to a group
       description: | 
@@ -2564,7 +2570,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group _id ('party' for the user party and 'habitrpg' for tavern are accepted)
       - name: memberId
         in: path
         required: true
@@ -2618,7 +2624,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group _id ('party' for the user party and 'habitrpg' for tavern are accepted)
     post:
       summary: Join a group
       description: Join a group.
@@ -2659,7 +2665,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group _id ('party' for the user party and 'habitrpg' for tavern are accepted)
       - name: keep
         in: query
         required: false
@@ -2716,7 +2722,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group _id ('party' for the user party and 'habitrpg' for tavern are accepted)
     post:
       summary: Reject a group invitation
       description: Reject an invitation to join a group.
@@ -2751,7 +2757,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group _id (or 'party')
     post:
       summary: Accept Group Quest
       description: Accept a pending group (party) quest.
@@ -2792,7 +2798,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group _id (or 'party')
     post:
       summary: Reject Group Quest
       description: Reject a pending group (party) quest.
@@ -2803,7 +2809,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Group quest rejected successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -2833,7 +2839,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group _id (or 'party')
     post:
       summary: Leave Group Quest
       description: Leave the ongoing quest.
@@ -2874,7 +2880,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group _id (or 'party')
     post:
       summary: Cancel Group Quest
       description: | 
@@ -2887,7 +2893,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Group quest canceled successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -2917,7 +2923,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group _id (or 'party')
     post:
       summary: Abort Group Quest
       description: | 
@@ -2960,7 +2966,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group _id (or 'party')
     post:
       summary: Force-Start Group Quest
       description: | 
@@ -2973,7 +2979,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Group quest force-started successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -3003,7 +3009,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Id of the group or `party`
+        description: The group _id (or 'party')
       - name: questKey
         in: path
         required: true
@@ -3020,7 +3026,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Quest invitation sent successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -3179,11 +3185,10 @@ paths:
     parameters:
       - name: groupId
         in: path
-        description: ID of the group
+        description: The group id ('party' for the user party and 'habitrpg' for tavern are accepted)
         required: true
         schema:
           type: string
-          format: uuid
     get:
       summary: Get group chat messages
       description: Retrieve the chat messages from the group's chat.
@@ -3270,8 +3275,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-          description: The UUID of the group containing the chat message.
+          description: The group id ('party' for the user party and 'habitrpg' for tavern are accepted)
       - name: chatId
         in: path
         required: true
@@ -3293,6 +3297,7 @@ paths:
           required: false
           schema:
             type: string
+            format: uuid
           description: The last message's ID fetched by the client so that the whole chat will be returned only if new messages have been posted in the meantime.
       responses:
         '200':
@@ -3326,8 +3331,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-          description: The UUID of the group containing the chat message.
+          description: The group id ('party' for the user party and 'habitrpg' for tavern are accepted)
       - name: chatId
         in: path
         required: true
@@ -3375,8 +3379,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-          description: The UUID of the group containing the chat messages.
+          description: The group id ('party' for the user party and 'habitrpg' for tavern are accepted)
     post:
       summary: Mark Group Chat Messages as Seen
       description: Mark all chat messages in a group as seen.
@@ -3417,7 +3420,6 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
         description: The group id ('party' for the user party and 'habitrpg' for tavern are accepted).
       - name: chatId
         in: path
@@ -3472,8 +3474,7 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
-          description: The UUID of the group containing the chat message.
+          description: The group id ('party' for the user party and 'habitrpg' for tavern are accepted)
       - name: chatId
         in: path
         required: true
@@ -3884,7 +3885,6 @@ paths:
         required: true
         schema:
           type: string
-          format: uuid
         description: The group id ('party' for the user party and 'habitrpg' for tavern are accepted).
     get:
       summary: Get challenges for a group
@@ -4324,7 +4324,7 @@ paths:
         required: true
         schema:
           type: string
-        description: The ID of the group
+        description: The group id ('party' for the user party and 'habitrpg' for tavern are accepted)
     get:
       summary: Get any Party given its ID
       description: | 
@@ -5220,10 +5220,9 @@ paths:
       - name: groupId
         in: path
         required: true
-        description: The id of the group
         schema:
           type: string
-          format: uuid
+        description: The group id ('party' for the user party and 'habitrpg' for tavern are accepted)
     get:
       summary: Get a group's tasks
       description: Retrieve tasks associated with a specific group.
