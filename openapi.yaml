@@ -405,15 +405,6 @@ components:
           items:
             type: string
           description: An array of notifications.
-    DeleteUserRequest:
-      type: object
-      properties:
-        password:
-          type: string
-          description: The user's password for confirmation.
-        feedback:
-          type: string
-          description: Any additional feedback or reason for deleting the account.
     LeaveGroupRequest:
       type: object
       properties:
@@ -1037,35 +1028,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/DataResponse'
         "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-    delete:
-      summary: Delete User Account [Danger Zone]
-      description: |
-        ## !!!Danger Zone!!!
-        Delete the user account associated with the authenticated user.
-      tags:
-        - user
-      security:
-        - userId: []
-          apiToken: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DeleteUserRequest'
-      responses:
-        '200':
-          description: User account deleted successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
           description: Unauthorized
           content:
             application/json:
@@ -2122,17 +2084,17 @@ paths:
         *You must be the leader of a party to be able to use this endpoint.*
       tags:
         - party
+      security:
+        - userId: []
+          apiToken: []
       parameters:
         - name: page
           in: query
           required: false
           schema:
-            type: Number
+            type: number
             default: 0
           description: Page number, defaults to 0.
-      security:
-        - userId: []
-          apiToken: []
       responses:
         '200':
           description: OK
@@ -3064,7 +3026,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GroupPlansResponse'
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
@@ -4182,7 +4144,7 @@ paths:
           apiToken: []
       responses:
         "200":
-          description: OK
+          description: OK (data is an array of all remaining WebHooks)
           content:
             application/json:
               schema:
@@ -4710,175 +4672,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
-  /v3/tags:
-    get:
-      summary: Get all user's tags
-      description: Get the list of tags for the user's tasks in Habitica.
-      tags:
-        - tags
-      security:
-        - userId: []
-          apiToken: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-    post:
-      summary: Create a new tag
-      description: Create a new tag for the user's tasks in Habitica.
-      tags:
-        - tags
-      security:
-        - userId: []
-          apiToken: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TagCreateOrUpdateRequest'
-      responses:
-        '201':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-  /v3/tags/{tagId}:
-    parameters:
-      - name: tagId
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-          description: The ID of the tag.
-    get:
-      summary: Get a Tag
-      description: Get the details of a specific tag for the user's tasks in Habitica.
-      tags:
-        - tags
-      security:
-        - userId: []
-          apiToken: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
-          description: Bad Request ("tagId" must be a valid UUID corresponding to a tag belonging to the user.)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
-          description: Not Found (The specified tag could not be found)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-    put:
-      summary: Update Tag
-      description: Update the details of a specific tag for the user's tasks in Habitica.
-      tags:
-        - tags
-      security:
-        - userId: []
-          apiToken: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TagCreateOrUpdateRequest'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
-          description: Bad Request ("tagId" must be a valid UUID corresponding to a tag belonging to the user)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
-          description: Not Found (The specified tag could not be found)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-    delete:
-      summary: Delete a user tag
-      description: Delete a specific tag for the user's tasks in Habitica.
-      tags:
-        - tags
-      security:
-        - userId: []
-          apiToken: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
-          description: Bad Request ("tagId" must be a valid UUID corresponding to a tag belonging to the user)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
-          description: Not Found (The specified tag could not be found)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/tasks/{taskId}/tags/{tagId}:
     parameters:
       - name: taskId
@@ -5268,6 +5061,278 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tasks/{taskId}/move/to/{position}:
+    parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: The task _id or alias
+        schema:
+          type: string
+      - name: position
+        in: path
+        required: true
+        description: Where to move the task. 0 = top of the list ("push to top"). -1 = bottom of the list ("push to bottom")
+        schema:
+          type: integer
+    post:
+      summary: Move a task to a new position
+      description: |
+        Note: completed To Do's are not sortable, do not appear in user.tasksOrder.todos, and are ordered by date of completion. \
+        See [ApiDoc](https://habitica.com/apidoc/#api-Task-MoveTask)
+      tags:
+        - tasks
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK (The new tasks order for the specific type that the taskID belongs to)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/group/{groupId}/tasks/{taskId}/move/to/{position}:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The group id ('party' for the user party and 'habitrpg' for tavern are accepted)
+      - name: taskId
+        in: path
+        required: true
+        description: The task _id or alias
+        schema:
+          type: string
+          format: uuid
+      - name: position
+        in: path
+        required: true
+        description: Where to move the task. 0 = top of the list ("push to top"). -1 = bottom of the list ("push to bottom")
+        schema:
+          type: integer
+    post:
+      summary: Move a group task to a specified position
+      description: See [ApiDoc](https://habitica.com/apidoc/#api-Task-GroupMoveTask)
+      tags:
+        - tasks
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK (The new tasks order (group.tasksOrder.{task.type}s))
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tags:
+    get:
+      summary: Get all user's tags
+      description: Get the list of tags for the user's tasks in Habitica.
+      tags:
+        - tags
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+    post:
+      summary: Create a new tag
+      description: Create a new tag for the user's tasks in Habitica.
+      tags:
+        - tags
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagCreateOrUpdateRequest'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tags/{tagId}:
+    parameters:
+      - name: tagId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: The ID of the tag.
+    get:
+      summary: Get a Tag
+      description: Get the details of a specific tag for the user's tasks in Habitica.
+      tags:
+        - tags
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request ("tagId" must be a valid UUID corresponding to a tag belonging to the user.)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified tag could not be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+    put:
+      summary: Update Tag
+      description: Update the details of a specific tag for the user's tasks in Habitica.
+      tags:
+        - tags
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagCreateOrUpdateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request ("tagId" must be a valid UUID corresponding to a tag belonging to the user)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified tag could not be found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+    delete:
+      summary: Delete a user tag
+      description: Delete a specific tag for the user's tasks in Habitica.
+      tags:
+        - tags
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request ("tagId" must be a valid UUID corresponding to a tag belonging to the user)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (The specified tag could not be found)
           content:
             application/json:
               schema:
