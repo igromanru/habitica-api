@@ -5168,6 +5168,157 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tasks/{taskId}/needs-work/{userId}:
+    parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: The id pr alies of the task that is the original group task
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        description: The id of the assigned user
+        schema:
+          type: string
+          format: uuid
+    post:
+      summary: Require more work for a group task
+      description: Mark an assigned group task as needing more work before it can be approved
+      tags:
+        - tasks
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK (The task that needs more work)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tasks/{taskId}/checklist/{itemId}/score:
+    parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: The task _id or alias
+        schema:
+          type: string
+      - name: itemId
+        in: path
+        required: true
+        description: The checklist item _id
+        schema:
+          type: string
+          format: uuid
+    post:
+      summary: Score a checklist item
+      description: Score a checklist item within a task.
+      tags:
+        - tasks
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tasks/{taskId}/score/{direction}:
+    parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: The task _id or alias
+        schema:
+          type: string
+      - name: direction
+        in: path
+        required: true
+        description: The direction for scoring the task (up or down).
+        schema:
+          type: string
+          enum: [up, down]
+          default: up
+    post:
+      summary: Score a task
+      description: Score a task in the specified direction (up or down).
+      tags:
+        - tasks
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '202':
+          description: Accepted (Approval was requested for team task)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/tags:
     get:
       summary: Get all user's tags
