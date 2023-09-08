@@ -5319,6 +5319,108 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tasks/{taskId}/unassign/{assignedUserId}:
+    parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: The id of the task that is the original group task
+        schema:
+          type: string
+          format: uuid
+      - name: assignedUserId
+        in: path
+        required: true
+        description: The id of the user that will be unassigned from the task
+        schema:
+          type: string
+          format: uuid
+    post:
+      summary: Unassign a user from a task
+      description: | 
+        Unassigns a user from a group task \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-Task-UnassignTask)
+      tags:
+        - tasks
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK (The unassigned task)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /tasks/unlink-one/{taskId}:
+    parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: The task _id or alias
+        schema:
+          type: string
+    post:
+      summary: Unlink a challenge task
+      description: | 
+        Unlink a challenge task \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-Task-UnlinkOneTask)
+      tags:
+        - tasks
+      security:
+        - userId: []
+        - apiToken: []
+      parameters:
+        - name: keep
+          in: query
+          required: false
+          description: Specifies if the task should be kept(keep) or removed(remove)
+          schema:
+            type: string
+            enum: [keep, remove]
+      responses:
+        '200':
+          description: OK (An empty object)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/tags:
     get:
       summary: Get all user's tags
