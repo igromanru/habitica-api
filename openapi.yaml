@@ -5396,6 +5396,7 @@ paths:
           schema:
             type: string
             enum: [keep, remove]
+            default: remove
       responses:
         '200':
           description: OK (An empty object)
@@ -5417,6 +5418,59 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tasks/unlink-all/{challengeId}:
+    parameters:
+      - name: challengeId
+        in: path
+        required: true
+        description: The challenge _id
+        schema:
+          type: string
+          format: uuid
+    post:
+      summary: Unlink all tasks from a challenge
+      description: |
+        Unlink all tasks associated with a specific challenge in Habitica. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-Task-UnlinkAllTasks)
+      tags:
+        - tasks
+      security:
+        - userId: []
+        - apiToken: []
+      parameters:
+      - name: keep
+        in: query
+        required: true
+        description: Specifies if tasks should be kept(keep-all) or removed(remove-all) after the unlink.
+        schema:
+          type: string
+          enum: [keep-all, remove-all]
+          default: remove-all
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Challenge not found
           content:
             application/json:
               schema:
