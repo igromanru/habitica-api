@@ -568,7 +568,7 @@ components:
         to:
           type: number
           description: The new position of the tag in the order.
-    AddItemToChecklistRequest:
+    ChecklistItemRequest:
       type: object
       properties:
         text:
@@ -4773,7 +4773,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AddItemToChecklistRequest'
+              $ref: '#/components/schemas/ChecklistItemRequest'
       responses:
         '200':
           description: OK
@@ -4804,17 +4804,55 @@ paths:
       - name: taskId
         in: path
         required: true
-        description: The ID of the task containing the checklist item
+        description: The task _id or alias
         schema:
           type: string
-          format: uuid
       - name: itemId
         in: path
         required: true
-        description: The ID of the checklist item to be deleted
+        description: The checklist item _id
         schema:
           type: string
           format: uuid
+    put:
+      summary: Update a checklist item
+      description: Update the details of a checklist item in a task.
+      tags:
+        - tasks
+      security:
+        - userId: []
+        - apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChecklistItemRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found (Task or checklist item not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     delete:
       summary: Delete a checklist item from a task
       description: Delete a checklist item from a task.
@@ -4848,6 +4886,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+
   /v3/tasks/{taskId}/assign:
     parameters:
       - name: taskId
