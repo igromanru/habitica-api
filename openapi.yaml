@@ -1990,7 +1990,9 @@ paths:
           type: string
     get:
       summary: Get a task
-      description: Retrieve a task by its id.
+      description: | 
+        Retrieve a task by its id. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-Task-GetTask)
       tags:
         - tasks
       security:
@@ -2021,9 +2023,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+    put:
+      summary: Update a task
+      description: | 
+        Update the details of a task. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-Task-UpdateTask)
+      tags:
+        - tasks
+      security:
+        - userId: []
+        - apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: OK (The updated task)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Fround (Task not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
     delete:
       summary: Delete a task
-      description: Delete a task.
+      description: | 
+        Delete a task. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-Task-DeleteTask)
       tags:
         - tasks
       security:
