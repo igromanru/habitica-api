@@ -791,6 +791,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /email/unsubscribe:
+    servers:
+      - url:  https://habitica.com
+    get:
+      summary: Unsubscribe an email address or user from email notifications
+      description: |
+        This is a GET method included in official emails from Habitica that will unsubscribe the user from emails. Does not require authentication. \
+        See: [ApiDocs](https://habitica.com/apidoc/#api-Unsubscribe)
+      parameters:
+        - name: code
+          in: query
+          schema:
+            type: string
+          description: An unsubscription code that contains an encrypted User ID or email address
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/i18n/browser-script:
     get:
       summary: Returns the i18n JS script
@@ -1976,125 +2010,6 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-  /v3/tasks/{taskId}:
-    parameters:
-      - name: taskId
-        in: path
-        required: true
-        description: The task _id or alias
-        schema:
-          type: string
-    get:
-      summary: Get a task
-      description: | 
-        Retrieve a task by its id. \
-        See: [ApiDoc](https://habitica.com/apidoc/#api-Task-GetTask)
-      tags:
-        - tasks
-      security:
-      - userId: []
-        apiToken: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Task'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-    put:
-      summary: Update a task
-      description: | 
-        Update the details of a task. \
-        See: [ApiDoc](https://habitica.com/apidoc/#api-Task-UpdateTask)
-      tags:
-        - tasks
-      security:
-        - userId: []
-        - apiToken: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Task'
-      responses:
-        '200':
-          description: OK (The updated task)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
-          description: Not Fround (Task not found)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-    delete:
-      summary: Delete a task
-      description: | 
-        Delete a task. \
-        See: [ApiDoc](https://habitica.com/apidoc/#api-Task-DeleteTask)
-      tags:
-        - tasks
-      security:
-      - userId: []
-        apiToken: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
-          description: Not Found
           content:
             application/json:
               schema:
@@ -4717,6 +4632,125 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/tasks/{taskId}:
+    parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: The task _id or alias
+        schema:
+          type: string
+    get:
+      summary: Get a task
+      description: | 
+        Retrieve a task by its id. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-Task-GetTask)
+      tags:
+        - tasks
+      security:
+      - userId: []
+        apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+    put:
+      summary: Update a task
+      description: | 
+        Update the details of a task. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-Task-UpdateTask)
+      tags:
+        - tasks
+      security:
+        - userId: []
+        - apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: OK (The updated task)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Fround (Task not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+    delete:
+      summary: Delete a task
+      description: | 
+        Delete a task. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-Task-DeleteTask)
+      tags:
+        - tasks
+      security:
+      - userId: []
+        apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/tasks/{taskId}/tags/{tagId}:
     parameters:
       - name: taskId
@@ -6037,12 +6071,6 @@ paths:
               schema:
                 type: string
                 format: binary
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
   /export/avatar-{uuid}.html:
     servers:
       - url:  https://habitica.com
