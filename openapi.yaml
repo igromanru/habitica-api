@@ -1572,6 +1572,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/buy/{key}:
+    parameters:
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The item to buy
+    post:
+      summary: Buy gear, armoire or potion
+      description: | 
+        Under the hood uses UserBuyGear, UserBuyPotion and UserBuyArmoire \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserBuy)
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (Not enough gold for the purchase or already own equipment)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/buy-gear/{key}:
     parameters:
       - name: key
@@ -1670,6 +1707,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+
   /v3/user/allocate:
     post:
       summary: Allocate a single Stat Point 
