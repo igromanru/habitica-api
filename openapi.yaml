@@ -2006,13 +2006,11 @@ paths:
             format: date
       responses:
         "200":
-          description: OK (An array of tasks)
+          description: OK (data contains an array of tasks)
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Task'
+                $ref: '#/components/schemas/DataResponse'
         "401":
           description: Unauthorized
           content:
