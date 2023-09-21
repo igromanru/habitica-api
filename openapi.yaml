@@ -1644,6 +1644,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/buy-special-spell/{key}:
+    parameters:
+      - name: key
+        in: path
+        required: true
+        description: The special item to buy. Must be one of the keys from "content.special", such as birthday, snowball, salt.
+        schema:
+          type: string
+          example: "snowball" 
+    post:
+      summary: Buy special item (card, avatar transformation)
+      description: |
+        Includes gift cards (e.g., birthday card), and avatar Transformation Items and their antidotes (e.g., Snowball item and Salt reward). \
+        See: [ApiDocs](https://habitica.com/apidoc/#api-User-UserBuySpecialSpell)
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'  
   /v3/user/buy-quest/{key}:
     parameters:
       - name: key
@@ -1711,7 +1755,9 @@ paths:
   /v3/user/allocate:
     post:
       summary: Allocate a single Stat Point 
-      description: Put a single Stat Point into a specific stat.
+      description: | 
+        Put a single Stat Point into a specific stat. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserAllocate)
       tags:
         - user
       security:
@@ -1747,7 +1793,9 @@ paths:
   /v3/user/allocate-now:
     post:
       summary: Allocate all Stat Points
-      description: "Uses the user's chosen automatic allocation method, or if none, assigns all to STR. Note: will return success, even if there are 0 points to allocate."
+      description: | 
+        "Uses the user's chosen automatic allocation method, or if none, assigns all to STR. Note: will return success, even if there are 0 points to allocate." \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserAllocateNow)
       tags:
         - user
       security:
@@ -1920,8 +1968,10 @@ paths:
           format: uuid
           description: The UUID of the user to block.
     post:
-      summary: Block/Unlock User
-      description: Block / unblock a user from sending you a PM.
+      summary: Block / unblock a user from sending you a PM
+      description: |
+        Block / unblock a user from sending you a PM. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-User-BlockUser)
       tags:
           - user
       security:
