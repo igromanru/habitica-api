@@ -116,6 +116,14 @@ components:
         email:
           type: string
           description: Bug Report Message to sent.
+    DeleteUserRequest:
+      type: object
+      properties:
+        password:
+          type: string
+        feedback:
+          type: string
+          example: "I'm leaving because..."
     PrivateMessageRequest:
       type: object
       required:
@@ -1067,6 +1075,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+    delete:
+      summary: Delete User Account [Danger]
+      description: |
+        Delete an authenticated user's account. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserDelete)
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteUserRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request (Missing or wrong password. or account deletion feedback is limited to 10,000 characters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/anonymized:
     get:
       summary: Get anonymized user data
@@ -1078,7 +1121,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Anonymized user data retrieved successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -1254,7 +1297,8 @@ paths:
       description: | 
         User must be at least level 10. \
         If "class" is defined and user.flags.classSelected is false it'll change the class. \
-        If user.preferences.disableClasses it'll enable classes, otherwise it sets user.flags.classSelected to false (costs 3 gems).
+        If user.preferences.disableClasses it'll enable classes, otherwise it sets user.flags.classSelected to false (costs 3 gems). \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserChangeClass)
       tags:
         - user
       security:
