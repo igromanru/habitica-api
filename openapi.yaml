@@ -116,6 +116,24 @@ components:
         email:
           type: string
           description: Bug Report Message to sent.
+    EditUserRequest:
+      type: object
+      properties:
+        achievements:
+          type: object
+          additionalProperties: true
+        stats:
+          type: object
+          additionalProperties: true
+        profile:
+          type: object
+          additionalProperties: true
+        flags:
+          type: object
+          additionalProperties: true
+        preferences:
+          type: object
+          additionalProperties: true
     DeleteUserRequest:
       type: object
       properties:
@@ -1064,12 +1082,47 @@ paths:
           apiToken: []
       responses:
         "200":
-          description: User information retrieved successfully
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataResponse'
         "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+    put:
+      summary: Update the user
+      description: |
+        Some of the user items can be updated, such as preferences, flags and stats. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserUpdate)
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+              schema:
+                $ref: '#/components/schemas/EditUserRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
           description: Unauthorized
           content:
             application/json:
