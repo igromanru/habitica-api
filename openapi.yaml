@@ -142,6 +142,17 @@ components:
         feedback:
           type: string
           example: "I'm leaving because..."
+    UpdateUsernameRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The new username
+        password:
+          type: string
+          description: The user's password if they use local authentication. Omit if they use social auth.
+      required:
+       - username
     PrivateMessageRequest:
       type: object
       required:
@@ -1969,8 +1980,10 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/revive:
     post:
-      summary: Revive user
-      description: Revive the authenticated user, restoring health and removing any penalties.
+      summary: Revive user from death
+      description: |
+        Revive the authenticated user, restoring health and removing any penalties.  \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserRevive)
       tags:
         - user
       security:
@@ -1978,7 +1991,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: User revived successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -1992,7 +2005,9 @@ paths:
   /v3/user/rebirth:
       post:
         summary: Use Orb of Rebirth on user
-        description: Rebirth the authenticated user, resetting their stats and granting rewards.
+        description: |
+          Rebirth the authenticated user, resetting their stats and granting rewards. \
+          See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserRebirth)
         tags:
           - user
         security:
@@ -2000,7 +2015,7 @@ paths:
             apiToken: []
         responses:
           '200':
-            description: User rebirth successful
+            description: OK
             content:
               application/json:
                 schema:
@@ -2014,7 +2029,9 @@ paths:
   /v4/user/purchase-history:
     get:
       summary: Get user purchase history
-      description: Retrieve the purchase history for the authenticated user.
+      description: | 
+        Retrieve the purchase history for the authenticated user. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserGetPurchaseHistory)
       tags:
         - user
       security:
@@ -2022,7 +2039,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Purchase history retrieved successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -2035,8 +2052,10 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/reset:
     post:
-      summary: Reset user data
-      description: Reset the authenticated user's data, removing all progress and starting over.
+      summary: Reset user
+      description: |
+        Reset the authenticated user's data, removing all progress and starting over.  \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserReset)
       tags:
         - user
       security:
@@ -2044,7 +2063,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: User data reset successful
+          description: OK
           content:
             application/json:
               schema:
@@ -2121,6 +2140,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/auth/update-username:
+    put:
+      summary: Update User's Username
+      description: |
+        Update the username associated with current user's account. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-User-UpdateUsername)
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        description: New Username
+        required: true
+        content:
+          application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateUsernameRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
         '401':
           description: Unauthorized
           content:
