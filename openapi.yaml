@@ -153,6 +153,20 @@ components:
           description: The user's password if they use local authentication. Omit if they use social auth.
       required:
        - username
+    UpdatePasswordRequest:
+      type: object
+      properties:
+        password:
+          type: string
+          description: The old password
+        newPassword:
+          type: string
+          description: The new password
+        confirmPassword:
+          type: string
+          description: New password confirmation
+      required:
+       - username
     PrivateMessageRequest:
       type: object
       required:
@@ -2158,12 +2172,47 @@ paths:
         - userId: []
           apiToken: []
       requestBody:
-        description: New Username
         required: true
         content:
           application/json:
               schema:
                 $ref: '#/components/schemas/UpdateUsernameRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/auth/update-password:
+    put:
+      summary: Update password
+      description: |
+        Update the password of a local user. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-User-UpdatePassword)
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatePasswordRequest'
       responses:
         '200':
           description: OK
