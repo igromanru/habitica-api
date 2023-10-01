@@ -1873,7 +1873,68 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
-
+  /v3/user/sell/{type}/{key}:
+    parameters:
+      - name: type
+        in: path
+        description: The type of item to sell
+        required: true
+        schema:
+          type: string
+          enum: [eggs, hatchingPotions, food]
+        example: eggs
+      - name: key
+        in: path
+        description: The key of the item
+        required: true
+        schema:
+          type: string
+    post:
+      summary: Sell a gold-sellable item owned by the user
+      description: Sell a specific item of a given type from the user's inventory.
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      parameters:
+        - name: amount
+          in: query
+          description: The amount to sell
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/allocate:
     post:
       summary: Allocate a single Stat Point 
