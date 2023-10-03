@@ -487,6 +487,8 @@ components:
         dayStart:
           type: number
           description: The hour number (0-23) for the day to begin. If not supplied, it will default to 0.
+          minimum: 0
+          maximum: 23
           default: 0
     CreateOrUpdateGroupRequest:
       type: object
@@ -1911,6 +1913,55 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+  /v4/user/unequip/{type}:
+    parameters:
+      - name: type
+        in: path
+        description: Type of the item to be unequipped
+        required: true
+        schema:
+          type: string
+          enum: [pet-mount-background, costume, equipped]
+        example: costume
+    post:
+      summary: Unequip all items by type
+      description: Unequip all items by type
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataWithMessageResponse'
         '400':
           description: Bad request
           content:
