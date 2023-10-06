@@ -1986,6 +1986,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/unlock:
+    post:
+      summary: Unlock item or set of items by purchase
+      description: "See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserUnlock)"
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      parameters:
+        - name: path
+          in: query
+          description: Full path to unlock. See "content" API call for list of items
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/allocate:
     post:
       summary: Allocate a single Stat Point 
