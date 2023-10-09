@@ -153,6 +153,17 @@ components:
           description: The user's password if they use local authentication. Omit if they use social auth.
       required:
        - username
+    UpdateEmailRequest:
+      type: object
+      properties:
+        newEmail:
+          type: string
+          description: The new email address
+        password:
+          type: string
+          description: The user password
+      required:
+       - newEmail
     UpdatePasswordRequest:
       type: object
       properties:
@@ -2349,6 +2360,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+  /v3/user/auth/update-email:
+    put:
+      summary: Update email
+      description: |
+        Change the user email address. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-User-UpdateEmail)
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateEmailRequest'
+      responses:
+        '200':
+          description: OK (email field, the updated email address)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'             
   /v3/user/auth/update-password:
     put:
       summary: Update password
