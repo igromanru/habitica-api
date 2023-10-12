@@ -453,20 +453,6 @@ components:
           minimum: 1
           default: 1
           description: Count of items to buy. Defaults to 1 and is ignored for items where quantity is irrelevant.
-    DeleteMessagesResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: Indicates the success status of the operation.
-        data:
-          type: object
-          description: An empty object for the "data" property.
-        notifications:
-          type: array
-          items:
-            type: string
-          description: An array of notifications.
     LeaveGroupRequest:
       type: object
       properties:
@@ -1442,8 +1428,10 @@ paths:
                 $ref: '#/components/schemas/ErrorMessageResponse'                
   /v3/user/messages:
     delete:
-      summary: Delete User Messages
-      description: Delete all user messages.
+      summary: Delete all messages
+      description: | 
+        Delete all user messages. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-User-clearMessages)
       tags:
         - user
       security:
@@ -1451,17 +1439,17 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: Messages deleted successfully
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeleteMessagesResponse'
+                $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
           content:
             application/json:
-              example:
-                error: Authentication failed. Please provide valid userId and apiToken.
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/user/messages/{id}:
     parameters:
       - name: id
@@ -1481,9 +1469,7 @@ paths:
           apiToken: []
       responses:
         '200':
-          description: |
-           Message deleted successfully
-           Contains all user.inbox.messages
+          description: OK (Contains all user.inbox.messages)
           content:
             application/json:
               schema:
@@ -1495,7 +1481,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
         '404':
-          description: Message not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -1517,7 +1503,7 @@ paths:
               $ref: '#/components/schemas/CustomDayStartRequest'
       responses:
         "200":
-          description: Custom day start time set successfully
+          description: OK
           content:
             application/json:
               schema:
@@ -2529,7 +2515,8 @@ paths:
       summary:  Get users in search of parties
       description: | 
         Get users who are looking for a party. \
-        *You must be the leader of a party to be able to use this endpoint.*
+        *You must be the leader of a party to be able to use this endpoint.* \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-Group-GetLookingForParty)
       tags:
         - party
       security:

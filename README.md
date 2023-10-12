@@ -1,5 +1,6 @@
-# Habitica API OpenAPI specification (WIP)
-WIP = Work In Progress
+# Habitica API OpenAPI specification
 
-I'm slowly working on it and adding new API endpoints almost daily.  
-Contributions and suggestions are welcome.  
+I've stopped working on it for now.  
+Most endpoints are there, some might be missing.  
+Feel free to report any issues and make requests.  
+Contributions are also welcome. 
