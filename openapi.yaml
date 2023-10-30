@@ -755,6 +755,15 @@ components:
     HeroUpdateRequest:
       type: object
       additionalProperties: true
+    SetLastCronRequest:
+      type: object
+      properties:
+        lastCron:
+          type: string
+          format: date-time
+          description: Last cron date-time
+      required:
+        - lastCron
 paths:
   /v3/status:
     get:
@@ -6725,6 +6734,12 @@ paths:
       security:
         - userId: []
           apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetLastCronRequest'
       responses:
         '200':
           description: OK
