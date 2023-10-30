@@ -6576,12 +6576,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/debug/add-hourglass:
     post:
       summary: Add Hourglass to the current user
       description: | 
         Add an hourglass to the user's account for debugging purposes. \
-        **Required Permissions:** `Developers`
+        **Required Permissions:** `Developers` \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-Development-AddHourglass)
       tags:
         - development
       security:
@@ -6596,6 +6603,12 @@ paths:
                 $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -6605,7 +6618,8 @@ paths:
       summary: Add ten gems to the current user
       description: |
         Add ten gems to the user's account for debugging purposes. \
-        **Required Permissions:** `Developers`
+        **Required Permissions:** `Developers` \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-Development-AddTenGems)
       tags:
         - development
       security:
@@ -6620,6 +6634,12 @@ paths:
                 $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -6629,7 +6649,8 @@ paths:
       summary: Artificially accelerate quest progress
       description: |
         Artificially accelerate quest progress for debugging purposes. \
-        **Required Permissions:** `Developers`
+        **Required Permissions:** `Developers` \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-Development-questProgress)
       tags:
         - development
       security:
@@ -6648,12 +6669,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/debug/modify-inventory:
     post:
       summary: Manipulate user's inventory
       description:  | 
         Modify user's inventory items for debugging purposes. \
-        **Required Permissions:** `Developers`
+        **Required Permissions:** `Developers` \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-Development-modifyInventory)
       tags:
         - development
       security:
@@ -6678,13 +6706,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
   /v3/debug/set-cron:
     post:
       summary: Set lastCron for user
       description: |
         Set lastCron to the user's account for debugging purposes. \
         **Required Permissions:** `Developers` \
-        *The official Habitica Doc hasn't provided any parameters for the request*
+        *The official Habitica Doc hasn't provided any parameters for the request* \
+        See: [ApiDocs](https://habitica.com/apidoc/#api-Development-setCron)
       tags:
         - development
       security:
@@ -6699,6 +6734,12 @@ paths:
                 $ref: '#/components/schemas/DataResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessageResponse'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
