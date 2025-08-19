@@ -60,6 +60,10 @@ components:
       type: apiKey
       in: header
       name: x-api-key
+    xClient:
+      type: apiKey
+      in: header
+      name: x-client
   schemas:
     DataResponse:
       type: object
@@ -793,6 +797,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         "200":
           description: Cron executed successfully
@@ -819,6 +824,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -1001,6 +1007,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -1051,6 +1058,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: Member objections retrieved successfully
@@ -1073,6 +1081,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -1113,6 +1122,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         "200":
           description: OK
@@ -1136,6 +1146,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -1171,6 +1182,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -1205,6 +1217,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -1232,6 +1245,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: spellId
           in: path
@@ -1277,6 +1291,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: '"data" current user.preferences.sleep state (true/false)'
@@ -1299,6 +1314,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: Returns user.inbox.newMessages
@@ -1321,6 +1337,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: Returns Obtained items in data and a success message
@@ -1358,6 +1375,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: Returns user.items.special, user.flags.cardReceived and a success message
@@ -1390,6 +1408,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: class
           in: query
@@ -1426,6 +1445,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: User classes disabled successfully
@@ -1446,6 +1466,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -1476,6 +1497,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK (Contains all user.inbox.messages)
@@ -1504,6 +1526,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -1553,6 +1576,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: false
         content:
@@ -1608,6 +1632,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: false
         content:
@@ -1648,6 +1673,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -1683,6 +1709,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -1720,6 +1747,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -1755,6 +1783,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -1793,6 +1822,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -1834,6 +1864,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -1862,6 +1893,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -1905,6 +1937,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: amount
           in: query
@@ -1961,6 +1994,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -2001,6 +2035,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: path
           in: query
@@ -2044,6 +2079,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: stat
           in: query
@@ -2082,6 +2118,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: Stat points allocated successfully
@@ -2104,6 +2141,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -2138,6 +2176,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: User stats rerolled successfully
@@ -2162,6 +2201,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -2186,6 +2226,7 @@ paths:
         security:
           - userId: []
             apiToken: []
+          xClient: []
         responses:
           '200':
             description: OK
@@ -2210,6 +2251,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -2234,6 +2276,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -2266,6 +2309,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -2294,6 +2338,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: page
           in: query
@@ -2330,6 +2375,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -2366,6 +2412,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -2402,6 +2449,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -2436,6 +2484,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: type
           in: query
@@ -2472,6 +2521,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -2531,6 +2581,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: page
           in: query
@@ -2567,6 +2618,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: type
           in: query
@@ -2618,6 +2670,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -2662,6 +2715,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         "200":
           description: OK
@@ -2691,6 +2745,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -2738,6 +2793,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: lastId
           in: query
@@ -2854,6 +2910,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -2894,7 +2951,8 @@ paths:
         - groups
       security:
         - userId: []
-          apiToken: []   
+          apiToken: []
+          xClient: []   
       requestBody:
         required: true
         content:
@@ -2938,6 +2996,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -2998,6 +3057,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -3039,6 +3099,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -3090,6 +3151,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: false
         content:
@@ -3137,6 +3199,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -3172,6 +3235,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -3213,6 +3277,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -3254,6 +3319,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: Successfully left the group quest
@@ -3297,6 +3363,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -3340,6 +3407,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: Group quest aborted successfully
@@ -3383,6 +3451,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -3430,6 +3499,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -3464,6 +3534,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK (An array of the requested groups with a group plan (See [/website/server/models/group.js](https://github.com/HabitRPG/habitica/blob/develop/website/server/models/group.js)))
@@ -3488,6 +3559,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -3516,6 +3588,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK (data is an array of chat messages)
@@ -3549,6 +3622,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: previousMsg
           in: query
@@ -3603,6 +3677,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK (data is an array of chat messages)
@@ -3636,6 +3711,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: previousMsg
           in: query
@@ -3697,6 +3773,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: previousMsg
           in: query
@@ -3753,6 +3830,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -3794,6 +3872,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: Chat messages marked as seen successfully
@@ -3842,6 +3921,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: false
         content:
@@ -3898,6 +3978,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: Chat flags cleared successfully
@@ -3932,6 +4013,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -3978,6 +4060,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: page
           in: query
@@ -4052,6 +4135,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: Challenge retrieved successfully
@@ -4075,6 +4159,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -4114,6 +4199,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: Challenge deleted successfully
@@ -4150,6 +4236,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: Challenge joined successfully
@@ -4186,6 +4273,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: false
         content:
@@ -4228,6 +4316,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: Challenge cloned successfully
@@ -4264,6 +4353,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: CSV exported successfully
@@ -4300,6 +4390,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -4342,6 +4433,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: lastId
           in: query
@@ -4448,6 +4540,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -4482,6 +4575,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         "200":
           description: OK
@@ -4505,6 +4599,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -4547,6 +4642,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -4586,6 +4682,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         "200":
           description: OK (data is an array of all remaining WebHooks)
@@ -4654,6 +4751,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -4683,6 +4781,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -4714,6 +4813,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -4758,6 +4858,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -4787,6 +4888,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -4834,6 +4936,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: News articles marked as read successfully
@@ -4856,6 +4959,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: Request to be notified later successful
@@ -4878,6 +4982,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -4914,6 +5019,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -4948,6 +5054,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -4987,6 +5094,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -5021,6 +5129,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK (Notifications marked as read successfully, returns user.notifications)
@@ -5043,6 +5152,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK (Notifications marked as seen successfully, returns user.notifications)
@@ -5073,6 +5183,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK (Notification marked as read successfully, returns user.notifications)
@@ -5103,6 +5214,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK (Notification marked as seen successfully, returns user.notifications)
@@ -5259,6 +5371,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -5331,6 +5444,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -5424,6 +5538,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -5467,6 +5582,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: false
         content:
@@ -5509,6 +5625,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: type
           in: query
@@ -5552,6 +5669,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -5599,6 +5717,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       parameters:
         - name: type
           in: query
@@ -5642,6 +5761,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -5691,6 +5811,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK (The new tasks order for the specific type that the taskID belongs to)
@@ -5745,6 +5866,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK (The new tasks order (group.tasksOrder.{task.type}s))
@@ -5793,6 +5915,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK (The task that needs more work)
@@ -5841,6 +5964,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -5890,6 +6014,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -5947,6 +6072,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK (The unassigned task)
@@ -6086,6 +6212,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -6107,6 +6234,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -6149,6 +6277,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -6182,6 +6311,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -6221,6 +6351,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -6258,6 +6389,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -6313,6 +6445,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -6341,6 +6474,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: List of available coupons retrieved successfully
@@ -6377,6 +6511,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -6412,6 +6547,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -6442,6 +6578,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -6467,6 +6604,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -6492,6 +6630,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -6517,6 +6656,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -6603,6 +6743,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -6634,6 +6775,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -6665,6 +6807,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       responses:
         '200':
           description: OK
@@ -6696,6 +6839,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
@@ -6734,6 +6878,7 @@ paths:
       security:
         - userId: []
           apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
