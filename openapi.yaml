@@ -4,7 +4,7 @@ info:
   title: Habitica API
   description: Habitica API representation as OpenAPI spec
   version: 1.0.0
-  contact: 
+  contact:
     name: Specification repository
     url: https://github.com/igromanru/habitica-api
 externalDocs:
@@ -13,7 +13,7 @@ externalDocs:
 servers:
   - url: https://habitica.com/api
     description: Habitica API server
-tags: 
+tags:
   - name: default
   - name: hall
     description: Hall of Fame related requests
@@ -47,7 +47,7 @@ tags:
   - name: data-export
     description: Data Export related requests
   - name: development
-    description: | 
+    description: |
       Development related requests \
       **These routes only exist while Habitica is in development mode. (Such as running a local instance on your computer)**
 components:
@@ -90,12 +90,12 @@ components:
           example: "4.276.0"
     DataWithMessageResponse:
       allOf:
-      - $ref: '#/components/schemas/DataResponse'
-      - type: object
-        properties:
-          message:
-            type: string
-            description: Success message.
+        - $ref: "#/components/schemas/DataResponse"
+        - type: object
+          properties:
+            message:
+              type: string
+              description: Success message.
     ErrorMessageResponse:
       type: object
       properties:
@@ -156,7 +156,7 @@ components:
           type: string
           description: The user's password if they use local authentication. Omit if they use social auth.
       required:
-       - username
+        - username
     UpdateEmailRequest:
       type: object
       properties:
@@ -167,7 +167,7 @@ components:
           type: string
           description: The user password
       required:
-       - newEmail
+        - newEmail
     UpdatePasswordRequest:
       type: object
       properties:
@@ -181,7 +181,7 @@ components:
           type: string
           description: New password confirmation
       required:
-       - username
+        - username
     PrivateMessageRequest:
       type: object
       required:
@@ -503,12 +503,12 @@ components:
           description: The name of the new group.
         type:
           type: string
-          enum: ['guild', 'party']
+          enum: ["guild", "party"]
           example: guild
           description: Type of group (guild or party)
         privacy:
           type: string
-          enum: ['private', 'public']
+          enum: ["private", "public"]
           example: public
           description: Privacy of group (party MUST be private)
     AddOrRemoveManagerRequest:
@@ -537,7 +537,7 @@ components:
                 type: string
                 description: The name of the user being invited.
             required:
-             - email
+              - email
         uuids:
           type: array
           description: An array of user IDs to invite.
@@ -577,7 +577,13 @@ components:
         type:
           type: string
           description: The webhook's type.
-          enum: ['taskActivity', 'groupChatReceived', 'userActivity', 'questActivity']
+          enum:
+            [
+              "taskActivity",
+              "groupChatReceived",
+              "userActivity",
+              "questActivity",
+            ]
           default: taskActivity
         options:
           type: object
@@ -599,7 +605,13 @@ components:
           description: If the webhook should be enabled.
         type:
           type: string
-          enum: ['taskActivity', 'groupChatReceived', 'userActivity', 'questActivity']
+          enum:
+            [
+              "taskActivity",
+              "groupChatReceived",
+              "userActivity",
+              "questActivity",
+            ]
           description: The webhook's type.
         options:
           type: object
@@ -682,7 +694,7 @@ components:
           description: Values "weekly" and "monthly" enable use of the "repeat" field. All frequency values enable use of the "everyX" field. Value "monthly" enables use of the "weeksOfMonth" and "daysOfMonth" fields. Frequency is only valid for type "daily".
         repeat:
           type: string
-          default: 'true'
+          default: "true"
           description: 'List of objects for days of the week, Days that are true will be repeated upon. Only valid for type "daily". Any days not specified will be marked as true. Days are: su, m, t, w, th, f, s. Value of frequency must be "weekly". For example, to skip repeats on Mon and Fri: "repeat":{"f":false,"m":false}'
         everyX:
           type: integer
@@ -772,16 +784,16 @@ paths:
   /v3/status:
     get:
       summary: Get Habitica API status
-      description: | 
+      description: |
         Endpoint to get the current status of the Habitica API. \
         Returns typical data object with string property "status" that has the value `up`, if the server is running.
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
+                $ref: "#/components/schemas/DataResponse"
         "500":
           description: Internal Server Error (The server is down)
   /v3/cron:
@@ -804,23 +816,23 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
+                $ref: "#/components/schemas/DataResponse"
         "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v4/bug-report:
     post:
       summary: Submit a bug report
-      description: Submit a bug report for the Habitica application.      
+      description: Submit a bug report for the Habitica application.
       security:
         - userId: []
           apiToken: []
@@ -830,35 +842,35 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BugReportRequest'
+              $ref: "#/components/schemas/BugReportRequest"
       responses:
-        '200':
+        "200":
           description: Bug report submitted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (The report message is missing)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (The specified user could not be found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /email/unsubscribe:
     servers:
-      - url:  https://habitica.com
+      - url: https://habitica.com
     get:
       summary: Unsubscribe an email address or user from email notifications
       description: |
@@ -871,31 +883,31 @@ paths:
             type: string
           description: An unsubscription code that contains an encrypted User ID or email address
       responses:
-        '200':
+        "200":
           description: OK
           content:
             text/html:
               schema:
                 type: string
                 format: binary
-        '400':
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/i18n/browser-script:
     get:
       summary: Returns the i18n JS script
       description: Returns the i18n JS script to make all the i18n strings available in the browser under window.i18n.strings. Does not require authentication.
       responses:
-        '200':
+        "200":
           description: OK
           content:
             text/plain:
@@ -907,12 +919,12 @@ paths:
       summary: Get World State
       description: Get the state for the game world
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
+                $ref: "#/components/schemas/DataResponse"
   /v3/content:
     get:
       summary: Get Content
@@ -922,16 +934,45 @@ paths:
           in: query
           schema:
             type: string
-            enum: ["bg", "cs", "da", "de", "en", "en@pirate", "en_GB", "es", "es_419", "fr", "he", "hu", "id", "it", "ja", "nl", "pl", "pt", "pt_BR", "ro", "ru", "sk", "sr", "sv", "uk", "zh", "zh_TW"]
+            enum:
+              [
+                "bg",
+                "cs",
+                "da",
+                "de",
+                "en",
+                "en@pirate",
+                "en_GB",
+                "es",
+                "es_419",
+                "fr",
+                "he",
+                "hu",
+                "id",
+                "it",
+                "ja",
+                "nl",
+                "pl",
+                "pt",
+                "pt_BR",
+                "ro",
+                "ru",
+                "sk",
+                "sr",
+                "sv",
+                "uk",
+                "zh",
+                "zh_TW",
+              ]
             default: "en"
           description: The desired language for the content data.
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
+                $ref: "#/components/schemas/DataResponse"
   /v3/members/{memberId}:
     parameters:
       - name: memberId
@@ -952,19 +993,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
+                $ref: "#/components/schemas/DataResponse"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
         "404":
           description: Member not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/members/{memberId}/achievements:
     parameters:
       - name: memberId
@@ -980,24 +1021,24 @@ paths:
       tags:
         - members
       responses:
-        '200':
+        "200":
           description: Successfully retrieved member achievements
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Member not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/members/send-private-message:
     post:
       summary: Send Private Message
@@ -1013,26 +1054,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PrivateMessageRequest'
+              $ref: "#/components/schemas/PrivateMessageRequest"
       responses:
-        '200':
+        "200":
           description: Private message sent successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/members/{toUserId}/objections/{interaction}:
     parameters:
       - name: toUserId
@@ -1060,18 +1101,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: Member objections retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/members/transfer-gems:
     post:
       summary: Transfer Gems
@@ -1087,32 +1128,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TransferGemsRequest'
+              $ref: "#/components/schemas/TransferGemsRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (The specified user could not be found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user:
     get:
       summary: Get user information
@@ -1129,13 +1170,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
+                $ref: "#/components/schemas/DataResponse"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     put:
       summary: Update the user
       description: |
@@ -1151,27 +1192,27 @@ paths:
         required: true
         content:
           application/json:
-              schema:
-                $ref: '#/components/schemas/EditUserRequest'
+            schema:
+              $ref: "#/components/schemas/EditUserRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     delete:
       summary: Delete User Account [Danger]
       description: |
@@ -1188,26 +1229,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DeleteUserRequest'
+              $ref: "#/components/schemas/DeleteUserRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (Missing or wrong password. or account deletion feedback is limited to 10,000 characters)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/anonymized:
     get:
       summary: Get anonymized user data
@@ -1219,18 +1260,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/class/cast/{spellId}:
     post:
       summary: Cast a skill (spell) on yourself or a target
@@ -1253,7 +1294,29 @@ paths:
           required: true
           schema:
             type: string
-            enum: [fireball, mpheal, earth, frost, smash, defensiveStance, valorousPresence, intimidate, pickPocket, backStab, toolsOfTrade, stealth, heal, protectAura, brightness, healAll, snowball, spookySparkles, seafoam, shinySeed]
+            enum:
+              [
+                fireball,
+                mpheal,
+                earth,
+                frost,
+                smash,
+                defensiveStance,
+                valorousPresence,
+                intimidate,
+                pickPocket,
+                backStab,
+                toolsOfTrade,
+                stealth,
+                heal,
+                protectAura,
+                brightness,
+                healAll,
+                snowball,
+                spookySparkles,
+                seafoam,
+                shinySeed,
+              ]
         - name: targetId
           in: query
           description: User ID of the target (optional)
@@ -1262,26 +1325,26 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: |
             Spell cast successfully. \
             Will return the modified targets. For party members only the necessary fields will be populated. The user is always returned.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/sleep:
     post:
       summary: Make the user start / stop sleeping (resting in the Inn)
@@ -1293,18 +1356,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: '"data" current user.preferences.sleep state (true/false)'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/mark-pms-read:
     post:
       summary: Mark Private Messages as read
@@ -1316,18 +1379,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: Returns user.inbox.newMessages
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/open-mystery-item:
     post:
       summary: Open the Mystery Item box
@@ -1339,24 +1402,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: Returns Obtained items in data and a success message
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataWithMessageResponse'
-        '400':
+                $ref: "#/components/schemas/DataWithMessageResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/read-card/{cardType}:
     parameters:
       - name: cardType
@@ -1377,28 +1440,28 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: Returns user.items.special, user.flags.cardReceived and a success message
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataWithMessageResponse'
-        '400':
+                $ref: "#/components/schemas/DataWithMessageResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/change-class:
     post:
       summary: Change the class of the authenticated user
-      description: | 
+      description: |
         User must be at least level 10. \
         If "class" is defined and user.flags.classSelected is false it'll change the class. \
         If user.preferences.disableClasses it'll enable classes, otherwise it sets user.flags.classSelected to false (costs 3 gems). \
@@ -1418,24 +1481,24 @@ paths:
             type: string
             enum: [warrior, rogue, wizard, healer]
       responses:
-        '200':
+        "200":
           description: User class changed successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/disable-classes:
     post:
       summary: Disable Classes
@@ -1447,18 +1510,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: User classes disabled successfully
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'                
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/messages:
     delete:
       summary: Delete all messages
-      description: | 
+      description: |
         Delete all user messages. \
         See: [ApiDoc](https://habitica.com/apidoc/#api-User-clearMessages)
       tags:
@@ -1468,18 +1531,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/messages/{id}:
     parameters:
       - name: id
@@ -1499,24 +1562,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK (Contains all user.inbox.messages)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/custom-day-start:
     post:
       summary: Set Custom Day Start time for user
@@ -1532,26 +1595,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CustomDayStartRequest'
+              $ref: "#/components/schemas/CustomDayStartRequest"
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
+                $ref: "#/components/schemas/DataResponse"
         "400":
           description: Bad Request (Value provided is not a number or is outside the range of 0-23)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/purchase/{type}/{key}:
     parameters:
       - name: type
@@ -1559,7 +1622,17 @@ paths:
         required: true
         schema:
           type: string
-          enum: [gems, eggs, hatchingPotions, premiumHatchingPotions, food, quests, gear, pets]
+          enum:
+            [
+              gems,
+              eggs,
+              hatchingPotions,
+              premiumHatchingPotions,
+              food,
+              quests,
+              gear,
+              pets,
+            ]
           default: food
         description: Type of item to purchase. Can be gems, eggs, hatchingPotions, premiumHatchingPotions, food, quests, gear, or pets.
       - name: key
@@ -1582,32 +1655,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PurchaseItemRequest'
+              $ref: "#/components/schemas/PurchaseItemRequest"
       responses:
-        '200':
+        "200":
           description: Item purchased successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataWithMessageResponse'
-        '400':
+                $ref: "#/components/schemas/DataWithMessageResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/purchase-hourglass/{type}/{key}:
     parameters:
       - name: type
@@ -1638,32 +1711,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PurchaseItemRequest'
+              $ref: "#/components/schemas/PurchaseItemRequest"
       responses:
-        '200':
+        "200":
           description: Hourglass item purchased successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataWithMessageResponse'
-        '400':
+                $ref: "#/components/schemas/DataWithMessageResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/buy-health-potion:
     post:
       summary: Buy a health potion
@@ -1675,24 +1748,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (Not enough gold for the purchase or health is already full)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/buy-mystery-set/{key}:
     parameters:
       - name: key
@@ -1711,24 +1784,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (Not enough Mystic Hourglasses or specified item doesn't exist or already owned)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/buy/{key}:
     parameters:
       - name: key
@@ -1739,7 +1812,7 @@ paths:
         description: The item to buy
     post:
       summary: Buy gear, armoire or potion
-      description: | 
+      description: |
         Under the hood uses UserBuyGear, UserBuyPotion and UserBuyArmoire \
         See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserBuy)
       tags:
@@ -1749,24 +1822,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (Not enough gold for the purchase or already own equipment)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/buy-gear/{key}:
     parameters:
       - name: key
@@ -1785,24 +1858,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (Not enough gold for the purchase or already own equipment)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/buy-special-spell/{key}:
     parameters:
       - name: key
@@ -1811,7 +1884,7 @@ paths:
         description: The special item to buy. Must be one of the keys from "content.special", such as birthday, snowball, salt.
         schema:
           type: string
-          example: "snowball" 
+          example: "snowball"
     post:
       summary: Buy special item (card, avatar transformation)
       description: |
@@ -1824,30 +1897,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'  
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/buy-quest/{key}:
     parameters:
       - name: key
@@ -1866,24 +1939,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (Specified quest does not exist or not enough gold for the purchase)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/buy-armoire:
     post:
       summary: Buy Enchanted Armoire
@@ -1895,24 +1968,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (Not enough gold for the purchase)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/sell/{type}/{key}:
     parameters:
       - name: type
@@ -1946,36 +2019,36 @@ paths:
           schema:
             type: number
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '403':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "403":
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v4/user/unequip/{type}:
     parameters:
       - name: type
@@ -1996,36 +2069,36 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataWithMessageResponse'
-        '400':
+                $ref: "#/components/schemas/DataWithMessageResponse"
+        "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '403':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "403":
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/unlock:
     post:
       summary: Unlock item or set of items by purchase
@@ -2044,34 +2117,34 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '403':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "403":
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/allocate:
     post:
-      summary: Allocate a single Stat Point 
-      description: | 
+      summary: Allocate a single Stat Point
+      description: |
         Put a single Stat Point into a specific stat. \
         See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserAllocate)
       tags:
@@ -2089,28 +2162,28 @@ paths:
             type: string
             enum: [str, con, int, per]
       responses:
-        '200':
+        "200":
           description: Stat Point allocated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/allocate-now:
     post:
       summary: Allocate all Stat Points
-      description: | 
+      description: |
         "Uses the user's chosen automatic allocation method, or if none, assigns all to STR. Note: will return success, even if there are 0 points to allocate." \
         See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserAllocateNow)
       tags:
@@ -2120,18 +2193,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: Stat points allocated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/allocate-bulk:
     post:
       summary: Allocate multiple Stat Points
@@ -2147,26 +2220,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/StatAllocation'
+              $ref: "#/components/schemas/StatAllocation"
       responses:
-        '200':
+        "200":
           description: Stat points allocated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/reroll:
     post:
       summary: Reroll user stats
@@ -2178,18 +2251,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: User stats rerolled successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/revive:
     post:
       summary: Revive user from death
@@ -2203,47 +2276,47 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/rebirth:
-      post:
-        summary: Use Orb of Rebirth on user
-        description: |
-          Rebirth the authenticated user, resetting their stats and granting rewards. \
-          See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserRebirth)
-        tags:
-          - user
-        security:
-          - userId: []
-            apiToken: []
+    post:
+      summary: Use Orb of Rebirth on user
+      description: |
+        Rebirth the authenticated user, resetting their stats and granting rewards. \
+        See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserRebirth)
+      tags:
+        - user
+      security:
+        - userId: []
+          apiToken: []
           xClient: []
-        responses:
-          '200':
-            description: OK
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/DataResponse'
-          '401':
-            description: Unauthorized
-            content:
-              application/json:
-                example:
-                  error: Authentication failed. Please provide valid userId and apiToken.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Authentication failed. Please provide valid userId and apiToken.
   /v4/user/purchase-history:
     get:
       summary: Get user purchase history
-      description: | 
+      description: |
         Retrieve the purchase history for the authenticated user. \
         See: [ApiDoc](https://habitica.com/apidoc/#api-User-UserGetPurchaseHistory)
       tags:
@@ -2253,18 +2326,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/reset:
     post:
       summary: Reset user
@@ -2278,18 +2351,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/block/{uuid}:
     parameters:
       - name: uuid
@@ -2305,36 +2378,36 @@ paths:
         Block / unblock a user from sending you a PM. \
         See: [ApiDoc](https://habitica.com/apidoc/#api-User-BlockUser)
       tags:
-          - user
+        - user
       security:
         - userId: []
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (Invalid UUID)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/inbox/messages:
     get:
       summary: Get Inbox Messages
       description: Get inbox messages for a user.
       tags:
-          - user
+        - user
       security:
         - userId: []
           apiToken: []
@@ -2352,18 +2425,18 @@ paths:
             format: uuid
           description: Loads only the messages of a conversation
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/auth/update-username:
     put:
       summary: Update User's Username
@@ -2380,27 +2453,27 @@ paths:
         required: true
         content:
           application/json:
-              schema:
-                $ref: '#/components/schemas/UpdateUsernameRequest'
+            schema:
+              $ref: "#/components/schemas/UpdateUsernameRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/auth/update-email:
     put:
       summary: Update email
@@ -2417,27 +2490,27 @@ paths:
         required: true
         content:
           application/json:
-              schema:
-                $ref: '#/components/schemas/UpdateEmailRequest'
+            schema:
+              $ref: "#/components/schemas/UpdateEmailRequest"
       responses:
-        '200':
+        "200":
           description: OK (email field, the updated email address)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'             
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/auth/update-password:
     put:
       summary: Update password
@@ -2454,27 +2527,27 @@ paths:
         required: true
         content:
           application/json:
-              schema:
-                $ref: '#/components/schemas/UpdatePasswordRequest'
+            schema:
+              $ref: "#/components/schemas/UpdatePasswordRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tasks/user:
     get:
       summary: Get user's tasks
@@ -2506,13 +2579,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
+                $ref: "#/components/schemas/DataResponse"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     post:
       summary: Create a new task belonging to the user
       description: Can be passed an object to create a single task or an array of objects to create multiple tasks.
@@ -2527,26 +2600,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserTaskRequest'
+              $ref: "#/components/schemas/UserTaskRequest"
       responses:
-        '201':
+        "201":
           description: Task created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tasks/clearCompletedTodos:
     post:
       summary: Delete user's completed todos
@@ -2554,25 +2627,26 @@ paths:
       tags:
         - tasks
       security:
-      - userId: []
-        apiToken: []
+        - userId: []
+          apiToken: []
+          xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/looking-for-party:
     get:
-      summary:  Get users in search of parties
-      description: | 
+      summary: Get users in search of parties
+      description: |
         Get users who are looking for a party. \
         *You must be the leader of a party to be able to use this endpoint.* \
         See: [ApiDoc](https://habitica.com/apidoc/#api-Group-GetLookingForParty)
@@ -2591,24 +2665,24 @@ paths:
             default: 0
           description: Page number, defaults to 0.
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (You are not the leader of a Party)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups:
     get:
       summary: Get user's groups
@@ -2652,16 +2726,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
+                $ref: "#/components/schemas/DataResponse"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     post:
       summary: Create a Group
-      description: | 
+      description: |
         Create a group in Habitica. \
         Possible types: `guild` or `party` \
         Possible privacy: `public` or `private` (party MUST be private)
@@ -2676,26 +2750,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateOrUpdateGroupRequest'
+              $ref: "#/components/schemas/CreateOrUpdateGroupRequest"
       responses:
-        '201':
+        "201":
           description: Group created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}:
     parameters:
       - name: groupId
@@ -2722,22 +2796,22 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
+                $ref: "#/components/schemas/DataResponse"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
         "404":
           description: Group not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     put:
       summary: Update Group
-      description: | 
+      description: |
         Update a group. \
         **Required Permissions:** `GroupLeader`, `Admin`
       tags:
@@ -2751,32 +2825,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateOrUpdateGroupRequest'
+              $ref: "#/components/schemas/CreateOrUpdateGroupRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/members:
     parameters:
       - name: groupId
@@ -2824,24 +2898,24 @@ paths:
             type: boolean
           description: If set to true then all public fields for members will be returned (similar to when making a request for a single member).
       responses:
-        '200':
+        "200":
           description: OK (data is an array of members, sorted by _id)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Group not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/invites:
     parameters:
       - name: groupId
@@ -2876,24 +2950,24 @@ paths:
             default: false
           description: If set to `true` then all public fields for members will be returned (similar to when making a request for a single member).
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/add-manager:
     parameters:
       - name: groupId
@@ -2916,26 +2990,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AddOrRemoveManagerRequest'
+              $ref: "#/components/schemas/AddOrRemoveManagerRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/remove-manager:
     parameters:
       - name: groupId
@@ -2952,32 +3026,32 @@ paths:
       security:
         - userId: []
           apiToken: []
-          xClient: []   
+          xClient: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AddOrRemoveManagerRequest'
+              $ref: "#/components/schemas/AddOrRemoveManagerRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/invite:
     parameters:
       - name: groupId
@@ -2988,7 +3062,7 @@ paths:
         description: The group _id ('party' for the user party and 'habitrpg' for tavern are accepted)
     post:
       summary: Invite users to a group
-      description: | 
+      description: |
         Invite a user to join a group. \
         You can provide both `emails` and `uuids`, or just one. You must provide at least one.
       tags:
@@ -3002,32 +3076,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GroupInviteRequest'
+              $ref: "#/components/schemas/GroupInviteRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/removeMember/{memberId}:
     parameters:
       - name: groupId
@@ -3059,30 +3133,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/join:
     parameters:
       - name: groupId
@@ -3101,30 +3175,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (A groupId is required or Group requires an invitation to join (e.g. private group, party))
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (The specified group could not be found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/leave:
     parameters:
       - name: groupId
@@ -3157,32 +3231,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LeaveGroupRequest'
+              $ref: "#/components/schemas/LeaveGroupRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (The specified group could not be found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/reject-invite:
     parameters:
       - name: groupId
@@ -3201,24 +3275,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/quests/accept:
     parameters:
       - name: groupId
@@ -3237,30 +3311,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (Group or Quest not found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/quests/reject:
     parameters:
       - name: groupId
@@ -3279,30 +3353,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (Group or Quest not found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/quests/leave:
     parameters:
       - name: groupId
@@ -3321,30 +3395,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: Successfully left the group quest
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (Group or Quest not found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/quests/cancel:
     parameters:
       - name: groupId
@@ -3355,7 +3429,7 @@ paths:
         description: The group _id (or 'party')
     post:
       summary: Cancel Group Quest
-      description: | 
+      description: |
         Cancel current not active quest. \
         **Required Permissions:** `QuestLeader` or `GroupLeader`.
       tags:
@@ -3365,30 +3439,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (Group or Quest not found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/quests/abort:
     parameters:
       - name: groupId
@@ -3399,7 +3473,7 @@ paths:
         description: The group _id (or 'party')
     post:
       summary: Abort Group Quest
-      description: | 
+      description: |
         Abort the active group quest. \
         **Required Permissions:** `QuestLeader` or `GroupLeader`.
       tags:
@@ -3409,30 +3483,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: Group quest aborted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse' 
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (Group or Quest not found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/quests/force-start:
     parameters:
       - name: groupId
@@ -3443,7 +3517,7 @@ paths:
         description: The group _id (or 'party')
     post:
       summary: Force-Start Group Quest
-      description: | 
+      description: |
         Force-start the quest, allowing the quest to begin immediately. \
         **Required Permissions:** `QuestLeader` or `GroupLeader`.
       tags:
@@ -3453,30 +3527,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (Group or Quest not found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/quests/invite/{questKey}:
     parameters:
       - name: groupId
@@ -3501,30 +3575,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (Group or Quest not found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/group-plans:
     get:
       summary: Get Group Plans
@@ -3536,22 +3610,22 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK (An array of the requested groups with a group plan (See [/website/server/models/group.js](https://github.com/HabitRPG/habitica/blob/develop/website/server/models/group.js)))
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/create-plan:
     post:
       summary: Create Group Plan
-      description: | 
+      description: |
         Create a new group plan. \
         *The official Habitica Doc doesn't provide infomation about the request body, it might be wrong.*
       tags:
@@ -3565,20 +3639,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GroupPlanCreateRequest'
+              $ref: "#/components/schemas/GroupPlanCreateRequest"
       responses:
-        '201':
+        "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/party/chat:
     get:
       summary: Get party chat messages
@@ -3590,30 +3664,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK (data is an array of chat messages)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     post:
       summary: Send a chat message to the party
       description: Send a chat message in the party's chat.
@@ -3635,32 +3709,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChatMessageRequest'
+              $ref: "#/components/schemas/ChatMessageRequest"
       responses:
-        '201':
+        "201":
           description: Created (Sent message)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request  (Your chat privileges have been revoked or the group ID is invalid)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (No party found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/chat:
     parameters:
       - name: groupId
@@ -3679,30 +3753,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK (data is an array of chat messages)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     post:
       summary: Send a chat message in a group
       description: Send a chat message in the specified group's chat.
@@ -3724,32 +3798,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChatMessageRequest'
+              $ref: "#/components/schemas/ChatMessageRequest"
       responses:
-        '201':
+        "201":
           description: Created (Sent message)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request  (Your chat privileges have been revoked or the group ID is invalid)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (The specified group could not be found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/chat/{chatId}:
     parameters:
       - name: groupId
@@ -3783,30 +3857,30 @@ paths:
             format: uuid
           description: The last message's ID fetched by the client so that the whole chat will be returned only if new messages have been posted in the meantime.
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (The specified group or message could't be found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/chat/{chatId}/like:
     parameters:
       - name: groupId
@@ -3832,30 +3906,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (A user can't like his own message, invalid group or chat ID)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (The specified group or message could't be found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/chat/seen:
     parameters:
       - name: groupId
@@ -3874,30 +3948,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: Chat messages marked as seen successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/chat/{chatId}/flag:
     parameters:
       - name: groupId
@@ -3927,32 +4001,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChatFlagRequest'
+              $ref: "#/components/schemas/ChatFlagRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/groups/{groupId}/chat/{chatId}/clearflags:
     parameters:
       - name: groupId
@@ -3970,7 +4044,7 @@ paths:
           description: The UUID of the chat message to clear flags from.
     post:
       summary: Clear flags
-      description: | 
+      description: |
         Resets the flag count on a chat message. Retains the id of the user's that have flagged the message. (Only visible to moderators). \
         **Required Permissions:** Habitica `Admin`
       tags:
@@ -3980,30 +4054,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: Chat flags cleared successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (Group ID or Chat ID are missing)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (Insufficient Permissions or Group ID or Chat ID couldn't be find)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/challenges:
     post:
       summary: Create a challenge
@@ -4019,38 +4093,38 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChallengeRequest'
+              $ref: "#/components/schemas/ChallengeRequest"
       responses:
-        '200':
+        "200":
           description: Challenge created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '201':
+                $ref: "#/components/schemas/DataResponse"
+        "201":
           description: The newly created challenge
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (Invalid or missing parameter in challenge body)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized (Not Authorized or User does not have enough gems to offer this prize)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (Group or User not found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/challenges/user:
     get:
       summary: Get challenges for a user
@@ -4094,30 +4168,30 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: User challenges retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (Page query parameter must be a positive integer)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (User could not be found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/challenges/{challengeId}:
     parameters:
       - name: challengeId
@@ -4137,21 +4211,21 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: Challenge retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '404':
+                $ref: "#/components/schemas/DataResponse"
+        "404":
           description: Challenge not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     put:
       summary: Update a challenge
-      description: | 
+      description: |
         Update a challenge's name, description, or summary. \
         **Required Permission:** `ChallengeLeader`
       tags:
@@ -4165,32 +4239,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChallengeUpdateRequest'
+              $ref: "#/components/schemas/ChallengeUpdateRequest"
       responses:
-        '200':
+        "200":
           description: Challenge updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Challenge not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     delete:
       summary: Delete a challenge
       description: Delete the specified challenge by challenge ID.
@@ -4201,24 +4275,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: Challenge deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Challenge not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/challenges/{challengeId}/join:
     parameters:
       - name: challengeId
@@ -4238,33 +4312,33 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: Challenge joined successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Challenge not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/challenges/{challengeId}/leave:
     parameters:
-        - name: challengeId
-          in: path
-          description: ID of the challenge to leave
-          required: true
-          schema:
-            type: string
-            format: uuid
+      - name: challengeId
+        in: path
+        description: ID of the challenge to leave
+        required: true
+        schema:
+          type: string
+          format: uuid
     post:
       summary: Leave Challenge
       description: Leave a challenge by its ID.
@@ -4279,26 +4353,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LeaveChallengeRequest'
+              $ref: "#/components/schemas/LeaveChallengeRequest"
       responses:
-        '200':
+        "200":
           description: Successfully left the challenge
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Challenge not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/challenges/{challengeId}/clone:
     parameters:
       - name: challengeId
@@ -4318,24 +4392,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: Challenge cloned successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Challenge not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/challenges/{challengeId}/export/csv:
     parameters:
       - name: challengeId
@@ -4355,25 +4429,25 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: CSV exported successfully
           content:
             text/csv:
               schema:
                 type: string
                 format: binary
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Challenge not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/challenges/groups/{groupId}:
     parameters:
       - name: groupId
@@ -4392,30 +4466,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/challenges/{challengeId}/members:
     parameters:
       - name: challengeId
@@ -4464,24 +4538,24 @@ paths:
             type: boolean
           description: If set to true then all public fields for members will be returned (similar to when making a request for a single member).
       responses:
-        '200':
+        "200":
           description: OK (data is an array of members, sorted by _id)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Challenge not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/challenges/{challengeId}/members/{memberId}:
     parameters:
       - name: challengeId
@@ -4504,18 +4578,18 @@ paths:
       tags:
         - challenges
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/challenges/{challengeId}/selectWinner/{winnerId}:
     parameters:
       - name: challengeId
@@ -4542,30 +4616,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (The challenge or the user could't be found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse' 
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/webhook:
     get:
       summary: Get user webhooks
@@ -4582,16 +4656,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
+                $ref: "#/components/schemas/DataResponse"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     post:
       summary: Create user webhook
-      description: | 
+      description: |
         Create a new webhook for the authenticated user. \
         Possible types: `taskActivity`, `groupChatReceived`, `userActivity`, `questActivity`
       tags:
@@ -4605,26 +4679,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WebhookCreateRequest'
+              $ref: "#/components/schemas/WebhookCreateRequest"
       responses:
         "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
+                $ref: "#/components/schemas/DataResponse"
         "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/user/webhook/{id}:
     parameters:
       - name: id
@@ -4648,32 +4722,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WebhookUpdateRequest'
+              $ref: "#/components/schemas/WebhookUpdateRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
         "404":
           description: Webhook not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     delete:
       summary: Delete a webhook
       description: Delete a specific webhook by webhook ID.
@@ -4689,19 +4763,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
+                $ref: "#/components/schemas/DataResponse"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
         "404":
           description: Webhook not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/models/{model}/paths:
     parameters:
       - name: model
@@ -4724,24 +4798,24 @@ paths:
       summary: Get paths for a specific model
       description: Retrieve the paths associated with the specified model.
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Model not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/hall/heroes:
     get:
       summary: Get all Heroes (contributors)
@@ -4753,18 +4827,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/hall/patrons:
     parameters:
       - name: page
@@ -4783,18 +4857,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/hall/heroes/party/{groupId}:
     parameters:
       - name: groupId
@@ -4805,9 +4879,9 @@ paths:
         description: The group id ('party' for the user party and 'habitrpg' for tavern are accepted)
     get:
       summary: Get any Party given its ID
-      description: | 
-       Returns some basic information about a given Party, to assist admins with user support. \
-       **Required Permissions:** `userSupport`
+      description: |
+        Returns some basic information about a given Party, to assist admins with user support. \
+        **Required Permissions:** `userSupport`
       tags:
         - hall
       security:
@@ -4815,30 +4889,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/hall/heroes/{heroId}:
     parameters:
       - name: heroId
@@ -4860,24 +4934,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     put:
       summary: Update any user ("hero")
       description: |
@@ -4894,26 +4968,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HeroUpdateRequest'
+              $ref: "#/components/schemas/HeroUpdateRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/news:
     get:
       summary: Get latest Bailey announcement
@@ -4921,12 +4995,12 @@ paths:
       tags:
         - news
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NewsResponse'
+                $ref: "#/components/schemas/NewsResponse"
   /v4/news/read:
     post:
       summary: Mark the latest Bailey announcement as read
@@ -4938,18 +5012,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: News articles marked as read successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/news/tell-me-later:
     post:
       summary: Allow latest Bailey announcement to be read later
@@ -4961,18 +5035,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: Request to be notified later successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v4/news:
     post:
       summary: Create news article
@@ -4988,20 +5062,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewsPost'
+              $ref: "#/components/schemas/NewsPost"
       responses:
-        '200':
+        "200":
           description: News article created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v4/news/{postId}:
     parameters:
       - name: postId
@@ -5021,31 +5095,31 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+
+        "404":
           description: News post not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     put:
       summary: Update news post by ID
       description: Update a news post by its ID.
@@ -5060,32 +5134,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewsPost'
+              $ref: "#/components/schemas/NewsPost"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: News post not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     delete:
       summary: Delete news post by ID
       description: Delete a news post by its ID.
@@ -5096,30 +5170,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: News post not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/notifications/read:
     post:
       summary: Mark Notifications as Read
@@ -5131,18 +5205,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK (Notifications marked as read successfully, returns user.notifications)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/notifications/see:
     post:
       summary: Mark Notifications as Seen
@@ -5154,18 +5228,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK (Notifications marked as seen successfully, returns user.notifications)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/notifications/{notificationId}/read:
     parameters:
       - name: notificationId
@@ -5185,18 +5259,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK (Notification marked as read successfully, returns user.notifications)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/notifications/{notificationId}/see:
     parameters:
       - name: notificationId
@@ -5216,18 +5290,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK (Notification marked as seen successfully, returns user.notifications)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tasks/{taskId}:
     parameters:
       - name: taskId
@@ -5238,115 +5312,118 @@ paths:
           type: string
     get:
       summary: Get a task
-      description: | 
+      description: |
         Retrieve a task by its id. \
         See: [ApiDoc](https://habitica.com/apidoc/#api-Task-GetTask)
       tags:
         - tasks
       security:
-      - userId: []
-        apiToken: []
+        - userId: []
+          apiToken: []
+          xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Task'
-        '400':
+                $ref: "#/components/schemas/Task"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     put:
       summary: Update a task
-      description: | 
+      description: |
         Update the details of a task. \
         See: [ApiDoc](https://habitica.com/apidoc/#api-Task-UpdateTask)
       tags:
         - tasks
       security:
         - userId: []
-        - apiToken: []
+          apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Task'
+              $ref: "#/components/schemas/Task"
       responses:
-        '200':
+        "200":
           description: OK (The updated task)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        '400':
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Fround (Task not found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     delete:
       summary: Delete a task
-      description: | 
+      description: |
         Delete a task. \
         See: [ApiDoc](https://habitica.com/apidoc/#api-Task-DeleteTask)
       tags:
         - tasks
       security:
-      - userId: []
-        apiToken: []
+        - userId: []
+          apiToken: []
+          xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tasks/{taskId}/tags/{tagId}:
     parameters:
       - name: taskId
@@ -5373,60 +5450,60 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     delete:
       summary: Delete a tag from a task
       description: Remove a tag from a task.
       tags:
         - tasks
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tasks/{taskId}/checklist:
     parameters:
       - name: taskId
@@ -5450,32 +5527,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChecklistItemRequest'
+              $ref: "#/components/schemas/ChecklistItemRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tasks/{taskId}/checklist/{itemId}:
     parameters:
       - name: taskId
@@ -5498,38 +5575,39 @@ paths:
         - tasks
       security:
         - userId: []
-        - apiToken: []
+          apiToken: []
+          xClient: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChecklistItemRequest'
+              $ref: "#/components/schemas/ChecklistItemRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (Task or checklist item not found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     delete:
       summary: Delete a checklist item from a task
       description: Delete a checklist item from a task.
@@ -5540,30 +5618,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
 
   /v3/tasks/{taskId}/assign:
     parameters:
@@ -5588,26 +5666,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TaskAssignRequest'
+              $ref: "#/components/schemas/TaskAssignRequest"
       responses:
-        '200':
+        "200":
           description: OK (The assigned task)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tasks/challenge/{challengeId}:
     parameters:
       - name: challengeId
@@ -5635,32 +5713,32 @@ paths:
             type: string
             enum: [habits, dailys, todos, rewards]
       responses:
-        '200':
+        "200":
           description: OK (An array of tasks)
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Task'
-        '400':
+                  $ref: "#/components/schemas/Task"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     post:
       summary: Create a new task belonging to a challenge
       description: Can be passed an object to create a single task or an array of objects to create multiple tasks.
@@ -5675,32 +5753,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Task'
+              $ref: "#/components/schemas/Task"
       responses:
-        '201':
+        "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tasks/group/{groupId}:
     parameters:
       - name: groupId
@@ -5727,34 +5805,34 @@ paths:
             type: string
             enum: [habits, dailys, todos, rewards]
       responses:
-        '200':
+        "200":
           description: OK (An array of tasks)
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Task'
-        '400':
+                  $ref: "#/components/schemas/Task"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     post:
-      summary:  Create a new task belonging to a group
+      summary: Create a new task belonging to a group
       description: Can be passed an object to create a single task or an array of objects to create multiple tasks.
       tags:
         - tasks
@@ -5767,26 +5845,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Task'
+              $ref: "#/components/schemas/Task"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tasks/{taskId}/move/to/{position}:
     parameters:
       - name: taskId
@@ -5813,30 +5891,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK (The new tasks order for the specific type that the taskID belongs to)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/group/{groupId}/tasks/{taskId}/move/to/{position}:
     parameters:
       - name: groupId
@@ -5868,30 +5946,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK (The new tasks order (group.tasksOrder.{task.type}s))
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tasks/{taskId}/needs-work/{userId}:
     parameters:
       - name: taskId
@@ -5917,30 +5995,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK (The task that needs more work)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tasks/{taskId}/checklist/{itemId}/score:
     parameters:
       - name: taskId
@@ -5966,30 +6044,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tasks/{taskId}/score/{direction}:
     parameters:
       - name: taskId
@@ -6016,36 +6094,36 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '202':
+                $ref: "#/components/schemas/DataResponse"
+        "202":
           description: Accepted (Approval was requested for team task)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tasks/{taskId}/unassign/{assignedUserId}:
     parameters:
       - name: taskId
@@ -6064,7 +6142,7 @@ paths:
           format: uuid
     post:
       summary: Unassign a user from a task
-      description: | 
+      description: |
         Unassigns a user from a group task \
         See: [ApiDoc](https://habitica.com/apidoc/#api-Task-UnassignTask)
       tags:
@@ -6074,30 +6152,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK (The unassigned task)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /tasks/unlink-one/{taskId}:
     parameters:
       - name: taskId
@@ -6108,14 +6186,15 @@ paths:
           type: string
     post:
       summary: Unlink a challenge task
-      description: | 
+      description: |
         Unlink a challenge task \
         See: [ApiDoc](https://habitica.com/apidoc/#api-Task-UnlinkOneTask)
       tags:
         - tasks
       security:
         - userId: []
-        - apiToken: []
+          apiToken: []
+          xClient: []
       parameters:
         - name: keep
           in: query
@@ -6126,30 +6205,30 @@ paths:
             enum: [keep, remove]
             default: remove
       responses:
-        '200':
+        "200":
           description: OK (An empty object)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tasks/unlink-all/{challengeId}:
     parameters:
       - name: challengeId
@@ -6168,41 +6247,42 @@ paths:
         - tasks
       security:
         - userId: []
-        - apiToken: []
+          apiToken: []
+          xClient: []
       parameters:
-      - name: keep
-        in: query
-        required: true
-        description: Specifies if tasks should be kept(keep-all) or removed(remove-all) after the unlink.
-        schema:
-          type: string
-          enum: [keep-all, remove-all]
-          default: remove-all
+        - name: keep
+          in: query
+          required: true
+          description: Specifies if tasks should be kept(keep-all) or removed(remove-all) after the unlink.
+          schema:
+            type: string
+            enum: [keep-all, remove-all]
+            default: remove-all
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Challenge not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tags:
     get:
       summary: Get all user's tags
@@ -6214,18 +6294,18 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     post:
       summary: Create a new tag
       description: Create a new tag for the user's tasks in Habitica.
@@ -6240,26 +6320,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TagCreateOrUpdateRequest'
+              $ref: "#/components/schemas/TagCreateOrUpdateRequest"
       responses:
-        '201':
+        "201":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/tags/{tagId}:
     parameters:
       - name: tagId
@@ -6279,30 +6359,30 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request ("tagId" must be a valid UUID corresponding to a tag belonging to the user.)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (The specified tag could not be found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     put:
       summary: Update Tag
       description: Update the details of a specific tag for the user's tasks in Habitica.
@@ -6317,32 +6397,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TagCreateOrUpdateRequest'
+              $ref: "#/components/schemas/TagCreateOrUpdateRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request ("tagId" must be a valid UUID corresponding to a tag belonging to the user)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (The specified tag could not be found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
     delete:
       summary: Delete a user tag
       description: Delete a specific tag for the user's tasks in Habitica.
@@ -6353,34 +6433,34 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request ("tagId" must be a valid UUID corresponding to a tag belonging to the user)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (The specified tag could not be found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/reorder-tags:
     post:
       summary: Reorder Tags
-      description: | 
+      description: |
         Reorder the user's tags for tasks in Habitica. \
         **tagId**: Id of the tag to move \
         **to**: Position the tag is moving to
@@ -6395,32 +6475,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TagReorderRequest'
+              $ref: "#/components/schemas/TagReorderRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found (The specified tag could not be found)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/coupons/generate/{event}:
     parameters:
       - name: event
@@ -6437,7 +6517,7 @@ paths:
         description: The number of coupon codes to generate.
     post:
       summary: Generate Coupons for Event
-      description: | 
+      description: |
         Generate coupons for an event in Habitica. \
         **Required Permission:** `sudo` *(whatever it means)*
       tags:
@@ -6447,24 +6527,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request (The request was missing the count query parameter or used an invalid event)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/coupons:
     get:
       summary: Get Coupons
@@ -6476,25 +6556,25 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: List of available coupons retrieved successfully
           content:
             text/csv:
               schema:
                 type: string
                 format: binary
-        '400':
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/coupons/enter/{code}:
     parameters:
       - name: code
@@ -6513,24 +6593,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/coupons/validate/{code}:
     parameters:
       - name: code
@@ -6549,27 +6629,27 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '400':
+                $ref: "#/components/schemas/DataResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /export/userdata.json:
     servers:
-      - url:  https://habitica.com
+      - url: https://habitica.com
     get:
       summary: Export user data in JSON format
       description: Export user data in JSON format.
@@ -6580,22 +6660,22 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: string
                 format: binary
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /export/userdata.xml:
     servers:
-      - url:  https://habitica.com
+      - url: https://habitica.com
     get:
       summary: Export user data in XML format
       description: Export user data in XML format.
@@ -6606,22 +6686,22 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/xml:
               schema:
                 type: string
                 format: binary
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /export/inbox.html:
     servers:
-      - url:  https://habitica.com
+      - url: https://habitica.com
     get:
       summary: Export Inbox Data in HTML
       description: Export user private messages as HTML document.
@@ -6632,22 +6712,22 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             text/html:
               schema:
                 type: string
                 format: binary
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /export/history.csv:
     servers:
-      - url:  https://habitica.com
+      - url: https://habitica.com
     get:
       summary: Export user tasks history in CSV format
       description: History is only available for habits and dailies so todos and rewards won't be included. Can only be used on https://habitica.com.
@@ -6658,22 +6738,22 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             text/csv:
               schema:
                 type: string
                 format: binary
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /export/avatar-{uuid}.png:
     servers:
-      - url:  https://habitica.com
+      - url: https://habitica.com
     parameters:
       - name: uuid
         in: path
@@ -6684,11 +6764,11 @@ paths:
         description: The UUID of the user.
     get:
       summary: Render a user avatar as a PNG file
-      description: '**This PNG export feature is not currently working (https://github.com/HabitRPG/habitica/issues/9489).**'
+      description: "**This PNG export feature is not currently working (https://github.com/HabitRPG/habitica/issues/9489).**"
       tags:
         - data-export
       responses:
-        '200':
+        "200":
           description: OK
           content:
             image/png:
@@ -6697,7 +6777,7 @@ paths:
                 format: binary
   /export/avatar-{uuid}.html:
     servers:
-      - url:  https://habitica.com
+      - url: https://habitica.com
     parameters:
       - name: uuid
         in: path
@@ -6708,33 +6788,33 @@ paths:
         description: The UUID of the user.
     get:
       summary: Render a user avatar as an HTML page
-      description: '**This HTML export feature is not currently working (https://github.com/HabitRPG/habitica/issues/9489).**'
+      description: "**This HTML export feature is not currently working (https://github.com/HabitRPG/habitica/issues/9489).**"
       tags:
         - data-export
       responses:
-        '200':
+        "200":
           description: OK
           content:
             text/html:
               schema:
                 type: string
                 format: binary
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/debug/add-hourglass:
     post:
       summary: Add Hourglass to the current user
-      description: | 
+      description: |
         Add an hourglass to the user's account for debugging purposes. \
         **Required Permissions:** `Developers` \
         See: [ApiDoc](https://habitica.com/apidoc/#api-Development-AddHourglass)
@@ -6745,24 +6825,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/debug/add-ten-gems:
     post:
       summary: Add ten gems to the current user
@@ -6777,24 +6857,24 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/debug/quest-progress:
     post:
       summary: Artificially accelerate quest progress
@@ -6809,28 +6889,28 @@ paths:
           apiToken: []
           xClient: []
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/debug/modify-inventory:
     post:
       summary: Manipulate user's inventory
-      description:  | 
+      description: |
         Modify user's inventory items for debugging purposes. \
         **Required Permissions:** `Developers` \
         See: [ApiDoc](https://habitica.com/apidoc/#api-Development-modifyInventory)
@@ -6845,26 +6925,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InventoryModificationRequest'
+              $ref: "#/components/schemas/InventoryModificationRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
   /v3/debug/set-cron:
     post:
       summary: Set lastCron for user
@@ -6884,23 +6964,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SetLastCronRequest'
+              $ref: "#/components/schemas/SetLastCronRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataResponse'
-        '401':
+                $ref: "#/components/schemas/DataResponse"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorMessageResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessageResponse'
+                $ref: "#/components/schemas/ErrorMessageResponse"
