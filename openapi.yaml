@@ -966,6 +966,8 @@ paths:
               ]
             default: "en"
           description: The desired language for the content data.
+      security:
+        - xClient: []
       responses:
         "200":
           description: OK
